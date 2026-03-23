@@ -1,0 +1,6 @@
+.fundo-content{
+    background: url('/fundoLogin.jpeg') center/cover no-repeat;
+    height: 100vh;
+    width: 40%;
+    
+}

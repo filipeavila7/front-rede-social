@@ -1,0 +1,26 @@
+header{
+    background-color: black;
+    width: 15%;
+    height: 100vh;
+    padding: 30px;
+}
+
+.navLinks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+}
+
+.navLinks a {
+  color: white;
+  text-decoration: none;
+}
+
+.navLinks a.active {
+  font-weight: 700;
+}
+
+
