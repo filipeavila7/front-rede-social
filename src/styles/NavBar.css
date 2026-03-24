@@ -7,16 +7,56 @@
 
 .navLinks{
     display: flex;
-    gap: 30px;
     flex-direction: column;
     justify-content: center;
+    list-style: none;
+    width: 100%;
+}
+
+.navLinks li{
+    font-size: 23px;
 }
 
 .navLinks li a{
     text-decoration: none;
     color: white;
+    font-size: 23px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding: 20px 0 20px 0;
 }
-.navLinks li a.active{
+
+.navLinks li p{
     text-decoration: none;
     color: white;
+    font-size: 23px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    padding: 20px 0 20px 0;
 }
+
+.navLinks li a:hover{
+    border-bottom: #377661 solid 2px;
+}
+
+
+
+
+.navLinks li img{
+    width: 30px;
+
+}
+
+
+
+.navLinks li a.active{
+    text-decoration: none;
+    color: #377661;
+    font-weight: 700;
+}
+
+

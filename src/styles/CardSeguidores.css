@@ -1,0 +1,24 @@
+.cards-content{
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    width: 220px;
+    align-items: center;
+}
+
+
+.img-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.img-container img{
+    width: 180px;
+    border-radius: 150px;
+}
+
+.name{
+    display: flex;
+    justify-content: center;
+}

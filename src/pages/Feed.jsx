@@ -1,7 +1,9 @@
+import StatusCard from "../components/StatusCards";
+
 function Feed() {
   return (
     <main>
-      <h1>Feed</h1>
+      <StatusCard/>
     </main>
   );
 }

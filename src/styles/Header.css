@@ -1,26 +1,16 @@
 header{
     background-color: black;
-    width: 15%;
+    width: 19%;
+    position: sticky;
+    top: 0;
     height: 100vh;
-    padding: 30px;
+    padding: 50px 0px 50px 30px;
+    -webkit-box-shadow: 4px 3px 17px 0px #000000; 
+    box-shadow: 4px 3px 17px 0px #000000;
 }
 
-.navLinks {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 0;
-  margin: 0;
-}
 
-.navLinks a {
-  color: white;
-  text-decoration: none;
-}
 
-.navLinks a.active {
-  font-weight: 700;
-}
+
 
 
