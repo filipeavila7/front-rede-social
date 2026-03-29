@@ -1,4 +1,4 @@
-import api from '../api';
+import api from '../service/api';
 import '../styles/CardSeguidores.css';
 import { useEffect, useState, useMemo } from "react";
 
@@ -41,7 +41,7 @@ function CardSeguidores() {
           )}
 
           <div className="img-container">
-            <img
+            <img className='imageCard'
               src={dados.imageUrlProfile ? dados.imageUrlProfile : "/null.png"}
               alt={dados.nome}
             />

@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Fundo from '../components/Fundo';
 import Botao from '../components/Botao';
 import { useState, useRef, useEffect } from 'react';
-import api from '../api';
+import api from '../service/api';
 
 function Cadastro() {
     const [loading, setLoading] = useState(false)
