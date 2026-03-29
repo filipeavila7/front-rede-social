@@ -9,6 +9,8 @@
     gap: 20px;
     padding: 25px 10px 25px 10px;
     border-radius: 20px;
+    width: 100%;
+
     
     
 }
@@ -29,5 +31,40 @@
 }
 
 .img-post-container:hover{
-    filter: brightness(1.4);
+    filter: brightness(1.28);
 }
+
+
+.tooltip{
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    gap: 40px;
+    position: absolute;
+    top: 275px;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.619);
+    padding: 10px;
+    
+   
+    
+}
+
+.like-container{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.comment-container{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    
+}
+
+.tool-img{
+    width: 50px;
+}
+

@@ -32,7 +32,7 @@ function CardSeguidores() {
   return (
     <>
       {seguidoresOrdenados.map((dados) => (
-        <div key={dados.id} className="cards-content">
+        <div key={`status-${dados.id}`} className="cards-content">
 
           {dados.messageStatus?.trim() && (
             <div className="message-status">

@@ -1,8 +1,38 @@
 .cards-container{
     width: 100%;
+    max-width: 1000px;
     background-color: black;
     border-radius: 30px;
     padding: 30px 15px 15px 15px;
     display: flex;
+    gap: 40px;
+    overflow-x: scroll;
     
+}
+
+
+/* largura da barra */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 7px;
+  
+  
+}
+
+/* fundo da barra */
+::-webkit-scrollbar-track {
+  background: #1e1e2f;
+}
+
+/* parte que você arrasta */
+::-webkit-scrollbar-thumb {
+  background-color: #377661;
+  border-radius: 10px;
+  cursor: grab;
+  
+}
+
+/* hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #2c5e4d;
 }

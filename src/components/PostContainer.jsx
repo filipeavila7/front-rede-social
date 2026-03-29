@@ -5,11 +5,6 @@ function PostContainer(){
     return (
             <div className="post-content">
                 <PostsUsers/>
-                <PostsUsers/>
-                <PostsUsers/>
-                <PostsUsers/>
-                <PostsUsers/>
-                <PostsUsers/>
                     
             </div>
     )
