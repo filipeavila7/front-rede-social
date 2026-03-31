@@ -4,7 +4,6 @@ import '../styles/Feed.css'
 function Feed() {
   return (
     <main className="conteudo-feed" >
-      <StatusCard/>
       <PostContainer/>
     </main>
   );
