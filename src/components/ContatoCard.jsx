@@ -1,14 +1,19 @@
 import '../styles/ContatoCard.css'
 import api from '../service/api'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 
 function ContatoCard() {
     const [contatos, setContatos] = useState([])
+    const navigate = useNavigate();
 
     async function getContatos() {
         try {
             const res = await api.get('/conversations/me')
             setContatos(res.data)
+            console.log(res.data)
+            
         } catch (error) {
             console.error("Erro ao buscar contatos:", error);
         }
@@ -24,13 +29,11 @@ function ContatoCard() {
     }, [])
 
 
-
-
     return (
         <>
             {
                 contatos.map((dados) => (
-                    <div key={`contatos-${dados.id}`} className="contato-card">
+                    <div key={`contatos-${dados.conversationId}`} onClick={() => navigate(`/contatos/${dados.conversationId}`)} className="contato-card"> 
                         <div className="img-contato-container">
                             <img className='img-contato' src={dados.otherUserPhoto} alt="" />
 

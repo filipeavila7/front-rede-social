@@ -53,6 +53,7 @@ function Login() {
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
 
             <label htmlFor="senha">Senha</label>
@@ -62,6 +63,7 @@ function Login() {
               name="senha"
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
+              required
             />
 
             {erro && <p className="erro">{erro}</p>}

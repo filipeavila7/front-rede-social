@@ -6,6 +6,7 @@ import Contatos from "./pages/Contatos";
 import Posts from "./pages/Posts";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
+import Messages from "./pages/Messages";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="perfil" element={<Perfil />} />
         <Route path="contatos" element={<Contatos />} />
         <Route path="posts" element={<Posts />} />
+        <Route path="contatos/:conversationId" element={<Messages />} />
       </Route>
     </Routes>
   );

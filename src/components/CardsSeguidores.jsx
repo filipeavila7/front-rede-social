@@ -10,6 +10,7 @@ function CardSeguidores() {
     try {
       const seguidoresApi = await api.get('/profiles/following');
       setSeguidres(seguidoresApi.data);
+      console.log(seguidoresApi.data)
     } catch (error) {
       console.error("Erro ao buscar seguidores:", error);
     }
@@ -32,7 +33,8 @@ function CardSeguidores() {
   return (
     <>
       {seguidoresOrdenados.map((dados) => (
-        <div key={`status-${dados.id}`} className="cards-content">
+        <div key={`status-${dados.userId}`} className="cards-content">
+          
 
           {dados.messageStatus?.trim() && (
             <div className="message-status">
