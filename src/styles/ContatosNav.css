@@ -1,0 +1,31 @@
+.contatos-nav{
+    display: flex;
+    flex-direction: column;
+    background-color: black;
+    width: 19%;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    padding: 10px;
+    -webkit-box-shadow: 4px 3px 17px 0px #000000; 
+    box-shadow: 4px 3px 17px 0px #000000;
+
+}
+
+.contato-user-nav{
+    display: flex;
+    align-items: center;
+    padding: 15px 10px 15px 10px;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.contato-user-nav:hover{
+    background-color: #ecdada69;
+    border-radius: 20px;
+}
+
+.img-contato-nav{
+    width: 80px;
+    border-radius: 100px;
+}

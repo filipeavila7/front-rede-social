@@ -1,34 +1,172 @@
-.message-container{
+.message-layout{
     display: flex;
-    
-    
-    gap: 20px;
+    min-height: 100vh
 }
 
-.msg-right{
+.message-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.message-content{
+    flex: 1;
+    display: flex;
+}
+
+.message-list{
+    display: flex;
+    flex-direction: column;
+   
+    padding: 50px 20px 20px 20px;
+    padding-bottom: 120px;
+}
+
+.all{
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    min-height: 100vh;
+    
+
+}
+
+/* Header do chat */
+.chat-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #000000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding: 20px;
+}
+
+/* Foto do usuário */
+.chat-photo {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+ 
+}
+
+/* Nome */
+.chat-name {
+  font-weight: 600;
+  font-size: 25px;
+  color: #e2e8f0;
+}
+
+
+.message-container {
+    display: flex;
+    flex-direction: column; /* mensagens uma embaixo da outra */
+    gap: 10px;
+    
+}
+/* ===== MENSAGEM DIREITA ===== */
+.msg-right {
     display: flex;
     justify-content: flex-end;
-    padding-bottom: 25px;
+    margin-bottom: 20px;
     
+    
+}
+
+.conteudo-right {
+    background-color: #377661;
+    padding: 10px 60px 20px 15px; /* espaço pra hora */
+    border-radius: 20px;
+    font-size: 23px;
+    position: relative;
+    -webkit-box-shadow: 6px 15px 24px -1px rgba(0,0,0,0.56); 
+    box-shadow: 6px 15px 24px -1px rgba(0,0,0,0.56);
+    max-width: 500px;
+    width: fit-content;
+
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* ===== MENSAGEM ESQUERDA ===== */
+.msg-left {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+    
+    
+}
+
+.conteudo-left {
+    background-color: #000000;
+    color: white;
+    padding: 10px 60px 20px 15px; /* espaço pra hora */
+    border-radius: 20px;
+    font-size: 23px;
+    position: relative;
+    -webkit-box-shadow: 6px 15px 24px -1px rgba(0,0,0,0.56); 
+    box-shadow: 6px 15px 24px -1px rgba(0,0,0,0.56);
+    max-width: 500px;
+    width: fit-content;
+
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+/* ===== HORÁRIOS ===== */
+.horas-right,
+.horas-left {
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+
+.input-msg-container {
+    position: fixed;
+    bottom: 0;
+    left: 19%;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    padding: 12px 20px;
+    z-index: 10;
+    background: transparent;
+    align-items: center;
+}
+
+
+
+.msg-form{
+    display: flex;
+    width: 100%;
+    max-width: 900px;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: #2f3735;
+    border-radius: 20px;
+    padding: 15px;
+    gap: 20px;
    
 }
 
-.msg-left{
-    width: 100%;
-    
-}
-
-.conteudo-right{
-    background-color: #377661;
-    padding: 10px 15px 10px 15px ; 
-    border-radius: 20px;
+.input-msg{
+    width: 90%;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    resize: none;
+    outline: none;
     font-size: 23px;
 }
 
-.conteudo-left{
-    background-color: #000000;
-    padding: 10px 15px 10px 15px ; 
-    border-radius: 20px;
-    font-size: 23px;
+.btn-msg{
+    width: 50px;;
+    padding: 20px;
+    height: 50px;
+    border-radius: 100px;
 }

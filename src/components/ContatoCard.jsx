@@ -1,12 +1,13 @@
 import '../styles/ContatoCard.css'
 import api from '../service/api'
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 
 function ContatoCard() {
     const [contatos, setContatos] = useState([])
     const navigate = useNavigate();
+    const { conversationId } = useParams();
 
     async function getContatos() {
         try {
@@ -33,7 +34,11 @@ function ContatoCard() {
         <>
             {
                 contatos.map((dados) => (
-                    <div key={`contatos-${dados.conversationId}`} onClick={() => navigate(`/contatos/${dados.conversationId}`)} className="contato-card"> 
+                    <div
+                        key={`contatos-${dados.conversationId}`}
+                        onClick={() => navigate(`/contatos/${dados.conversationId}`)}
+                        className={`contato-card ${Number(conversationId) === dados.conversationId ? "active" : ""}`}
+                    > 
                         <div className="img-contato-container">
                             <img className='img-contato' src={dados.otherUserPhoto} alt="" />
 
