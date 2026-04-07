@@ -9,6 +9,7 @@
     padding: 10px;
     -webkit-box-shadow: 4px 3px 17px 0px #000000; 
     box-shadow: 4px 3px 17px 0px #000000;
+    overflow-y: auto ;
 
 }
 
@@ -21,11 +22,26 @@
 }
 
 .contato-user-nav:hover{
-    background-color: #ecdada69;
+    background-color: #6c6c6c57;
+    border-radius: 20px;
+}
+
+.contato-user-nav.active{
+    background-color: #6c6c6c57;
     border-radius: 20px;
 }
 
 .img-contato-nav{
     width: 80px;
     border-radius: 100px;
+}
+
+
+.voltar-container{
+    padding: 20px 10px 20px 10px;
+}
+
+.voltar-icon{
+    width: 40px;
+    cursor: pointer;
 }

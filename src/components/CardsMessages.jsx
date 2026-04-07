@@ -11,6 +11,8 @@ function CardsMessages() {
   const { conversationId } = useParams();
   const [receiverId, setReceiverId] = useState(null)
   const inputMessage = useRef()
+  const allRef = useRef(null)
+  const firstLoadRef = useRef(true)
   async function getMessages() {
     try {
       const res = await api.get(`/messages/conversation/${conversationId}`);
@@ -59,25 +61,38 @@ function CardsMessages() {
   }
 
   useEffect(() => {
-  if (!conversationId) return;
+    if (!conversationId) return;
 
-  getMessages();
-  getMe();
-  getConversationHeader();
-
-  const interval = setInterval(() => {
     getMessages();
-  }, 1000); // a cada 1s
+    getMe();
+    getConversationHeader();
+    firstLoadRef.current = true;
 
-  return () => clearInterval(interval);
-}, [conversationId]);
+    const interval = setInterval(() => {
+      getMessages();
+    }, 1000); // a cada 1s
+
+    return () => clearInterval(interval);
+  }, [conversationId]);
+
+  useEffect(() => {
+    if (!firstLoadRef.current) return;
+    if (messages.length === 0) return;
+    const el = allRef.current;
+    if (!el) return;
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+      firstLoadRef.current = false;
+    });
+  }, [messages]);
 
 
   return (
-    <div className="all">
+    <div ref={allRef} className="all">
       <div className="chat-header">
-        <img className="chat-photo" src={headerPhoto || ""} alt="" />
+        <img className="chat-photo" src={headerPhoto || "/user.png"} alt="" />
         <div className="chat-name">{headerName}</div>
+        <img className="config-icon" src="/dots.png" alt="" />
       </div>
 
       <div className="message-list">
@@ -104,8 +119,10 @@ function CardsMessages() {
       </div>
       <div className="input-msg-container">
         <form onSubmit={postMessage} className="msg-form" action="">
-          <textarea placeholder="Mensagem" className="input-msg" type="text" ref={inputMessage} />
-          <button className="btn-msg" type="submit"></button>
+          <textarea  placeholder="Mensagem" className="input-msg" type="text" ref={inputMessage} />
+          <button className="btn-msg" type="submit">
+            <img className="btn-icon" src="/send.png" alt="" />
+          </button>
         </form>
         
       </div>

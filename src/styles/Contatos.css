@@ -3,3 +3,13 @@
     flex-direction: column;
     gap: 30px;
 }
+
+.contatos-layout{
+    display: flex;
+    min-height: 100vh;
+}
+
+.contatos-content{
+    flex: 1;
+    display: flex;
+}

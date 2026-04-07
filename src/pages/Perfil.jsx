@@ -1,7 +1,10 @@
+import MeuPerfil from "../components/MeuPerfil";
+
+
 function Perfil() {
   return (
     <main>
-      <h1>Perfil</h1>
+      <MeuPerfil/>
     </main>
   );
 }

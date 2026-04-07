@@ -12,8 +12,8 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-       <Route path="contatos/:conversationId" element={<Messages />} />
       <Route path="/cadastro" element={<Cadastro />} />
+      <Route path="/contatos/:conversationId" element={<Messages />} />
       <Route path="/" element={<AppLayout />}>
         <Route index element={<Navigate to="/login" replace />} />
         <Route path="feed" element={<Feed />} />

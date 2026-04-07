@@ -1,0 +1,51 @@
+.meu-perfil{
+    background-color: black;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+    border-radius: 30px;
+}
+
+
+.dados-perfil{
+    font-size: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.img-perfil{
+    width: 180px;
+    border-radius: 100px;
+    cursor: pointer;
+}
+
+
+.seguidores-container{
+    display: flex;
+    gap: 20px;
+    font-size: 25px;
+    align-items: center;
+    
+}
+
+.btn-editar-perfil{
+    width: 200px;
+    background-color: #377661 ;
+    font-size: 23px;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 35px;
+    padding: 10px;
+}
+
+.seguindo{
+    cursor: pointer;
+}
+
+.seguidores{
+    cursor: pointer;
+}
