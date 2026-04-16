@@ -90,7 +90,7 @@ function CardsMessages() {
   return (
     <div ref={allRef} className="all">
       <div className="chat-header">
-        <img className="chat-photo" src={headerPhoto || "/user.png"} alt="" />
+        <img className="chat-photo" src={headerPhoto || "/null.png"} alt="" />
         <div className="chat-name">{headerName}</div>
         <img className="config-icon" src="/dots.png" alt="" />
       </div>

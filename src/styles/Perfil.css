@@ -5,6 +5,9 @@
     gap: 30px;
     padding: 20px;
     border-radius: 30px;
+    -webkit-box-shadow: 5px 5px 15px 5px #000000; 
+    box-shadow: 5px 5px 15px 5px #000000;
+    position: relative;
 }
 
 
@@ -49,3 +52,35 @@
 .seguidores{
     cursor: pointer;
 }
+
+.my-bio{
+    font-size: 23px;
+    font-style: italic;
+}
+
+.more{
+    width: 45px;
+    position: absolute;
+    bottom: 25px;
+    cursor: pointer;
+    left: 21px;
+}
+
+.perfil-layout{
+   display: flex;
+   flex-direction: column;
+   gap: 20px;
+   
+    
+}
+
+.meus-posts-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+     gap: 20px;
+    padding: 25px 10px 25px 10px;
+   
+}
+

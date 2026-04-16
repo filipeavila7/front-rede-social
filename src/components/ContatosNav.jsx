@@ -33,7 +33,7 @@ function ContatoNav() {
                     key={dados.conversationId}
                     onClick={() => navigate(`/contatos/${dados.conversationId}`)}
                 >
-                    <img className="img-contato-nav" src={dados.otherUserPhoto} alt=""  />
+                    <img className="img-contato-nav" src={dados.otherUserPhoto || "/null.png"} alt=""  />
                     <p className="nome-contato-nav">{dados.otherUserName}</p>
                 </div>
             ))}

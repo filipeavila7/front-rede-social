@@ -25,6 +25,7 @@ function MeuPerfil() {
     try {
       const res = await api.get('/profiles/me')
       setMyprofile(res.data)
+      console.log(res.data)
     } catch (error) {
       console.log(error)
     }
@@ -39,18 +40,19 @@ function MeuPerfil() {
     }
   }
 
-  async function getMyFollows() {
+  async function getMyFollows(id) {
     try {
-      const res = await api.get('/users/me/following')
+      const res = await api.get(`/users/${id}/following/count`)
       setMyFollows(res.data)
+      console.log(res.data)
     } catch (error) {
       console.log(error)
     }
   }
 
 
-  async function getTotalPosts() {
-    const res = await api.get(`/posts/user/${userId}/count`)
+  async function getTotalPosts(id) {
+    const res = await api.get(`/posts/user/${id}/count`)
     setTotalPost(res.data)
   }
 
@@ -58,9 +60,13 @@ function MeuPerfil() {
     async function load() {
       const id = await getMe()
       getMyProfile()
-      if (id) getMyFollowers(id)
-      getMyFollows()
-      getTotalPosts()
+      if (id){
+        getMyFollowers(id)
+        getTotalPosts(id)
+        getMyFollows(id)
+      } 
+      
+      
     }
     load()
   }, [])
@@ -69,6 +75,7 @@ function MeuPerfil() {
     <>
       {myProfile && (
         <div className='meu-perfil'>
+          <img className='more' src="/plus.png" alt="" />
           <div className='img-perfil-container'>
             <img className='img-perfil' src={myProfile.imageUrlProfile} alt="" />
           </div>
@@ -78,9 +85,11 @@ function MeuPerfil() {
             <div className="seguidores-container">
               <p>Posts: {totalPost ?? 0}</p>
               <p className='seguidores'>Seguidores: {myFollowers ?? 0}</p>
-              <p className='seguindo'>Seguindo: {myFollows ? myFollows.length : 0}</p>
+              <p className='seguindo'>Seguindo: {myFollows ?? 0}</p>
               <button className='btn-editar-perfil'>Editar Perfil</button>
             </div>
+
+            <div  className='my-bio'><p>{myProfile.bio}</p></div>
             
           </div>
         </div>

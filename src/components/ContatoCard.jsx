@@ -40,7 +40,7 @@ function ContatoCard() {
                         className={`contato-card ${Number(conversationId) === dados.conversationId ? "active" : ""}`}
                     > 
                         <div className="img-contato-container">
-                            <img className='img-contato' src={dados.otherUserPhoto} alt="" />
+                            <img className='img-contato' src={ dados.otherUserPhoto || "/null.png"} alt="" />
 
                         </div>
                         <div className="contato-nome">
