@@ -21,7 +21,7 @@ function MeusPosts() {
 
     }, [])
 
-    return <>
+    return( <>
         {myPosts.map((dados) => (
             <div key={dados.id} className='card-container'>
                 <div className="img-post-container" onMouseEnter={() => setHoveredId(dados.id)}
@@ -42,7 +42,7 @@ function MeusPosts() {
                 </div>
             </div>
         ))}
-    </>
+    </>)
 }
 
 export default MeusPosts

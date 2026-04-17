@@ -7,7 +7,7 @@ import Posts from "./pages/Posts";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import Messages from "./pages/Messages";
-
+import PerfilEditar from "./pages/PerfilEditar";
 function App() {
   return (
     <Routes>
@@ -18,6 +18,7 @@ function App() {
         <Route index element={<Navigate to="/login" replace />} />
         <Route path="feed" element={<Feed />} />
         <Route path="perfil" element={<Perfil />} />
+        <Route path="perfil/editar" element={<PerfilEditar />} />
         <Route path="contatos" element={<Contatos />} />
         <Route path="posts" element={<Posts />} />
        

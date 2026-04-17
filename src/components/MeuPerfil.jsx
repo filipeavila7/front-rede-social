@@ -1,6 +1,7 @@
 import '../styles/Perfil.css'
 import api from '../service/api'
 import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 
 function MeuPerfil() {
   const [myProfile, setMyprofile] = useState(null)
@@ -8,6 +9,7 @@ function MeuPerfil() {
   const [myFollows, setMyFollows] = useState(null)
   const [meId, setMeId] = useState(null)
   const [totalPost, setTotalPost] = useState(null)
+  const navigate = useNavigate();
 
   async function getMe() {
     try {
@@ -60,13 +62,13 @@ function MeuPerfil() {
     async function load() {
       const id = await getMe()
       getMyProfile()
-      if (id){
+      if (id) {
         getMyFollowers(id)
         getTotalPosts(id)
         getMyFollows(id)
-      } 
-      
-      
+      }
+
+
     }
     load()
   }, [])
@@ -75,6 +77,11 @@ function MeuPerfil() {
     <>
       {myProfile && (
         <div className='meu-perfil'>
+          {myProfile.messageStatus?.trim() && (
+            <div className="message-status-perfil">
+              <p>{myProfile.messageStatus}</p>
+            </div>
+          )}
           <img className='more' src="/plus.png" alt="" />
           <div className='img-perfil-container'>
             <img className='img-perfil' src={myProfile.imageUrlProfile} alt="" />
@@ -86,11 +93,11 @@ function MeuPerfil() {
               <p>Posts: {totalPost ?? 0}</p>
               <p className='seguidores'>Seguidores: {myFollowers ?? 0}</p>
               <p className='seguindo'>Seguindo: {myFollows ?? 0}</p>
-              <button className='btn-editar-perfil'>Editar Perfil</button>
+              <button onClick={()=> navigate('/perfil/editar')} className='btn-editar-perfil'>Editar Perfil</button>
             </div>
 
-            <div  className='my-bio'><p>{myProfile.bio}</p></div>
-            
+            <div className='my-bio'><p>{myProfile.bio}</p></div>
+
           </div>
         </div>
       )}
