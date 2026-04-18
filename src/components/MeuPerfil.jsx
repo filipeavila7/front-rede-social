@@ -91,8 +91,8 @@ function MeuPerfil() {
 
             <div className="seguidores-container">
               <p>Posts: {totalPost ?? 0}</p>
-              <p className='seguidores'>Seguidores: {myFollowers ?? 0}</p>
-              <p className='seguindo'>Seguindo: {myFollows ?? 0}</p>
+              <p onClick={() => navigate('/perfil/followers')} className='seguidores'>Seguidores: {myFollowers ?? 0}</p>
+              <p onClick={() => navigate('/perfil/follows')}  className='seguindo'>Seguindo: {myFollows ?? 0}</p>
               <button onClick={()=> navigate('/perfil/editar')} className='btn-editar-perfil'>Editar Perfil</button>
             </div>
 

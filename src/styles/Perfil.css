@@ -181,3 +181,44 @@
     -webkit-box-shadow: -3px 7px 15px -1px #000000; 
 box-shadow: -3px 7px 15px -1px #000000;
 }
+
+
+.seguidor-container{
+    display: flex;
+    align-items: center;
+    background-color: black;
+    padding: 15px 30px 15px 30px;
+    border-radius:40px;
+    gap: 20px;
+}
+
+.seguidor-img{
+    width: 140px;
+    border-radius: 120px;
+    height: 140px;
+    object-fit: cover;
+    
+}
+
+.dados-seguidor{
+    font-size: 24px;
+}
+
+
+.seguidor-layout{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    
+}
+
+.delete-container{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.delete-icon{
+    width: 38px;
+    cursor: pointer;
+}

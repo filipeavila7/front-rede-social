@@ -49,6 +49,16 @@ function NavBar() {
             )}
           </NavLink>
         </li>
+        <li>
+          <NavLink to="/config" className={({ isActive }) => (isActive ? "active" : "")}>
+            {({ isActive }) => (
+              <>
+                <img src={isActive ? "/cog2.png" : "/cog.png"} alt="" />
+                Configuração
+              </>
+            )}
+          </NavLink>
+        </li>
       </ul>
     </nav>
   );
