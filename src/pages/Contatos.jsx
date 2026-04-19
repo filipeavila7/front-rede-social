@@ -6,10 +6,16 @@ import '../styles/Contatos.css'
 function Contatos() {
   return (
     <main className="conteudo-contato">
-      <StatusCard/>
-      <ContatoCard/>
-      
-      
+      <StatusCard />
+
+      <section className="contatos-section">
+        <div className="contatos-section-top">
+          <p className="contatos-section-label">Mensagens</p>
+          <h2 className="contatos-section-title">Suas conversas</h2>
+        </div>
+
+        <ContatoCard />
+      </section>
     </main>
   );
 }

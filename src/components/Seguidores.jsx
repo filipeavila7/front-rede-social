@@ -49,16 +49,22 @@ function Seguidores({ getSeguidoresUser, onDelete }) {
                     </div>
 
                     <div className='dados-seguidor'>
-                        <p>{dados.nome}</p>
+                        <p className="seguidor-nome">{dados.nome}</p>
+                        <span className="seguidor-legenda">Perfil conectado com voce</span>
                     </div>
 
                     <div className='delete-container'>
-                        <img
+                        <button
+                            type="button"
+                            className="delete-button"
                             onClick={() => abrirModal(dados.userId)}
-                            src="/x.png"
-                            alt=""
-                            className="delete-icon"
-                        />
+                        >
+                            <img
+                                src="/x.png"
+                                alt="Remover usuario"
+                                className="delete-icon"
+                            />
+                        </button>
                     </div>
                 </div>
             ))}

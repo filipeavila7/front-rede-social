@@ -1,14 +1,16 @@
+import '../styles/ConfirmModal.css'
+
 function ConfirmModal({ isOpen, message, onConfirm, onCancel }) {
   if (!isOpen) return null;
 
   return (
-    <div style={overlayStyle} onClick={onCancel}>
-      <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
+    <div className="overlay-modal" onClick={onCancel}>
+      <div className='modal-content' onClick={(e) => e.stopPropagation()}>
         <p>{message}</p>
 
-        <div style={{ display: "flex", gap: "10px", marginTop: "15px" }}>
-          <button onClick={onConfirm}>Confirmar</button>
-          <button onClick={onCancel}>Cancelar</button>
+        <div className='btn-confirm-container'>
+          <button className='btn-cancel' onClick={onCancel}>Cancelar</button>
+          <button className='btn-confirm' onClick={onConfirm}>Confirmar</button>
         </div>
       </div>
     </div>

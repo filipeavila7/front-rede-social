@@ -1,77 +1,78 @@
-import '../styles/ContatoCard.css'
-import api from '../service/api'
-import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-
+import "../styles/ContatoCard.css";
+import api from "../service/api";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 function ContatoCard() {
-    const [contatos, setContatos] = useState([])
+    const [contatos, setContatos] = useState([]);
     const navigate = useNavigate();
     const { conversationId } = useParams();
 
     async function getContatos() {
         try {
-            const res = await api.get('/conversations/me')
-            setContatos(res.data)
-            console.log(res.data)
-            
+            const res = await api.get("/conversations/me");
+            setContatos(res.data);
         } catch (error) {
             console.error("Erro ao buscar contatos:", error);
         }
-
-
-
     }
 
     useEffect(() => {
-        getContatos()
+        getContatos();
+    }, []);
 
+    const formatTime = (date) => {
+        if (!date) return "--:--";
 
-    }, [])
+        return new Date(date).toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
 
+    const formatDate = (date) => {
+        if (!date) return "";
+
+        return new Date(date).toLocaleDateString("pt-BR", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+        });
+    };
 
     return (
-        <>
-            {
-                contatos.map((dados) => (
-                    <div
-                        key={`contatos-${dados.conversationId}`}
-                        onClick={() => navigate(`/contatos/${dados.conversationId}`)}
-                        className={`contato-card ${Number(conversationId) === dados.conversationId ? "active" : ""}`}
-                    > 
-                        <div className="img-contato-container">
-                            <img className='img-contato' src={ dados.otherUserPhoto || "/null.png"} alt="" />
+        <div className="contato-card-list">
+            {contatos.map((dados) => (
+                <article
+                    key={`contatos-${dados.conversationId}`}
+                    onClick={() => navigate(`/contatos/${dados.conversationId}`)}
+                    className={`contato-card ${Number(conversationId) === dados.conversationId ? "active" : ""}`}
+                >
+                    <div className="img-contato-container">
+                        <img
+                            className="img-contato"
+                            src={dados.otherUserPhoto || "/null.png"}
+                            alt={dados.otherUserName}
+                        />
+                    </div>
 
-                        </div>
+                    <div className="contato-info">
                         <div className="contato-nome">
-                            <p>{dados.otherUserName}</p>
-                            <p className='ultima-msg'>{dados.lastMessage} </p>
+                            <p className="contato-nome-text">{dados.otherUserName}</p>
+                            <p className="ultima-msg">
+                                {dados.lastMessage?.trim() || "Comece essa conversa"}
+                            </p>
                         </div>
+
                         <div className="hora-msg">
-                            <p> {
-                                new Date(dados.lastMessageAt).toLocaleTimeString("pt-BR", {
-                                    hour: "2-digit",
-                                    minute: "2-digit"
-
-                                })} </p>
-                            <p> {
-                                new Date(dados.lastMessageAt).toLocaleDateString("pt-BR", {
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                })} </p>
-
-
+                            <p className="hora-principal">{formatTime(dados.lastMessageAt)}</p>
+                            <p className="hora-secundaria">{formatDate(dados.lastMessageAt)}</p>
                         </div>
                     </div>
-                ))
-            }
-
-        </>
-
-    )
-
-
+                </article>
+            ))}
+        </div>
+    );
 }
 
-export default ContatoCard
+export default ContatoCard;

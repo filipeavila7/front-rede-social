@@ -1,47 +1,117 @@
 .contatos-nav{
     display: flex;
     flex-direction: column;
-    background-color: black;
-    width: 19%;
+    background: linear-gradient(180deg, #050505 0%, #0d0d0d 100%);
+    width: 22rem;
     position: sticky;
     top: 0;
     height: 100vh;
-    padding: 10px;
-    -webkit-box-shadow: 4px 3px 17px 0px #000000; 
+    padding: 18px 14px;
+    -webkit-box-shadow: 4px 3px 17px 0px #000000;
     box-shadow: 4px 3px 17px 0px #000000;
-    overflow-y: auto ;
-
+    overflow-y: auto;
+    border-right: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 .contato-user-nav{
     display: flex;
     align-items: center;
-    padding: 15px 10px 15px 10px;
-    gap: 10px;
+    padding: 14px 12px;
+    gap: 12px;
     cursor: pointer;
+    border-radius: 22px;
+    transition: 0.2s ease-in-out;
+    margin-bottom: 8px;
 }
 
 .contato-user-nav:hover{
-    background-color: #6c6c6c57;
-    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.05);
 }
 
 .contato-user-nav.active{
-    background-color: #6c6c6c57;
-    border-radius: 20px;
+    background: linear-gradient(145deg, rgba(92, 203, 166, 0.22) 0%, rgba(20, 20, 20, 0.95) 100%);
+    
 }
 
 .img-contato-nav{
-    width: 80px;
-    border-radius: 100px;
+    width: 62px;
+    height: 62px;
+    border-radius: 999px;
+    object-fit: cover;
+    border: 3px solid #1c1c1c;
 }
 
-
 .voltar-container{
-    padding: 20px 10px 20px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 8px 8px 20px 8px;
+}
+
+.voltar-button{
+    width: 52px;
+    height: 52px;
+    border-radius: 18px;
+    border: none;
+    background-color: #151515;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.voltar-button:hover{
+    background-color: #242424;
+    transform: translateY(-2px);
 }
 
 .voltar-icon{
-    width: 40px;
+    width: 22px;
     cursor: pointer;
+}
+
+.contatos-nav-top{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.contatos-nav-label{
+    color: #7ca896;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.contatos-nav-title{
+    color: white;
+    font-size: 28px;
+}
+
+.contato-user-nav-info{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.nome-contato-nav{
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+}
+
+.contato-user-nav-text{
+    color: rgba(255, 255, 255, 0.68);
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 1100px){
+    .contatos-nav{
+        width: 19rem;
+    }
 }

@@ -1,11 +1,10 @@
 header{
-    background-color: black;
+    background: linear-gradient(180deg, #050505 0%, #0d0d0d 100%);
     width: 19%;
     position: sticky;
     top: 0;
     height: 100vh;
     padding: 50px 0px 50px 30px;
-    -webkit-box-shadow: 4px 3px 17px 0px #000000; 
     box-shadow: 4px 3px 17px 0px #000000;
 }
 

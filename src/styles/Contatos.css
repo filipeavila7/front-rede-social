@@ -1,7 +1,9 @@
 .conteudo-contato{
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 30px;
+    width: 100%;
 }
 
 .contatos-layout{
@@ -12,4 +14,31 @@
 .contatos-content{
     flex: 1;
     display: flex;
+}
+
+.contatos-section{
+    width: 100%;
+    background: linear-gradient(145deg, #050505 0%, #111111 100%);
+    border-radius: 28px;
+    padding: 26px;
+    box-shadow: 5px 5px 15px 5px #000000;
+}
+
+.contatos-section-top{
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.contatos-section-label{
+    color: #7ca896;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.contatos-section-title{
+    color: white;
+    font-size: 30px;
 }

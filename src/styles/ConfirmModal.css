@@ -1,0 +1,56 @@
+.overlay-modal{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content:  center;
+  align-items: center;
+}
+
+.modal-content{
+    -webkit-box-shadow: 5px 5px 18px -1px #000000; 
+    box-shadow: 5px 5px 18px -1px #000000;
+    font-size: 23px;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    padding: 40px;
+    border-radius: 30px;
+    background: linear-gradient(180deg, #050505 0%, #0d0d0d 100%);
+}
+
+.btn-confirm-container{
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 20px;
+    
+    
+}
+
+.btn-confirm{
+    color: white;
+    background-color: black;
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+    outline: none;
+    border: none;
+    font-size: 23px;
+    cursor: pointer;
+}
+
+.btn-cancel{
+    color: white;
+    background-color: black;
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+    outline: none;
+    border: none;
+    font-size: 23px;
+    cursor: pointer;
+}

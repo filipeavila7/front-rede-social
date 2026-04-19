@@ -9,10 +9,11 @@ function CardsMessages() {
   const [headerName, setHeaderName] = useState("");
   const [headerPhoto, setHeaderPhoto] = useState("");
   const { conversationId } = useParams();
-  const [receiverId, setReceiverId] = useState(null)
-  const inputMessage = useRef()
-  const allRef = useRef(null)
-  const firstLoadRef = useRef(true)
+  const [receiverId, setReceiverId] = useState(null);
+  const inputMessage = useRef();
+  const allRef = useRef(null);
+  const firstLoadRef = useRef(true);
+
   async function getMessages() {
     try {
       const res = await api.get(`/messages/conversation/${conversationId}`);
@@ -33,31 +34,31 @@ function CardsMessages() {
 
   async function getConversationHeader() {
     try {
-      const res = await api.get("/conversations/me"); // faz o get nos contatos
+      const res = await api.get("/conversations/me");
       const convo = res.data?.find(
-        (c) => c.conversationId === Number(conversationId) // procura o id do contato que tem o msm da url
+        (c) => c.conversationId === Number(conversationId)
       );
-      setReceiverId(convo.otherUserId)
-      setHeaderName(convo?.otherUserName || ""); // pega o nome
-      setHeaderPhoto(convo?.otherUserPhoto || ""); // pega a foto
+      setReceiverId(convo?.otherUserId ?? null);
+      setHeaderName(convo?.otherUserName || "");
+      setHeaderPhoto(convo?.otherUserPhoto || "");
     } catch (error) {
       console.log(error);
     }
   }
 
   async function postMessage(e) {
-    e.preventDefault()
+    e.preventDefault();
+    const content = inputMessage.current.value.trim();
+
+    if (!content || !receiverId) return;
 
     try {
-      await api.post(`/messages/${receiverId}`, { 
-        content : inputMessage.current.value
-        
-      })
+      await api.post(`/messages/${receiverId}`, {
+        content,
+      });
       inputMessage.current.value = "";
-      getMessages()
-    } catch (error) {
-      
-    }
+      getMessages();
+    } catch (error) {}
   }
 
   useEffect(() => {
@@ -70,7 +71,7 @@ function CardsMessages() {
 
     const interval = setInterval(() => {
       getMessages();
-    }, 1000); // a cada 1s
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [conversationId]);
@@ -91,8 +92,13 @@ function CardsMessages() {
     <div ref={allRef} className="all">
       <div className="chat-header">
         <img className="chat-photo" src={headerPhoto || "/null.png"} alt="" />
-        <div className="chat-name">{headerName}</div>
-        <img className="config-icon" src="/dots.png" alt="" />
+        <div className="chat-header-info">
+          <div className="chat-name">{headerName}</div>
+          <p className="chat-subtitle">Conversa ativa</p>
+        </div>
+        <div className="config-icon-container">
+          <img className="config-icon" src="/dots.png" alt="" />
+        </div>
       </div>
 
       <div className="message-list">
@@ -119,12 +125,11 @@ function CardsMessages() {
       </div>
       <div className="input-msg-container">
         <form onSubmit={postMessage} className="msg-form" action="">
-          <textarea  placeholder="Mensagem" className="input-msg" type="text" ref={inputMessage} />
+          <textarea placeholder="Escreva sua mensagem" className="input-msg" type="text" ref={inputMessage} />
           <button className="btn-msg" type="submit">
             <img className="btn-icon" src="/send.png" alt="" />
           </button>
         </form>
-        
       </div>
     </div>
   );
