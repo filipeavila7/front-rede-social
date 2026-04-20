@@ -5,7 +5,7 @@
 }
 
 .contato-card{
-    background: linear-gradient(145deg, #060606 0%, #111111 100%);
+    background: linear-gradient(145deg, #181717 0%, #111111 100%);
     border-radius: 30px;
     padding: 20px 22px;
     display: flex;
@@ -18,11 +18,11 @@
 
 .contato-card:hover{
     transform: translateY(-2px);
-    border-color: rgba(124, 168, 150, 0.18);
+    background: linear-gradient(145deg, #313030 0%, #111111 100%);
+    border-color: rgba(146, 217, 188, 0.18);
 }
 
 .contato-card.active{
-    border-color: rgba(55, 118, 97, 0.9);
     box-shadow: 0 0 0 4px rgba(55, 118, 97, 0.12);
 }
 

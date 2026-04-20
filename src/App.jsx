@@ -11,11 +11,14 @@ import PerfilEditar from "./pages/PerfilEditar";
 import Config from "./pages/Config";
 import SeguidoresPage from "./pages/SeguidoresPage";
 import SeguindoPage from "./pages/SeguindoPage";
+import PostInner from "./pages/PostInner";
+
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/cadastro" element={<Cadastro />} />
+       <Route path="/feed/:postId" element={<PostInner />} />
       <Route path="/contatos/:conversationId" element={<Messages />} />
       <Route index element={<Navigate to="/login" replace />} />
       <Route path="/" element={<AppLayout />}>
@@ -27,6 +30,7 @@ function App() {
         <Route path="config" element={<Config />} />
         <Route path="perfil/followers" element={<SeguidoresPage />} />
         <Route path="perfil/follows" element={<SeguindoPage />} />
+       
       </Route>
     </Routes>
   );

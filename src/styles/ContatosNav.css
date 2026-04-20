@@ -29,7 +29,7 @@
 }
 
 .contato-user-nav.active{
-    background: linear-gradient(145deg, rgba(92, 203, 166, 0.22) 0%, rgba(20, 20, 20, 0.95) 100%);
+    background: linear-gradient(145deg, rgba(148, 162, 155, 0.22) 0%, rgba(20, 20, 20, 0.95) 100%);
     
 }
 
@@ -104,7 +104,7 @@
 
 .contato-user-nav-text{
     color: rgba(255, 255, 255, 0.68);
-    font-size: 13px;
+    font-size: 18px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

@@ -156,17 +156,18 @@
 }
 
 .message-status-perfil{
+    border-radius: 30px;
     background-color: #377661;
     padding: 10px;
     position: absolute;
-    border-radius: 20px;
-    min-width: 150px;
+    border-radius: 30px;
+    min-width: 170px;
     max-width: 150px;
     height: 80px;
     top: 0px;
     text-align: center;
     overflow-wrap: break-word;
-    left: 35px;
+    left: 27px;
 }
 
 
@@ -204,7 +205,6 @@
 }
 
 .profile-edit-input{
-    background-color: transparent;
     padding: 25px;
     outline: none;
     font-size: 23px;
@@ -322,6 +322,36 @@ box-shadow: -3px 7px 15px -1px #000000;
 
 .delete-icon{
     width: 18px;
+    cursor: pointer;
+}
+
+
+.voltar-container-seguidor{
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.voltar-button{
+    width: 52px;
+    height: 52px;
+    border-radius: 18px;
+    border: none;
+    background-color: #151515;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.voltar-button:hover{
+    background-color: #242424;
+    transform: translateY(-2px);
+}
+
+.voltar-icon{
+    width: 22px;
     cursor: pointer;
 }
 

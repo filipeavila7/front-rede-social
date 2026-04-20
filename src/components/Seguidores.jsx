@@ -60,7 +60,7 @@ function Seguidores({ getSeguidoresUser, onDelete }) {
                             onClick={() => abrirModal(dados.userId)}
                         >
                             <img
-                                src="/x.png"
+                                src="/close.png"
                                 alt="Remover usuario"
                                 className="delete-icon"
                             />

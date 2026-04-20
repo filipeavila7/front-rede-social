@@ -40,7 +40,8 @@
 }
 
 .navLinks li a:hover{
-    font-style: italic;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
 }
 
 

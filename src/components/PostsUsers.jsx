@@ -1,16 +1,19 @@
 import '../styles/Post.css'
 import { useState, useEffect } from 'react'
 import api from '../service/api'
+import { useNavigate } from 'react-router-dom';
 
 let cachedPostsOrder = null;
 
 function PostsUsers() {
+    const navigate = useNavigate()
     const [posts, setPosts] = useState([])
     const [hoveredId, setHoveredId] = useState(null);
 
     async function getAllPosts() {
         const res = await api.get('/posts')
         const postsData = [...res.data]
+        console.log(res.data)
 
         if (cachedPostsOrder) {
             const orderMap = new Map(cachedPostsOrder.map((id, index) => [id, index]))
@@ -43,7 +46,7 @@ function PostsUsers() {
     return (
         <>
             {posts.map((dados) => (
-                <div key={`post-${dados.id}`} className='card-container'>
+                <div onClick={() => navigate(`/feed/${dados.id}`)}  key={`post-${dados.id}`} className='card-container'>
                     <div className="img-post-container" onMouseEnter={() => setHoveredId(dados.id)}
                         onMouseLeave={() => setHoveredId(null)}>
                         <img className='image-post' src={dados.imageUrl} alt="" />
