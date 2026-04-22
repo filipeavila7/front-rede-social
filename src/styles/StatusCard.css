@@ -28,7 +28,7 @@
 
 /* parte que você arrasta */
 ::-webkit-scrollbar-thumb {
-  background-color: #3776613b;
+  background-color: #32185e ;
   border-radius: 10px;
   cursor: pointer;
   
@@ -36,5 +36,5 @@
 
 /* hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #2c5e4d;
+  background: linear-gradient(145deg, #7B3FE4 0%, #cf32f2 100%);
 }

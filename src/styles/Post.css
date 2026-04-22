@@ -89,18 +89,19 @@
 .post-inner-content{
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 12px;
     border-radius: 20px 0px 0px 20px;
     width: 100%;
     padding: 30px;
     background: linear-gradient(145deg, #050505 0%, #111111 100%);
-    
+    -webkit-box-shadow: -8px 0px 17px 0px #000000; 
+box-shadow: -8px 0px 17px 0px #000000;
 }
 
 
 .dono-post-img{
-    width: 90px;
-    height: 90px;
+    width: 80px;
+    height: 80px;
     object-fit: contain;
     border-radius: 100px;
 }
@@ -121,13 +122,28 @@
 }
 
 .dono-nome{
-    font-size: 24px;
+    font-size: 23px;
 }
 
 .seguir-dono{
     width: 100%;
     display: flex;
+    gap: 8px;
     justify-content: flex-end;
+}
+
+.dots-button{
+    background-color: transparent;
+    padding: 5px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 40px;
+    
+}
+
+.dots-img{
+    width: 25px;
 }
 
 .btn-dono-seguir{
@@ -135,14 +151,15 @@
     outline: none;
     border: #7B3FE4 1px solid;
     padding: 10px 15px 10px 15px;
-    font-size: 22px;
-    color: #7B3FE4;
+    font-size: 21px;
+    color: #a57aef;
     border-radius: 10px;
     cursor: pointer;
 }
 
 .post-data{
     color: rgb(187, 188, 188);
+    font-size: 16px;
 }
 
 .dados-post{
@@ -152,7 +169,7 @@
 }
 
 .dados-post-nome{
-    font-size: 28px;
+    font-size: 27px;
     padding: 5px;
 }
 
@@ -160,7 +177,7 @@
     background-color: transparent;
     border: 1px rgb(189, 189, 189) solid;
     width: 100%;
-    padding: 11px;
+    padding: 8px 25px 8px 25px;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -174,7 +191,7 @@
     background-color : #1F1E2C;
     border: 1px #7B3FE4 solid;
     width: 100%;
-    padding: 11px;
+    padding: 11px 25px 11px 25px;
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -187,6 +204,8 @@
 .post-acoes-container{
     display: flex;
     gap: 11px;
+    padding-bottom: 20px;
+    border-bottom: #c4bdd1b5 1px solid;
 }
 
 .salvar-btn{
@@ -205,13 +224,131 @@
 }
 
 .img-acao{
-    width: 25px;
+    width: 22px;
 }
 
 .salve-img{
-    width: 25px;
+    width: 22px;
 }
 
 .liked{
     color: #d894f8;
+}
+
+.count{
+    display: flex;
+    align-items: center;
+    padding-bottom: 5px;
+    border-bottom: 1px solid rgb(52, 48, 48);
+}
+
+.post-comments-container{
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    height: 240px;
+}
+
+.user-comments{
+    display: flex;
+    padding: 15px 0px 10px 0px;
+    gap: 10px;
+    position: relative;
+    border-bottom: 1px solid rgb(52, 48, 48);
+}
+
+
+.user-comment-img{
+    width: 45px;
+    height:45px;
+    object-fit: contain;
+    border-radius: 100px;
+}
+
+.horas{
+    display: flex;
+    gap: 15px;
+    
+}
+
+.comment-date{
+    color: #c6c5c5;
+}
+
+.user-name{
+    font-size: 20px;
+}
+
+.comment-content{
+    font-size: 17px;
+    margin-left: 5px;
+    color: rgb(233, 233, 233);
+    max-width: 650px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.comment-settings{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+   
+    
+    
+}
+
+.dots-comment{
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    left: 700px;
+    cursor: pointer;
+    
+   
+
+}
+
+.comentar-container{
+    height: 40px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+}
+
+.me-img{
+    width: 50px;
+    border-radius: 100px;
+}
+
+.form-comment{
+    width: 100%;
+}
+
+.form-input{
+    width: 100%;
+    background-color: transparent;
+    resize: none;
+    outline: none;
+    display: flex;
+    align-items: center;
+    border-radius: 7px;
+    font-size: 17px;
+    padding: 10px 20px 10px 20px;
+}
+
+.btn-enviar-comentario{
+    border-radius: 10px;
+    padding: 17px;
+    outline: none;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(145deg, #7B3FE4 0%, #cf32f2 100%);
+}
+
+.enviar-icon{
+    width: 25px;
 }
