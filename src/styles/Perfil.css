@@ -1,13 +1,15 @@
 .meu-perfil{
-    background: linear-gradient(145deg, #050505 0%, #111111 100%);
+    background: #101010;
+background: linear-gradient(164deg, rgba(16, 16, 16, 1) 85%, rgba(25, 11, 46, 1) 100%);
     display: flex;
     align-items: center;
     gap: 30px;
-    padding: 20px;
+    padding: 55px 30px 55px 30px;
     border-radius: 30px;
     -webkit-box-shadow: 5px 5px 15px 5px #000000; 
     box-shadow: 5px 5px 15px 5px #000000;
     position: relative;
+    border: 1px solid rgb(88, 88, 88);
 }
 
 
@@ -15,7 +17,7 @@
     font-size: 30px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 20px;
 }
 
 .img-perfil{
@@ -33,6 +35,42 @@
     font-size: 25px;
     align-items: center;
     
+}
+
+.perfil-posts-container{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    
+}
+
+
+.perfil-posts{
+    display: flex;
+    gap: 5px;
+    
+}
+
+.post-p{
+    color: #CBCBCB;
+}
+
+
+.followers-container{
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.seguidores-content{
+    display: flex;
+    gap: 5px;
+    
+}
+
+.profile-icon{
+    width: 20px;
 }
 
 .header-seguidores{
@@ -104,16 +142,34 @@
     background-color: #377661;
 }
 
+.btn-div{
+    display: flex;
+    width: 430px;
+    
+    justify-content: flex-end;
+}
+
 .btn-editar-perfil{
-    width: 200px;
-    background-color: #377661 ;
-    font-size: 23px;
-    border: none;
+    background-color: transparent;
     outline: none;
-    border-radius: 20px;
+    border: #7B3FE4 1px solid;
+    padding: 10px 30px 10px 30px;
+    font-size: 21px;
+    color: #b252f2;
+    border-radius: 10px;
     cursor: pointer;
-    margin-left: 35px;
-    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.edit-icon{
+    width: 24px;
+}
+
+.btn-texto{
+    color: #7B3FE4 ;
 }
 
 .seguindo{
@@ -130,11 +186,11 @@
 }
 
 .more{
-    width: 45px;
+    width: 38px;
     position: absolute;
-    bottom: 25px;
+    bottom: 67px;
     cursor: pointer;
-    left: 21px;
+    left: 167px;
 }
 
 .perfil-layout{

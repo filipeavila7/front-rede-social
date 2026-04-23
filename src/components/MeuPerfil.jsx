@@ -82,18 +82,45 @@ function MeuPerfil() {
               <p>{myProfile.messageStatus}</p>
             </div>
           )}
-          <img className='more' src="/plus.png" alt="" />
+          <img className='more' src="/add.png" alt="" />
           <div className='img-perfil-container'>
             <img className='img-perfil' src={myProfile.imageUrlProfile} alt="" />
           </div>
           <div className="dados-perfil">
-            <p>{myProfile.nome}</p>
+            <h4>{myProfile.nome}</h4>
 
             <div className="seguidores-container">
-              <p>Posts: {totalPost ?? 0}</p>
-              <p onClick={() => navigate('/perfil/followers')} className='seguidores'>Seguidores: {myFollowers ?? 0}</p>
-              <p onClick={() => navigate('/perfil/follows')}  className='seguindo'>Seguindo: {myFollows ?? 0}</p>
-              <button onClick={()=> navigate('/perfil/editar')} className='btn-editar-perfil'>Editar Perfil</button>
+              <div className="perfil-posts-container">
+                <div className="perfil-posts">
+                  <img className='profile-icon' src="/blog.png" alt="" />
+                  <p>{totalPost ?? 0}</p>
+                </div>
+                <p className='post-p'>Posts</p>
+              </div>
+
+              <div onClick={() => navigate('/perfil/follows')} className='followers-container'>
+                <div className='seguidores-content'>
+                  <img className='profile-icon' src="/followers.png" alt="" />
+                  <p>{myFollowers ?? 0}</p>
+                </div>
+                <p className='post-p'>Seguidores</p>
+              </div>
+
+              <div onClick={() => navigate('/perfil/follows')} className='followers-container'>
+                <div className='seguidores-content'>
+                  <img className='profile-icon' src="/follow.png" alt="" />
+                  <p>{myFollows ?? 0}</p>
+                </div>
+                <p className='post-p'>Seguidores</p>
+              </div>
+
+              <div className="btn-div">
+                <button onClick={() => navigate('/perfil/editar')} className='btn-editar-perfil'>
+                  <img className='edit-icon' src="/edit.png" alt="" />
+                  <p className='btn-texto'>Editar perfil</p>
+                </button>
+              </div>
+
             </div>
 
             <div className='my-bio'><p>{myProfile.bio}</p></div>

@@ -244,6 +244,7 @@ box-shadow: -8px 0px 17px 0px #000000;
 
 .post-comments-container{
     overflow-y: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     gap: 7px;
@@ -274,6 +275,7 @@ box-shadow: -8px 0px 17px 0px #000000;
 
 .comment-date{
     color: #c6c5c5;
+    font-size: 15px;
 }
 
 .user-name{

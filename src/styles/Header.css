@@ -1,11 +1,14 @@
 header{
-    background: linear-gradient(180deg, #050505 0%, #0d0d0d 100%);
-    width: 19%;
+    background-color: #101010;
+    width: 17%;
     position: sticky;
+    left: 15px;
     top: 0;
     height: 100vh;
-    padding: 50px 0px 50px 30px;
-    box-shadow: 4px 3px 17px 0px #000000;
+    border-radius: 20px;
+
+    padding: 50px 0px 50px 15px;
+    border: 1px solid rgb(70, 70, 70);
 }
 
 

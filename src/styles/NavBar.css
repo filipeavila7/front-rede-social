@@ -20,35 +20,35 @@
 .navLinks li a{
     text-decoration: none;
     color: white;
-    font-size: 23px;
+    font-size: 20px;
     display: flex;
     align-items: center;
     gap: 20px;
     width: 100%;
-    padding: 30px 0 20px 0;
+    padding: 20px 0 20px 10px;
 }
 
 .navLinks li p{
     text-decoration: none;
-    color: white;
-    font-size: 23px;
+    color: #7B3FE4;
+    font-size: 19px;
     display: flex;
     align-items: center;
     gap: 20px;
     width: 100%;
-    padding: 20px 0 20px 0;
+    padding: 20px 0 20px 10px;
 }
 
 .navLinks li a:hover{
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
+    background-color: #1e1a2a;
+    border-radius: 10px;
 }
 
 
 
 
 .navLinks li img{
-    width: 30px;
+    width: 22px;
 
 }
 
@@ -56,8 +56,10 @@
 
 .navLinks li a.active{
     text-decoration: none;
-    color: #377661;
+    color: #7B3FE4;
     font-weight: 700;
-}
+    border-radius: 10px;
+    background-color: #1e1a2a;
+}   
 
 
