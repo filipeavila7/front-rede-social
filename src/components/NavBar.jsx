@@ -7,13 +7,13 @@ function NavBar() {
     <nav className="navBar">
       <ul className="navLinks">
         <li>
-           <p>Menu</p>
+          <p>Menu</p>
         </li>
         <li>
           <NavLink to="/feed" className={({ isActive }) => (isActive ? "active" : "")}>
             {({ isActive }) => (
               <>
-                <img src={isActive ? "/feedActive.png" : "/feed.png"} alt="" />
+                <img src={isActive ? "/homeA.png" : "/home.png"} alt="" />
                 Feed
               </>
             )}
@@ -23,7 +23,7 @@ function NavBar() {
           <NavLink to="/contatos" className={({ isActive }) => (isActive ? "active" : "")}>
             {({ isActive }) => (
               <>
-                <img src={isActive ? "/contatoActive.png" : "/contato.png"} alt="" />
+                <img src={isActive ? "/planeB.png" : "/plane.png"} alt="" />
                 Contatos
               </>
             )}
@@ -33,7 +33,7 @@ function NavBar() {
           <NavLink to="/posts" className={({ isActive }) => (isActive ? "active" : "")}>
             {({ isActive }) => (
               <>
-                <img src={isActive ? "/postActive.png" : "/post.png"} alt="" />
+                <img src={isActive ? "/moreA.png" : "/more.png"} alt="" />
                 Posts
               </>
             )}
@@ -43,22 +43,27 @@ function NavBar() {
           <NavLink to="/perfil" className={({ isActive }) => (isActive ? "active" : "")}>
             {({ isActive }) => (
               <>
-                <img src={isActive ? "/userActive.png" : "/user.png"} alt="" />
+                <img src={isActive ? "/userA.png" : "/user.png"} alt="" />
                 Perfil
               </>
             )}
           </NavLink>
         </li>
-        <li>
+        <li className='cog'>
           <NavLink to="/config" className={({ isActive }) => (isActive ? "active" : "")}>
             {({ isActive }) => (
               <>
-                <img src={isActive ? "/cog2.png" : "/cog.png"} alt="" />
+                <img src={isActive ? "/cogA.png" : "/cog.png"} alt="" />
                 Configuração
               </>
             )}
           </NavLink>
         </li>
+        
+        <button className='btn-sair'>
+          <img className='sair-icon' src='/sair.png'/>
+          Sair
+        </button>
       </ul>
     </nav>
   );

@@ -1,6 +1,7 @@
 .navBar{
     display: flex;
     width: 100%;
+    flex-direction: column;
 
     
 }
@@ -11,6 +12,7 @@
     justify-content: center;
     list-style: none;
     width: 100%;
+    gap: 5px;
 }
 
 .navLinks li{
@@ -20,12 +22,17 @@
 .navLinks li a{
     text-decoration: none;
     color: white;
-    font-size: 20px;
+    font-size: 19px;
     display: flex;
     align-items: center;
     gap: 20px;
     width: 100%;
     padding: 20px 0 20px 10px;
+}
+
+.navLinks .cog{
+    border-top: 1px solid rgb(70, 70, 70);
+    margin-top: 20px;
 }
 
 .navLinks li p{
@@ -48,18 +55,38 @@
 
 
 .navLinks li img{
-    width: 22px;
+    width: 21px;
 
 }
 
 
 
 .navLinks li a.active{
+    border-left: 4px solid #7B3FE4;
     text-decoration: none;
     color: #7B3FE4;
     font-weight: 700;
-    border-radius: 10px;
+    border-radius: 0px 10px 0px 0;
     background-color: #1e1a2a;
 }   
 
 
+
+.btn-sair{
+    margin-top: 82px;
+    background-color: transparent;
+    outline: none;
+    border: #7B3FE4 1px solid;
+    padding: 10px 0px 10px 20px;
+    font-size: 21px;
+    color: #7B3FE4;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sair-icon{
+    width: 20px;
+}

@@ -137,7 +137,7 @@ function PostContent() {
                                     <p className={like ? "liked" : "not-liked"}>{post.likesCount}</p>
                                 </button>
                                 <button className="acao-post-btn">
-                                    <img src="/comment3.png" alt="" className="img-acao" />
+                                    <img src="/comment2.png" alt="" className="img-acao" />
                                     <p>{post.commentsCount}</p>
                                 </button>
                                 <button className="acao-post-btn">
