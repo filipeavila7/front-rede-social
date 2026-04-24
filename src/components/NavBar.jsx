@@ -66,7 +66,7 @@ function NavBar() {
               {({ isActive }) => (
                 <>
                   <img src={isActive ? "/cogA.png" : "/cog.png"} alt="" />
-                  Configuracao
+                  Configuração
                 </>
               )}
             </NavLink>

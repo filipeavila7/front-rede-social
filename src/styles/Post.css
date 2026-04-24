@@ -226,7 +226,7 @@ box-shadow: -8px 0px 17px 0px #000000;
 
 .salvar-btn{
     width: 120px;
-     background-color: transparent;
+    background-color: transparent;
     border: 1px rgb(189, 189, 189) solid;
     width: 15%;
     padding: 11px;
@@ -311,7 +311,10 @@ box-shadow: -8px 0px 17px 0px #000000;
     display: flex;
     justify-content: flex-end;
     align-items: center;
+    
+    position: absolute;
    
+    width: 100%;
     
     
 }
@@ -319,8 +322,7 @@ box-shadow: -8px 0px 17px 0px #000000;
 .dots-comment{
     width: 22px;
     height: 22px;
-    position: absolute;
-    left: 700px;
+    
     cursor: pointer;
     
    
@@ -361,6 +363,7 @@ box-shadow: -8px 0px 17px 0px #000000;
     padding: 17px;
     outline: none;
     border: none;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;

@@ -84,10 +84,14 @@ function MeuPerfil() {
           )}
           <img className='more' src="/add.png" alt="" />
           <div className='img-perfil-container'>
-            <img className='img-perfil' src={myProfile.imageUrlProfile} alt="" />
+            <img className='img-perfil' src={myProfile.imageUrlProfile ? myProfile.imageUrlProfile : 'null.png'} alt="" />
           </div>
           <div className="dados-perfil">
-            <h4>{myProfile.nome}</h4>
+            <div className='perfil-name'>
+              <h4>{myProfile.nome}</h4>
+              <p className='userName'>{myProfile.userName}</p>
+            </div>
+            
 
             <div className="seguidores-container">
               <div className="perfil-posts-container">

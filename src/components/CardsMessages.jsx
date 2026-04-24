@@ -58,7 +58,7 @@ function CardsMessages() {
       });
       inputMessage.current.value = "";
       getMessages();
-    } catch (error) {}
+    } catch (error) { }
   }
 
   useEffect(() => {
@@ -106,9 +106,9 @@ function CardsMessages() {
           const isMine = dados.senderId === meId;
           const time = dados.createdAt
             ? new Date(dados.createdAt).toLocaleTimeString("pt-BR", {
-                hour: "2-digit",
-                minute: "2-digit",
-              })
+              hour: "2-digit",
+              minute: "2-digit",
+            })
             : "";
 
           return (
@@ -125,11 +125,17 @@ function CardsMessages() {
       </div>
       <div className="input-msg-container">
         <form onSubmit={postMessage} className="msg-form" action="">
-          <textarea placeholder="Escreva sua mensagem" className="input-msg" type="text" ref={inputMessage} />
-          <button className="btn-msg" type="submit">
-            <img className="btn-icon" src="/send.png" alt="" />
-          </button>
+          <textarea onKeyDown={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              postMessage(e);
+            }
+          }} placeholder="Escreva sua mensagem" className="input-msg" type="text" ref={inputMessage} />
+
         </form>
+        <button onClick={postMessage} className="btn-msg" type="button">
+          <img className="btn-icon" src="/plane.png" alt="" />
+        </button>
       </div>
     </div>
   );

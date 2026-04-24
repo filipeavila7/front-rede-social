@@ -1,6 +1,6 @@
 import "../styles/Post.css";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import api from "../service/api";
 function PostContent() {
     const { postId } = useParams();
@@ -8,6 +8,7 @@ function PostContent() {
     const [like, setLike] = useState(false)
     const [comments, setComments] = useState([])
     const [myProfile, setMyprofile] = useState(null)
+    const contentComment = useRef()
 
     async function getPost() {
         try {
@@ -19,9 +20,45 @@ function PostContent() {
             console.log(error);
         }
 
+    }
 
+    async function subComment() {
+        try {
+            const res = await api.post(`/posts/${postId}/comments`, {
+                content : contentComment.current.value
+            } );
+            getPost()
+            getPostCommented()
+            contentComment.current.value = ""
+        } catch (error) {
+            console.log(error);
+        }
 
     }
+
+    async function postLike() {
+        try {
+            const res = await api.post(`/posts/${postId}/likes`);
+            getPostLiked()
+            getPost()
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    async function removePostLike() {
+        try {
+            const res = await api.delete(`/posts/${postId}/likes`);
+            getPostLiked()
+            getPost()
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+
 
     async function getPostLiked() {
         try {
@@ -55,6 +92,14 @@ function PostContent() {
             console.log(res.data)
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    async function handleLike() {
+        if (like) {
+            await removePostLike();
+        } else {
+            await postLike();
         }
     }
 
@@ -132,7 +177,7 @@ function PostContent() {
                             <p className="dados-post-nome">{post.content}</p>
 
                             <div className="post-acoes-container">
-                                <button className={like ? "acao-post-btn-liked" : "acao-post-btn"}>
+                                <button  onClick={handleLike} className={like ? "acao-post-btn-liked" : "acao-post-btn"}>
                                     <img src={like ? '/liked.png' : '/like.png'} alt="" className="img-acao" />
                                     <p className={like ? "liked" : "not-liked"}>{post.likesCount}</p>
                                 </button>
@@ -159,7 +204,7 @@ function PostContent() {
                             {comments.map((dados) => (
                                 <div key={dados.id} className="user-comments">
                                     <div className="user-comment-img-container">
-                                        <img className="user-comment-img" src={dados.user.profileImageUrl} alt="" />
+                                        <img className="user-comment-img" src={dados.user.profileImageUrl ? dados.user.profileImageUrl : '/null.png'} alt="" />
                                     </div>
                                     <div className="user-comment-dados-container">
                                         <div className="horas">
@@ -171,6 +216,7 @@ function PostContent() {
                                         <p className="comment-content">{dados.content}</p>
                                     </div>
                                     <div className="comment-settings">
+                                       
                                         <img className="dots-comment" src="/dots.png" alt="" />
                                     </div>
                                 </div>
@@ -179,12 +225,12 @@ function PostContent() {
                         <div className="comentar-container">
                             <div className="me-img-container">
                                 <img className="me-img" src={myProfile.
-                                    imageUrlProfile} alt="" />
+                                    imageUrlProfile ? myProfile.imageUrlProfile : '/null.png'} alt="" />
                             </div>
                             <form className="form-comment" action="">
-                                <textarea placeholder="Adcione um comentário.."  className="form-input" name="" id=""></textarea>
+                                <textarea placeholder="Adcione um comentário.." ref={contentComment}  className="form-input" name="content" id="content"></textarea>
                             </form>
-                            <button className="btn-enviar-comentario">
+                            <button onClick={() => subComment()} className="btn-enviar-comentario">
                                 <img className="enviar-icon" src="/plane.png" alt="" />
                             </button>
                         </div>

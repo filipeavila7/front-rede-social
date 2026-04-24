@@ -14,10 +14,22 @@ background: linear-gradient(164deg, rgba(16, 16, 16, 1) 85%, rgba(25, 11, 46, 1)
 
 
 .dados-perfil{
-    font-size: 30px;
+    font-size: 39px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+.perfil-name{
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    
+}
+
+.userName{
+    color: #CBCBCB;
+   
 }
 
 .img-perfil{

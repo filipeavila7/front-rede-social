@@ -88,7 +88,7 @@ function PostsUsers() {
                                 <p className='tool-count'>{dados.likesCount}</p>
                             </div>
                             <div className="comment-container">
-                                <img className='tool-img' src="/comment3.png" alt="" />
+                                <img className='tool-img' src="/comment2.png" alt="" />
                                 <p className='tool-comment'>{dados.commentsCount}</p>
                             </div>
                             <img className="tool-img" src="/save.png" alt="" />

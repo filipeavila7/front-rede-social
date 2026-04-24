@@ -1,15 +1,22 @@
 import "../styles/Login.css";
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Fundo from "../components/Fundo";
 import Botao from "../components/Botao";
 
 function Login() {
   const navigate = useNavigate(); // trocar de pagina
+  const location = useLocation();
   const [email, setEmail] = useState(""); // gurdar o email que o user digitou
   const [senha, setSenha] = useState(""); // gurdar a sebha
   const [loading, setLoading] = useState(false); // loading
   const [erro, setErro] = useState(""); // msg de erro
+
+  useEffect(() => {
+    if (location.state?.sessionMessage) {
+      setErro(location.state.sessionMessage);
+    }
+  }, [location.state]);
 
   async function handleSubmit(e) {
     e.preventDefault(); // impede a pagina de atualizar

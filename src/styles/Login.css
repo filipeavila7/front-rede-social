@@ -57,9 +57,14 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    position: relative;
 
-   
+}
 
+.voltar-icon-c{
+    width: 23px;
+    position: absolute;
+    top: 30px;
 }
 
 .container{   
@@ -77,11 +82,33 @@
     
 }
 
+.container-c{   
+    border-radius: 10px;
+    width: 475px;
+    height: 590px;
+    border: 2px solid rgb(255, 255, 255, .2);
+    box-shadow: 0 0px 10px rgba(0, 0, 0, 0.4);
+    padding: 10px 30px 30px 30px;
+    background-color: #100F18;
+    backdrop-filter:blur(30px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+}
+
 .container h1{
     text-align: center;
     padding-bottom: 10px;
     
 }
+
+.container-c h1{
+    text-align: center;
+    padding-bottom: 10px;
+    
+}
+
 
 .form{
     display: flex;

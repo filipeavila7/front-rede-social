@@ -112,7 +112,7 @@ function MeuPerfilEditar() {
           <div className="img-edit-container">
             <img
               className="img-edit"
-              src={previewImagem || imageUrlProfile || myProfile.imageUrlProfile}
+              src={previewImagem || imageUrlProfile || myProfile.imageUrlProfile || '/null.png' }
               alt=""
             />
             <input onChange={handleImageChange} type="file" />
