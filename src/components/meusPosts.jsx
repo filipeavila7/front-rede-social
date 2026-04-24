@@ -70,7 +70,7 @@ function MeusPosts() {
                             <p className='tool-comment'>{dados.commentsCount}</p>
 
                         </div>
-                        <img className="tool-img" src="/save.png" alt="" />
+                        
                     </div>
                     <div className="dia-post">
                         <div className="dia-div">

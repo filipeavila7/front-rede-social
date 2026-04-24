@@ -34,18 +34,19 @@
 }
 
 .titulo-a{
-    font-size: 45px;
+    font-size: 52px;
     color:  #aa2dfd;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 .titulos{
-    font-size: 45px;
+    font-size: 52px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
     
 }
 
 .midia-p p{
+  font-size: 21px;
    color: rgb(198, 196, 196);
    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
 }

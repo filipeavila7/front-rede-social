@@ -197,6 +197,8 @@ background: linear-gradient(164deg, rgba(16, 16, 16, 1) 85%, rgba(25, 11, 46, 1)
    display: flex;
    flex-direction: column;
    gap: 20px;
+   align-items: center;
+   
    
     
 }
@@ -205,25 +207,23 @@ background: linear-gradient(164deg, rgba(16, 16, 16, 1) 85%, rgba(25, 11, 46, 1)
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 20px;
-     gap: 20px;
-    padding: 25px 10px 25px 10px;
-   
+    gap: 20px;
+    padding: 25px 0px 25px 0px;
+    
 }
 
 .message-status-perfil{
     border-radius: 30px;
-    background-color: #377661;
+    background: linear-gradient(145deg, #7B3FE4 0%, #bc23f3 100%);
     padding: 10px;
     position: absolute;
     border-radius: 30px;
     min-width: 170px;
-    max-width: 150px;
-    height: 80px;
-    top: 0px;
+    height: 90px;
+    top: 30px;
     text-align: center;
     overflow-wrap: break-word;
-    left: 27px;
+    left: 38px;
 }
 
 
