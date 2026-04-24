@@ -46,7 +46,7 @@ function NavBar() {
               {({ isActive }) => (
                 <>
                   <img src={isActive ? "/moreA.png" : "/more.png"} alt="" />
-                  Posts
+                  Novo
                 </>
               )}
             </NavLink>

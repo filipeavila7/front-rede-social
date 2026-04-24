@@ -25,8 +25,8 @@ function PostContent() {
     async function subComment() {
         try {
             const res = await api.post(`/posts/${postId}/comments`, {
-                content : contentComment.current.value
-            } );
+                content: contentComment.current.value
+            });
             getPost()
             getPostCommented()
             contentComment.current.value = ""
@@ -177,7 +177,7 @@ function PostContent() {
                             <p className="dados-post-nome">{post.content}</p>
 
                             <div className="post-acoes-container">
-                                <button  onClick={handleLike} className={like ? "acao-post-btn-liked" : "acao-post-btn"}>
+                                <button onClick={handleLike} className={like ? "acao-post-btn-liked" : "acao-post-btn"}>
                                     <img src={like ? '/liked.png' : '/like.png'} alt="" className="img-acao" />
                                     <p className={like ? "liked" : "not-liked"}>{post.likesCount}</p>
                                 </button>
@@ -201,26 +201,38 @@ function PostContent() {
                         </div>
                         <div className="post-comments-container">
 
-                            {comments.map((dados) => (
-                                <div key={dados.id} className="user-comments">
-                                    <div className="user-comment-img-container">
-                                        <img className="user-comment-img" src={dados.user.profileImageUrl ? dados.user.profileImageUrl : '/null.png'} alt="" />
-                                    </div>
-                                    <div className="user-comment-dados-container">
-                                        <div className="horas">
-                                            <p className="user-name">{dados.user.nome}</p>
-                                            <p className="comment-date">
-                                                {formatRelativeDate(dados.createdAt)}
-                                            </p>
-                                        </div>
-                                        <p className="comment-content">{dados.content}</p>
-                                    </div>
-                                    <div className="comment-settings">
-                                       
-                                        <img className="dots-comment" src="/dots.png" alt="" />
-                                    </div>
+                            {comments.length === 0 ? (
+                                <div className="no-comments">
+                                    <img className="mascote-null" src="/sad.png" alt="Sem comentários" />
+                                    <p className="null">Nenhum comentário ainda</p>
                                 </div>
-                            ))}
+                            ) : (
+                                comments.map((dados) => (
+                                    <div key={dados.id} className="user-comments">
+                                        <div className="user-comment-img-container">
+                                            <img
+                                                className="user-comment-img"
+                                                src={dados.user.profileImageUrl ? dados.user.profileImageUrl : '/null.png'}
+                                                alt=""
+                                            />
+                                        </div>
+
+                                        <div className="user-comment-dados-container">
+                                            <div className="horas">
+                                                <p className="user-name">{dados.user.nome}</p>
+                                                <p className="comment-date">
+                                                    {formatRelativeDate(dados.createdAt)}
+                                                </p>
+                                            </div>
+                                            <p className="comment-content">{dados.content}</p>
+                                        </div>
+
+                                        <div className="comment-settings">
+                                            <img className="dots-comment" src="/dots.png" alt="" />
+                                        </div>
+                                    </div>
+                                ))
+                            )}
                         </div>
                         <div className="comentar-container">
                             <div className="me-img-container">
@@ -228,7 +240,7 @@ function PostContent() {
                                     imageUrlProfile ? myProfile.imageUrlProfile : '/null.png'} alt="" />
                             </div>
                             <form className="form-comment" action="">
-                                <textarea placeholder="Adcione um comentário.." ref={contentComment}  className="form-input" name="content" id="content"></textarea>
+                                <textarea placeholder="Adcione um comentário.." ref={contentComment} className="form-input" name="content" id="content"></textarea>
                             </form>
                             <button onClick={() => subComment()} className="btn-enviar-comentario">
                                 <img className="enviar-icon" src="/plane.png" alt="" />

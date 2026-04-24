@@ -65,6 +65,7 @@
     width: 23px;
     position: absolute;
     top: 30px;
+    cursor: pointer;
 }
 
 .container{   
@@ -202,6 +203,7 @@
 }
 
 .acao-texto{
+    
     font-size: 18px;
     color: rgb(204, 202, 202);
 }
@@ -209,6 +211,7 @@
 .acao-texto-e{
     font-size: 18px;
     color: #aa2dfd;
+    cursor: pointer;
     
 }
 

@@ -267,6 +267,22 @@ box-shadow: -8px 0px 17px 0px #000000;
     height: 240px;
 }
 
+
+
+.no-comments{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+.null{
+    color: #E2C2F0;
+}
+.mascote-null{
+    width: 185px;
+}
+
 .user-comments{
     display: flex;
     padding: 15px 0px 10px 0px;
@@ -372,4 +388,20 @@ box-shadow: -8px 0px 17px 0px #000000;
 
 .enviar-icon{
     width: 25px;
+}
+
+.empty-posts{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.empty-text{
+   color:  #E2C2F0;
+   font-size: 20px;
+   padding-bottom: 10px;
+}
+
+.empty-img{
+    width: 300px;
 }
