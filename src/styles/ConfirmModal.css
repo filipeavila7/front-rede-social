@@ -2,12 +2,13 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   background-color: rgba(0,0,0,0.5);
   display: flex;
   justify-content:  center;
   align-items: center;
+  z-index: 9999;
+  padding: 24px;
 }
 
 .modal-content{
@@ -19,7 +20,9 @@
     gap: 80px;
     padding: 40px;
     border-radius: 30px;
-    background: linear-gradient(180deg, #050505 0%, #0d0d0d 100%);
+    background: #101010;
+    background: linear-gradient(164deg, rgba(16, 16, 16, 1) 85%, rgba(25, 11, 46, 1) 100%);
+    width: min(100%, 560px);
 }
 
 .btn-confirm-container{

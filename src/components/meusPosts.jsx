@@ -51,7 +51,7 @@ function MeusPosts() {
         fetchData()
     }, [])
 
-    // 🔥 LOADING
+    
     if (loading) {
         return <div>Carregando...</div>
     }
@@ -61,9 +61,14 @@ function MeusPosts() {
         return (
             <div className="empty-posts">
                 <img src="/happy.png" alt="Sem posts" className="empty-img" />
-                <div>
-                    <h1 className="empty-text">Ops, parece que você ainda não postou nenhuma arte</h1>
-                    <h1 className="empty-text">Clique na aba "Criar" para começar</h1>
+                <div className="empty-content">
+                    <h1 className="empty-text">Sua galeria ainda está vazia</h1>
+                    <p className="empty-text-p">Compartilhe a sua primeira arte com o mundo</p>
+                    <p className="empty-text-p">e inspire outras pessoas</p>
+                    <button className="btn-mascote">
+                        <img className="btn-mascote-icon" src="" alt="" />
+                        <p>Criar primeira arte</p>
+                    </button>
                 </div>
                 
             </div>

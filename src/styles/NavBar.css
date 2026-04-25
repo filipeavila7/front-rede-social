@@ -2,8 +2,14 @@
     display: flex;
     width: 100%;
     flex-direction: column;
+    position: relative;
 
     
+}
+.logo-nav{
+    position: absolute;
+    width: 60px;
+    bottom: 60px;
 }
 
 .navLinks{

@@ -17,6 +17,7 @@ function NavBar() {
   return (
     <>
       <nav className="navBar">
+      <img className="logo-nav" src="" alt="" />
         <ul className="navLinks">
           <li>
             <p>Menu</p>

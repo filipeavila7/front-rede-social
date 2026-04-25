@@ -394,14 +394,52 @@ box-shadow: -8px 0px 17px 0px #000000;
     display: flex;
     align-items: center;
     gap: 30px;
+    background: #101010;
+    background: url('/fundoM.png') center/cover no-repeat;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 55px 95px 55px 95px;
+    border-radius: 30px;
+    width: 100%;
+    position: relative;
+    border: 1px solid rgb(88, 88, 88);
+}
+
+.empty-content{
+    display: flex;
+    flex-direction: column;
+    
 }
 
 .empty-text{
-   color:  #E2C2F0;
-   font-size: 20px;
+   font-size: 32px;
    padding-bottom: 10px;
+   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+.empty-text-p{
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 .empty-img{
     width: 300px;
+}
+
+
+.btn-mascote{
+  margin-top: 35px;
+  padding: 13px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 18px;
+  position: relative;
+  color: white;
+  background: linear-gradient(145deg, #7B3FE4 0%, #bc23f3 100%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
