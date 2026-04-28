@@ -89,7 +89,7 @@ function MeuPerfil() {
           <div className="dados-perfil">
             <div className='perfil-name'>
               <h4>{myProfile.nome}</h4>
-              <p className='userName'>{myProfile.userName}</p>
+              <p className='userName'>@{myProfile.userName}</p>
             </div>
             
 

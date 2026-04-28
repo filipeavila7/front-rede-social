@@ -1,47 +1,50 @@
 import '../styles/Post.css'
-import { useState, useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import api from '../service/api'
-import { useNavigate } from 'react-router-dom';
-
-let cachedPostsOrder = null;
+import { useFeedStore } from '../store/feedStore'
 
 function PostsUsers() {
     const navigate = useNavigate()
-    const [posts, setPosts] = useState([])
-    const [like, setLike] = useState({})
 
+    const {
+        posts,
+        likes,
+        setLikes,
+        page,
+        setPage,
+        hasMore,
+        setHasMore,
+        seed,
+        setSeed,
+        scrollY,
+        setScrollY,
+        isInitialized,
+        setInitialized,
+        loading,
+        setLoading,
+        mergePosts
+    } = useFeedStore()
 
-    async function getAllPosts() {
-        const res = await api.get('/posts')
-        const postsData = [...res.data]
-        console.log(res.data)
+    const observerRef = useRef(null)
+    const sentinelRef = useRef(null)
+    const isFetchingRef = useRef(false)
+    const requestedPagesRef = useRef(new Set())
 
-        if (cachedPostsOrder) {
-            const orderMap = new Map(cachedPostsOrder.map((id, index) => [id, index]))
+    const hasMoreRef = useRef(hasMore)
+    const seedRef = useRef(seed)
 
-            postsData.sort((a, b) => {
-                const aIndex = orderMap.has(a.id) ? orderMap.get(a.id) : Number.MAX_SAFE_INTEGER
-                const bIndex = orderMap.has(b.id) ? orderMap.get(b.id) : Number.MAX_SAFE_INTEGER
-                return aIndex - bIndex
-            })
-        } else {
-            postsData.sort(() => Math.random() - 0.5)
-            cachedPostsOrder = postsData.map((post) => post.id)
-        }
-
-        setPosts(postsData)
-
-    }
+    hasMoreRef.current = hasMore
+    seedRef.current = seed
 
     const formatDate = (date) => {
-        if (!date) return "";
-
+        if (!date) return ""
         return new Date(date).toLocaleDateString("pt-BR", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
-        });
-    };
+        })
+    }
 
     async function getPostLiked(postId) {
         try {
@@ -52,51 +55,128 @@ function PostsUsers() {
         }
     }
 
-    useEffect(() => {
-        async function fetchData() {
-            const res = await api.get('/posts')
-            setPosts(res.data)
+    async function fetchPosts(pageNumber) {
+        if (isFetchingRef.current || !hasMoreRef.current) return
+        if (requestedPagesRef.current.has(pageNumber)) return
 
-            const likesMap = {}
+        requestedPagesRef.current.add(pageNumber)
+        isFetchingRef.current = true
+        setLoading(true)
 
-            for (let post of res.data) {
-                const liked = await getPostLiked(post.id)
-                likesMap[post.id] = liked
+        try {
+            const params = { page: pageNumber, size: 12 }
+            if (seedRef.current !== null) params.seed = seedRef.current
+
+            const res = await api.get('/posts', { params })
+
+            const returnedSeed = res.headers['x-feed-seed']
+            if (returnedSeed && seedRef.current === null) {
+                setSeed(returnedSeed)
+                seedRef.current = returnedSeed
             }
 
-            setLike(likesMap)
-        }
+            const newPosts = res.data.content
+            const isLast = res.data.last
 
-        fetchData()
+            const likedResults = await Promise.all(
+                newPosts.map(post => getPostLiked(post.id))
+            )
+
+            const likesMap = {}
+            newPosts.forEach((post, index) => {
+                likesMap[post.id] = likedResults[index]
+            })
+
+            mergePosts(newPosts)
+            setLikes(prev => ({ ...prev, ...likesMap }))
+
+            hasMoreRef.current = !isLast
+            setHasMore(!isLast)
+        } catch (err) {
+            console.log(err)
+        } finally {
+            isFetchingRef.current = false
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        if (!isInitialized) {
+            fetchPosts(0)
+            setInitialized(true)
+        } else {
+            setTimeout(() => {
+                window.scrollTo(0, scrollY)
+            }, 100)
+        }
     }, [])
 
+    useEffect(() => {
+        if (page > 0) {
+            fetchPosts(page)
+        }
+    }, [page])
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrollY(window.scrollY)
+        }
 
+        window.addEventListener('scroll', handleScroll)
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [])
 
+    useEffect(() => {
+        observerRef.current = new IntersectionObserver((entries) => {
+            const first = entries[0]
 
+            if (
+                first.isIntersecting &&
+                hasMoreRef.current &&
+                !isFetchingRef.current
+            ) {
+                setPage(prev => prev + 1)
+            }
+        }, { threshold: 0.2 })
 
+        if (sentinelRef.current) {
+            observerRef.current.observe(sentinelRef.current)
+        }
+
+        return () => observerRef.current?.disconnect()
+    }, [])
 
     return (
         <>
             {posts.map((dados) => (
-                <div onClick={() => navigate(`/feed/${dados.id}`)} key={`post-${dados.id}`} className='card-container'>
-                    <div className="img-post-container" >
+                <div
+                    onClick={() => navigate(`/feed/${dados.id}`)}
+                    key={`post-${dados.id}`}
+                    className='card-container'
+                >
+                    <div className="img-post-container">
                         <img className='image-post' src={dados.imageUrl} alt="" />
+
                         <div className="tooltip">
                             <div className="like-container">
-                                <img className='tool-img' src={like[dados.id] ? '/liked.png' : '/like.png'} alt="" />
+                                <img
+                                    className='tool-img'
+                                    src={likes[dados.id] ? '/liked.png' : '/like.png'}
+                                    alt=""
+                                />
                                 <p className='tool-count'>{dados.likesCount}</p>
                             </div>
+
                             <div className="comment-container">
                                 <img className='tool-img' src="/comment2.png" alt="" />
                                 <p className='tool-comment'>{dados.commentsCount}</p>
                             </div>
+
                             <img className="tool-img" src="/save.png" alt="" />
                         </div>
+
                         <div className="dia-post">
-                            <div className="dia-div">
-                                {formatDate(dados.createdAt)}
-                            </div>
+                            <div className="dia-div">{formatDate(dados.createdAt)}</div>
                             <div className="dots-div">
                                 <img src="/dots.png" alt="" className="tool-img" />
                             </div>
@@ -105,6 +185,43 @@ function PostsUsers() {
                 </div>
             ))}
 
+            <div ref={sentinelRef} style={{ height: '10px' }} />
+
+            {loading && (
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '7px',
+                    padding: '25px'
+                }}>
+                    {[0, 1, 2].map(i => (
+                        <span
+                            key={i}
+                            style={{
+                                width: '9px',
+                                height: '9px',
+                                borderRadius: '50%',
+                                background: '#999',
+                                display: 'inline-block',
+                                animation: `bounce 0.8s ease-in-out ${i * 0.15}s infinite`
+                            }}
+                        />
+                    ))}
+                </div>
+            )}
+
+            <style>{`
+                @keyframes bounce {
+                    0%,100%{
+                        transform: translateY(0);
+                        opacity:0.3;
+                    }
+                    50%{
+                        transform: translateY(-8px);
+                        opacity:1;
+                    }
+                }
+            `}</style>
         </>
     )
 }
