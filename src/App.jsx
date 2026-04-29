@@ -6,7 +6,7 @@ import RequireAuth from "./components/RequireAuth";
 import Feed from "./pages/Feed";
 import Perfil from "./pages/Perfil";
 import Contatos from "./pages/Contatos";
-import Posts from "./pages/Posts";
+import CriarPostPage from "./pages/CriarPostPage";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
 import Messages from "./pages/Messages";
@@ -35,7 +35,7 @@ function App() {
             <Route path="perfil" element={<Perfil />} />
             <Route path="perfil/editar" element={<PerfilEditar />} />
             <Route path="contatos" element={<Contatos />} />
-            <Route path="posts" element={<Posts />} />
+            <Route path="posts" element={<CriarPostPage />} />
             <Route path="config" element={<Config />} />
             <Route path="perfil/followers" element={<SeguidoresPage />} />
             <Route path="perfil/follows" element={<SeguindoPage />} />
