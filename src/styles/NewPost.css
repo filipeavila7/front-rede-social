@@ -1,21 +1,24 @@
-.new-main{
-    padding-top: 50px;
-    padding-bottom: 90px;
+.criar-layout{
+    display: flex;
+    justify-content: space-between;
+    padding-top: 35px;
 }
-
+.sub{
+    padding-top: 10px;
+    color: #9a9696;
+}
 .criar-left{
     
-    height: 100vh;  
+   
     display: flex;
     flex-direction: column;
     gap: 12px;
     
-    
-    width: 55%;
+    width: 58%;
 }
 
 .criar-upload{
-    background-color: #07070c;
+    background-color: #0E0E17;
     border: 1px solid rgb(70, 70, 70);
     width: 100%;
     padding: 25px;
@@ -70,6 +73,17 @@
     gap: 8px;
 }
 
+.upload-label-preview{
+    padding: 14px;
+}
+
+.upload-preview{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 16px;
+}
+
 
 
 .upload-label h3{
@@ -92,12 +106,13 @@
 }
 
 .descricao-box{
-     background-color: #07070c;
+     background-color: #0E0E17;
     border: 1px solid rgb(70, 70, 70);
     width: 100%;
     height: 100%;
     border-radius: 20px;
     padding: 25px;
+
 }
 
 .descricao-form{
@@ -113,6 +128,7 @@
     font-size: 20px;
     padding: 10px;
     outline: none;
+    border-radius: 7px;
 
 }
 
@@ -133,14 +149,171 @@
     padding: 13px 13px 13px 13px;
     background-color: transparent;
     height: 50px;
+    border-radius: 10px;
     outline: none;
     border: 1px solid rgb(70, 70, 70);
+    cursor: pointer;
 }
 
 .btn-publicar{
     width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    justify-content: center;
+    background: linear-gradient(145deg, #7B3FE4 0%, #bc23f3 100%);
     padding: 13px 25px 13px 25px;
-    background-color: transparent;
     height: 50px;
+    border-radius: 10px;
     border: 1px solid rgb(70, 70, 70);
+}
+
+.publicar-icon{
+    width: 20px;
+}
+
+
+.criar-right{
+    width: 40%;
+   
+}
+
+
+.detalhes-box{
+    background-color: #0E0E17;
+    border: 1px solid rgb(70, 70, 70);
+    width: 100%;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    height: 406px;
+}
+
+.detalhes-form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 20px;
+}
+
+.detalhes-input{
+    background-color: transparent;
+    resize: none;
+    width: 100%;
+    border: 1px solid rgb(70, 70, 70);
+    font-size: 20px;
+    padding: 10px;
+    outline: none;
+    border-radius: 7px;
+}
+
+.categoria-select{
+    background-color: transparent;
+    resize: none;
+    width: 100%;
+    border: 1px solid rgb(70, 70, 70);
+    font-size: 20px;
+    padding: 10px;
+    outline: none;
+    border-radius: 7px;
+}
+
+.tags-box{
+    background-color: #0E0E17;
+    border: 1px solid rgb(70, 70, 70);
+    width: 100%;
+    padding: 25px 0px 25px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    height: 240px;
+    
+}
+
+
+.tags-inner{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    height: 240px;
+    overflow-x: auto;
+}
+
+.tag{
+    background-color: #7B3FE4;
+    cursor: pointer;
+    border: none;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 999px;
+    font-size: 15px;
+    transition: 0.2s ease;
+}
+
+.tag:hover{
+    filter: brightness(1.08);
+}
+
+.tag-disabled{
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.tag-disabled:hover{
+    filter: none;
+}
+
+.tags-selecionadas{
+    margin-top: 12px;
+    background-color: #0E0E17;
+    border: 1px solid rgb(70, 70, 70);
+    width: 100%;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.tags-selecionadas-titulo{
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 14px;
+}
+
+.tags-selecionadas-lista{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tag-selecionada{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(123, 63, 228, 0.16);
+    border: 1px solid rgba(123, 63, 228, 0.45);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 999px;
+}
+
+.tag-remove-btn{
+    background: transparent;
+    border: none;
+    color: #d1b8ff;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.tag-remove-btn:hover{
+    color: white;
+}
+
+.tags-selecionadas-vazio{
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
 }

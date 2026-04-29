@@ -3,8 +3,7 @@
     width: 100%;
     flex-direction: column;
     position: relative;
-
-    
+    height: 100%;
 }
 .logo-nav{
     position: absolute;
@@ -15,10 +14,10 @@
 .navLinks{
     display: flex;
     flex-direction: column;
-    justify-content: center;
     list-style: none;
     width: 100%;
     gap: 5px;
+    flex: 1;
 }
 
 .navLinks li{
@@ -79,7 +78,7 @@
 
 
 .btn-sair{
-    margin-top: 82px;
+    margin-top: auto;
     background-color: transparent;
     outline: none;
     border: #7B3FE4 1px solid;

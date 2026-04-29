@@ -1,8 +1,10 @@
 import api from "../service/api"
 import { useState, useEffect } from 'react'
+import { useNavigate } from "react-router-dom"
 import '../styles/Post.css'
 
 function MeusPosts() {
+    const navigate = useNavigate()
     const [myPosts, setMyPosts] = useState([])
     const [like, setLike] = useState({})
     const [loading, setLoading] = useState(true)
@@ -59,6 +61,7 @@ function MeusPosts() {
   
     if (myPosts.length === 0) {
         return (
+            <div className="empty-container">
             <div className="empty-posts">
                 <img src="/happy.png" alt="Sem posts" className="empty-img" />
                 <div className="empty-content">
@@ -72,45 +75,57 @@ function MeusPosts() {
                 </div>
                 
             </div>
+            </div>
         )
     }
 
     return (
-        <>
-            {myPosts.map((dados) => (
-                <div key={dados.id} className='card-container'>
-                    <div className="img-post-container">
+        <>  
+        <div className="meus-posts-container">
+            <div className="post-content">
+                {myPosts.map((dados) => (
+                    
+                    <div
+                        key={`post-${dados.id}`}
+                        className='card-container'
+                        onClick={() => navigate(`/feed/${dados.id}`)}
+                    >
+                        <div className="img-post-container">
 
-                        <img className='image-post' src={dados.imageUrl} alt="" />
+                            <img className='image-post' src={dados.imageUrl} alt="" />
 
-                        <div className="tooltip">
-                            <div className="like-container">
-                                <img
-                                    className='tool-img'
-                                    src={like[dados.id] ? '/liked.png' : '/like.png'}
-                                    alt=""
-                                />
-                                <p className='tool-count'>{dados.likesCount}</p>
+                            <div className="tooltip">
+                                <div className="like-container">
+                                    <img
+                                        className='tool-img'
+                                        src={like[dados.id] ? '/liked.png' : '/like.png'}
+                                        alt=""
+                                    />
+                                    <p className='tool-count'>{dados.likesCount}</p>
+                                </div>
+
+                                <div className="comment-container">
+                                    <img className='tool-img' src="/comment2.png" alt="" />
+                                    <p className='tool-comment'>{dados.commentsCount}</p>
+                                </div>
+
+                                <img className="tool-img" src="/save.png" alt="" />
                             </div>
 
-                            <div className="comment-container">
-                                <img className='tool-img' src="/comment2.png" alt="" />
-                                <p className='tool-comment'>{dados.commentsCount}</p>
+                            <div className="dia-post">
+                                <div className="dia-div">
+                                    {formatDate(dados.createdAt)}
+                                </div>
+                                <div className="dots-div">
+                                    <img src="/dots.png" alt="" className="tool-img" />
+                                </div>
                             </div>
+
                         </div>
-
-                        <div className="dia-post">
-                            <div className="dia-div">
-                                {formatDate(dados.createdAt)}
-                            </div>
-                            <div className="dots-div">
-                                <img src="/dots.png" alt="" className="tool-img" />
-                            </div>
-                        </div>
-
                     </div>
-                </div>
-            ))}
+                ))}
+            </div>
+        </div>
         </>
     )
 }

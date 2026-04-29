@@ -6,9 +6,8 @@ function Perfil() {
   return (
     <main className="perfil-layout">
       <MeuPerfil/>
-      <div className="meus-posts-container">
-        <MeusPosts/>
-      </div>
+      <MeusPosts/>
+      
     </main>
   );
 }

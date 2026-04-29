@@ -1,12 +1,18 @@
 import "../styles/NavBar.css";
 
 import { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import ConfirmModal from "./ConfirmModal";
+import usePostDraftStore from "../store/postDraftStore";
 
 function NavBar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [pendingRoute, setPendingRoute] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const hasUnsavedChanges = usePostDraftStore((state) => state.hasUnsavedChanges);
+  const setHasUnsavedChanges = usePostDraftStore((state) => state.setHasUnsavedChanges);
 
   function handleLogout() {
     localStorage.removeItem("token");
@@ -14,16 +20,44 @@ function NavBar() {
     navigate("/login", { replace: true });
   }
 
+  function handleProtectedNavigation(path, e) {
+    if (!hasUnsavedChanges || location.pathname !== "/posts") {
+      return;
+    }
+
+    e.preventDefault();
+    setPendingRoute(path);
+    setShowLeaveModal(true);
+  }
+
+  function confirmLeavePage() {
+    if (!pendingRoute) return;
+
+    setHasUnsavedChanges(false);
+    setShowLeaveModal(false);
+    navigate(pendingRoute);
+    setPendingRoute(null);
+  }
+
+  function cancelLeavePage() {
+    setShowLeaveModal(false);
+    setPendingRoute(null);
+  }
+
   return (
     <>
       <nav className="navBar">
-      <img className="logo-nav" src="" alt="" />
+        <img className="logo-nav" src="" alt="" />
         <ul className="navLinks">
           <li>
             <p>Menu</p>
           </li>
           <li>
-            <NavLink to="/feed" className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink
+              to="/feed"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              onClick={(e) => handleProtectedNavigation("/feed", e)}
+            >
               {({ isActive }) => (
                 <>
                   <img src={isActive ? "/homeA.png" : "/home.png"} alt="" />
@@ -33,7 +67,11 @@ function NavBar() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/contatos" className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink
+              to="/contatos"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              onClick={(e) => handleProtectedNavigation("/contatos", e)}
+            >
               {({ isActive }) => (
                 <>
                   <img src={isActive ? "/planeB.png" : "/plane.png"} alt="" />
@@ -43,7 +81,11 @@ function NavBar() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/posts" className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink
+              to="/posts"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              onClick={(e) => handleProtectedNavigation("/posts", e)}
+            >
               {({ isActive }) => (
                 <>
                   <img src={isActive ? "/moreA.png" : "/more.png"} alt="" />
@@ -53,7 +95,11 @@ function NavBar() {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/perfil" className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink
+              to="/perfil"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              onClick={(e) => handleProtectedNavigation("/perfil", e)}
+            >
               {({ isActive }) => (
                 <>
                   <img src={isActive ? "/userA.png" : "/user.png"} alt="" />
@@ -63,7 +109,11 @@ function NavBar() {
             </NavLink>
           </li>
           <li className="cog">
-            <NavLink to="/config" className={({ isActive }) => (isActive ? "active" : "")}>
+            <NavLink
+              to="/config"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              onClick={(e) => handleProtectedNavigation("/config", e)}
+            >
               {({ isActive }) => (
                 <>
                   <img src={isActive ? "/cogA.png" : "/cog.png"} alt="" />
@@ -72,12 +122,12 @@ function NavBar() {
               )}
             </NavLink>
           </li>
-
-          <button className="btn-sair" type="button" onClick={() => setShowLogoutModal(true)}>
-            <img className="sair-icon" src="/sair.png" alt="" />
-            Sair
-          </button>
         </ul>
+
+        <button className="btn-sair" type="button" onClick={() => setShowLogoutModal(true)}>
+          <img className="sair-icon" src="/sair.png" alt="" />
+          Sair
+        </button>
       </nav>
 
       <ConfirmModal
@@ -85,6 +135,13 @@ function NavBar() {
         message="Tem certeza que deseja sair da conta?"
         onConfirm={handleLogout}
         onCancel={() => setShowLogoutModal(false)}
+      />
+
+      <ConfirmModal
+        isOpen={showLeaveModal}
+        message="Voce tem alteracoes nao salvas. Deseja sair desta pagina?"
+        onConfirm={confirmLeavePage}
+        onCancel={cancelLeavePage}
       />
     </>
   );
