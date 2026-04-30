@@ -1,5 +1,5 @@
 import "../styles/Post.css";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import api from "../service/api";
 import { useFeedStore } from "../store/feedStore";
@@ -7,7 +7,7 @@ import { useFeedStore } from "../store/feedStore";
 function PostContent() {
     const { postId } = useParams();
     const numericId = Number(postId)
-
+    const navigate = useNavigate();
     const [post, setPost] = useState(null)
     const [like, setLike] = useState(false)
     const [comments, setComments] = useState([])
@@ -185,13 +185,15 @@ function PostContent() {
 
                     <div className="post-inner-content">
                         <div className="dono-post">
-                            <div className="dono-post-img-container">
+                            <div className="dono-post-img-container" onClick={() => navigate(`/profile/${post.user.id}/${post.user.userName}`)}>
                                 <img src={post.user.profileImageUrl} alt="" className="dono-post-img" />
                             </div>
 
                             <div className="dono-dados">
                                 <p className="dono-nome">{post.user.nome}</p>
-                                <p className="post-data">Publicado {formatRelativeDate(post.createdAt)}</p>
+                                <p className="post-data">@{post.user.userName}</p>
+                                <p className="post-data">Publicado em {formatRelativeDate(post.createdAt)}</p>
+                               
                             </div>
 
                             <div className="seguir-dono">

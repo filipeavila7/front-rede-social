@@ -3,6 +3,10 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Fundo from "../components/Fundo";
 import Botao from "../components/Botao";
+import {
+  consumeSessionExpiredMessage,
+  resetSessionStores,
+} from "../utils/session";
 
 function Login() {
   const navigate = useNavigate(); // trocar de pagina
@@ -13,8 +17,11 @@ function Login() {
   const [erro, setErro] = useState(""); // msg de erro
 
   useEffect(() => {
-    if (location.state?.sessionMessage) {
-      setErro(location.state.sessionMessage);
+    const sessionMessage =
+      location.state?.sessionMessage || consumeSessionExpiredMessage();
+
+    if (sessionMessage) {
+      setErro(sessionMessage);
     }
   }, [location.state]);
 
@@ -36,6 +43,7 @@ function Login() {
       } // mostra o erro se der na resposta
 
       const data = await res.json(); // pegar resposta do json
+      resetSessionStores();
       localStorage.setItem("token", data.token); // armazenar o bearer token que a api retronou
 
       navigate("/feed"); // ir para o feed

@@ -3,9 +3,11 @@ import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../service/api'
 import { useFeedStore } from '../store/feedStore'
+import useScrollPosition from '../hooks/useScrollPosition'
 
 function PostsUsers() {
     const navigate = useNavigate()
+    const isScrollReady = useScrollPosition("feed")
 
     const {
         posts,
@@ -17,8 +19,6 @@ function PostsUsers() {
         setHasMore,
         seed,
         setSeed,
-        scrollY,
-        setScrollY,
         isInitialized,
         setInitialized,
         loading,
@@ -104,10 +104,6 @@ function PostsUsers() {
         if (!isInitialized) {
             fetchPosts(0)
             setInitialized(true)
-        } else {
-            setTimeout(() => {
-                window.scrollTo(0, scrollY)
-            }, 100)
         }
     }, [])
 
@@ -116,15 +112,6 @@ function PostsUsers() {
             fetchPosts(page)
         }
     }, [page])
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrollY(window.scrollY)
-        }
-
-        window.addEventListener('scroll', handleScroll)
-        return () => window.removeEventListener('scroll', handleScroll)
-    }, [])
 
     useEffect(() => {
         observerRef.current = new IntersectionObserver((entries) => {
@@ -147,7 +134,7 @@ function PostsUsers() {
     }, [])
 
     return (
-        <>
+        <div style={{ display: 'contents', visibility: isScrollReady ? 'visible' : 'hidden' }}>
             {posts.map((dados) => (
                 <div
                     onClick={() => navigate(`/feed/${dados.id}`)}
@@ -222,7 +209,7 @@ function PostsUsers() {
                     }
                 }
             `}</style>
-        </>
+        </div>
     )
 }
 

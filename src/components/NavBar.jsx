@@ -4,6 +4,7 @@ import { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import ConfirmModal from "./ConfirmModal";
 import usePostDraftStore from "../store/postDraftStore";
+import { clearSession } from "../utils/session";
 
 function NavBar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -15,7 +16,7 @@ function NavBar() {
   const setHasUnsavedChanges = usePostDraftStore((state) => state.setHasUnsavedChanges);
 
   function handleLogout() {
-    localStorage.removeItem("token");
+    clearSession();
     setShowLogoutModal(false);
     navigate("/login", { replace: true });
   }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { clearSession } from "../utils/session";
 
 let isHandlingUnauthorized = false;
 
@@ -26,7 +27,7 @@ api.interceptors.response.use(
         const token = localStorage.getItem("token");
 
         if (status === 401 && token) {
-            localStorage.removeItem("token");
+            clearSession();
 
             if (!isHandlingUnauthorized) {
                 isHandlingUnauthorized = true;
