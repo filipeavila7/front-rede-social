@@ -102,7 +102,7 @@ function MeuPerfil() {
                 <p className='post-p'>Posts</p>
               </div>
 
-              <div onClick={() => navigate('/perfil/follows')} className='followers-container'>
+              <div onClick={() => navigate('/perfil/followers')} className='followers-container'>
                 <div className='seguidores-content'>
                   <img className='profile-icon' src="/followers.png" alt="" />
                   <p>{myFollowers ?? 0}</p>

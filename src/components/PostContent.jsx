@@ -1,43 +1,77 @@
 import "../styles/Post.css";
-import {useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import api from "../service/api";
 import { useFeedStore } from "../store/feedStore";
+import ConfirmModal from "./ConfirmModal";
 
 function PostContent() {
     const { postId } = useParams();
-    const numericId = Number(postId)
+    const numericId = Number(postId);
     const navigate = useNavigate();
-    const [post, setPost] = useState(null)
-    const [like, setLike] = useState(false)
-    const [comments, setComments] = useState([])
-    const [myProfile, setMyprofile] = useState(null)
-    const contentComment = useRef()
 
+    const [post, setPost] = useState(null);
+    const [like, setLike] = useState(false);
+    const [comments, setComments] = useState([]);
+    const [myProfile, setMyprofile] = useState(null);
+    const [meId, setMeId] = useState(null);
+    const [seguindo, setseguindo] = useState(false);
+    const [showUnfollowModal, setShowUnfollowModal] = useState(false);
+
+    const contentComment = useRef();
 
     const {
         setLikes,
         updatePostLikeCount,
         updatePostCommentCount,
         mergePosts
-    } = useFeedStore()
+    } = useFeedStore();
 
-    async function getPost() {
+    async function getIsSeguindo(userId) {
         try {
-            const res = await api.get(`/posts/${postId}`);
-            console.log(res.data)
-            setPost(res.data || null)
-
-            // sincroniza com feed global
-            mergePosts([res.data])
+            const res = await api.get(`/users/${userId}/followingStatus`);
+            setseguindo(res.data);
         } catch (error) {
             console.log(error);
         }
     }
 
+    async function seguir(userId) {
+        try {
+            await api.post(`/users/${userId}/follow`);
+            setseguindo(true);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function deixarDeSeguir(userId) {
+        try {
+            await api.delete(`/users/${userId}/follow`);
+            setseguindo(false);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function handleSeguir(userId) {
+        if (seguindo) {
+            setShowUnfollowModal(true);
+        } else {
+            await seguir(userId);
+        }
+    }
+
+    async function confirmUnfollow() {
+        if (!post?.user?.id) return;
+
+        await deixarDeSeguir(post.user.id);
+        setShowUnfollowModal(false);
+    }
+
     async function subComment() {
-        const text = contentComment.current.value.trim()
-        if (!text) return
+        const text = contentComment.current.value.trim();
+        if (!text) return;
 
         try {
             const res = await api.post(`/posts/${postId}/comments`, {
@@ -52,18 +86,18 @@ function PostContent() {
                     nome: myProfile?.nome || "Você",
                     profileImageUrl: myProfile?.imageUrlProfile || null
                 }
-            }
+            };
 
-            setComments(prev => [...prev, newComment])
+            setComments(prev => [...prev, newComment]);
 
             setPost(prev => ({
                 ...prev,
                 commentsCount: prev.commentsCount + 1
-            }))
+            }));
 
-            updatePostCommentCount(numericId, +1)
+            updatePostCommentCount(numericId, +1);
 
-            contentComment.current.value = ""
+            contentComment.current.value = "";
         } catch (error) {
             console.log(error);
         }
@@ -73,15 +107,15 @@ function PostContent() {
         try {
             await api.post(`/posts/${postId}/likes`);
 
-            setLike(true)
-            setLikes(prev => ({ ...prev, [numericId]: true }))
+            setLike(true);
+            setLikes(prev => ({ ...prev, [numericId]: true }));
 
             setPost(prev => ({
                 ...prev,
                 likesCount: prev.likesCount + 1
-            }))
+            }));
 
-            updatePostLikeCount(numericId, +1)
+            updatePostLikeCount(numericId, +1);
         } catch (error) {
             console.log(error);
         }
@@ -91,45 +125,17 @@ function PostContent() {
         try {
             await api.delete(`/posts/${postId}/likes`);
 
-            setLike(false)
-            setLikes(prev => ({ ...prev, [numericId]: false }))
+            setLike(false);
+            setLikes(prev => ({ ...prev, [numericId]: false }));
 
             setPost(prev => ({
                 ...prev,
                 likesCount: prev.likesCount - 1
-            }))
+            }));
 
-            updatePostLikeCount(numericId, -1)
+            updatePostLikeCount(numericId, -1);
         } catch (error) {
             console.log(error);
-        }
-    }
-
-    async function getPostLiked() {
-        try {
-            const res = await api.get(`/posts/${postId}/liked`);
-            setLike(res.data || false)
-            setLikes(prev => ({ ...prev, [numericId]: res.data }))
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async function getPostCommented() {
-        try {
-            const res = await api.get(`/posts/${postId}/comments`);
-            setComments(res.data || [])
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    async function getMyProfile() {
-        try {
-            const res = await api.get('/profiles/me')
-            setMyprofile(res.data)
-        } catch (error) {
-            console.log(error)
         }
     }
 
@@ -142,11 +148,52 @@ function PostContent() {
     }
 
     useEffect(() => {
-        getPost()
-        getPostLiked()
-        getPostCommented()
-        getMyProfile()
-    }, [])
+        api.get(`/posts/${postId}`)
+            .then((res) => {
+                setPost(res.data || null);
+                mergePosts([res.data]);
+
+                if (res.data?.user?.id) {
+                    getIsSeguindo(res.data.user.id);
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        api.get(`/posts/${postId}/liked`)
+            .then((res) => {
+                setLike(res.data || false);
+                setLikes(prev => ({ ...prev, [numericId]: res.data }));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        api.get(`/posts/${postId}/comments`)
+            .then((res) => {
+                setComments(res.data || []);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        api.get("/profiles/me")
+            .then((res) => {
+                setMyprofile(res.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        api.get("/users/me")
+            .then((res) => {
+                setMeId(res.data?.id ?? null);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }, [postId, numericId, mergePosts, setLikes]);
 
     const formatRelativeDate = (date) => {
         if (!date) return "";
@@ -171,6 +218,8 @@ function PostContent() {
         });
     };
 
+    const isMe = meId === post?.user?.id;
+
     return (
         <>
             {post && (
@@ -185,7 +234,10 @@ function PostContent() {
 
                     <div className="post-inner-content">
                         <div className="dono-post">
-                            <div className="dono-post-img-container" onClick={() => navigate(`/profile/${post.user.id}/${post.user.userName}`)}>
+                            <div
+                                className="dono-post-img-container"
+                                onClick={() => navigate(`/profile/${post.user.id}/${post.user.userName}`)}
+                            >
                                 <img src={post.user.profileImageUrl} alt="" className="dono-post-img" />
                             </div>
 
@@ -193,11 +245,20 @@ function PostContent() {
                                 <p className="dono-nome">{post.user.nome}</p>
                                 <p className="post-data">@{post.user.userName}</p>
                                 <p className="post-data">Publicado em {formatRelativeDate(post.createdAt)}</p>
-                               
                             </div>
 
                             <div className="seguir-dono">
-                                <button className="btn-dono-seguir">Seguir</button>
+                                <button
+                                    onClick={() =>
+                                        isMe
+                                            ? navigate("/perfil/editar")
+                                            : handleSeguir(post.user.id)
+                                    }
+                                    className="btn-dono-seguir"
+                                >
+                                    {isMe ? "Editar Perfil" : seguindo ? "Seguindo" : "Seguir"}
+                                </button>
+
                                 <button className="dots-button">
                                     <img className="dots-img" src="/dots.png" alt="" />
                                 </button>
@@ -207,18 +268,16 @@ function PostContent() {
                         <div className="dados-post">
                             <p className="dados-post-nome">{post.content}</p>
                             <p>{post.description}</p>
+
                             <div className="tags">
                                 {post.tags.map(tag => (
-                                    <p key={tag.id} className="tag">
-                                        #{tag.name}
-                                    </p>
+                                    <p key={tag.id} className="tag">#{tag.name}</p>
                                 ))}
                             </div>
 
-
                             <div className="post-acoes-container">
                                 <button onClick={handleLike} className={like ? "acao-post-btn-liked" : "acao-post-btn"}>
-                                    <img src={like ? '/liked.png' : '/like.png'} alt="" className="img-acao" />
+                                    <img src={like ? "/liked.png" : "/like.png"} alt="" className="img-acao" />
                                     <p className={like ? "liked" : "not-liked"}>{post.likesCount}</p>
                                 </button>
 
@@ -254,7 +313,7 @@ function PostContent() {
                                         <div className="user-comment-img-container">
                                             <img
                                                 className="user-comment-img"
-                                                src={dados.user.profileImageUrl ? dados.user.profileImageUrl : '/null.png'}
+                                                src={dados.user.profileImageUrl ? dados.user.profileImageUrl : "/null.png"}
                                                 alt=""
                                             />
                                         </div>
@@ -278,7 +337,11 @@ function PostContent() {
                         <div className="layout-coment">
                             <div className="comentar-container">
                                 <div className="me-img-container">
-                                    <img className="me-img" src={myProfile?.imageUrlProfile ? myProfile.imageUrlProfile : '/null.png'} alt="" />
+                                    <img
+                                        className="me-img"
+                                        src={myProfile?.imageUrlProfile ? myProfile.imageUrlProfile : "/null.png"}
+                                        alt=""
+                                    />
                                 </div>
 
                                 <form className="form-comment" action="">
@@ -297,8 +360,15 @@ function PostContent() {
                     </div>
                 </div>
             )}
+
+            <ConfirmModal
+                isOpen={showUnfollowModal}
+                message="Tem certeza que deseja deixar de seguir este usuario?"
+                onConfirm={confirmUnfollow}
+                onCancel={() => setShowUnfollowModal(false)}
+            />
         </>
-    )
+    );
 }
 
-export default PostContent
+export default PostContent;

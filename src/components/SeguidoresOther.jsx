@@ -28,19 +28,7 @@ function SeguidoresOther({ getSeguidoresUser, onDelete }) {
                         <span className="seguidor-legenda">Perfil conectado com voce</span>
                     </div>
 
-                    <div className='delete-container'>
-                        <button
-                            type="button"
-                            className="delete-button"
-                            onClick={() => abrirModal(dados.userId)}
-                        >
-                            <img
-                                src="/close.png"
-                                alt="Remover usuario"
-                                className="delete-icon"
-                            />
-                        </button>
-                    </div>
+         
                 </div>
             ))}
 

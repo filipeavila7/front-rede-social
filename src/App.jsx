@@ -41,8 +41,8 @@ function App() {
             <Route path="config" element={<Config />} />
             <Route path="perfil/followers" element={<SeguidoresPage />} />
             <Route path="perfil/follows" element={<SeguindoPage />} />
-            <Route path="perfil/:id/followers" element={<SeguidoresPageOther />} />
-            <Route path="perfil/:id/follows" element={<SeguindoPageOther />} />
+            <Route path="profile/:id/:userName/followers" element={<SeguidoresPageOther />} />
+            <Route path="profile/:id/:userName/follows" element={<SeguindoPageOther />} />
            <Route path="/profile/:id/:userName" element={<OtherUserPage />} />
           </Route>
         </Route>

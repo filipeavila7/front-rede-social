@@ -1,4 +1,4 @@
-import HeaderSeguidores from "../components/HeaderSeguidores";
+import HeaderSeguidoresOther from "../components/HeaderSeguidoresOther";
 import Seguidores from "../components/Seguidores";
 import SeguidoresOther from "../components/SeguidoresOther";
 import api from "../service/api";
@@ -8,7 +8,7 @@ function SeguindoPageOther() {
     const {id} = useParams()
     return (
         <main>
-            <HeaderSeguidores />
+            <HeaderSeguidoresOther />
             <SeguidoresOther
                 getSeguidoresUser={() => api.get(`/users/${id}/following`)}
             />

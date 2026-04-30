@@ -1,4 +1,4 @@
-import HeaderSeguidores from "../components/HeaderSeguidores";
+import HeaderSeguidoresOther from "../components/HeaderSeguidoresOther";
 import SeguidoresOther from "../components/SeguidoresOther";
 import api from "../service/api";
 import { useNavigate, useParams } from 'react-router-dom'
@@ -8,7 +8,7 @@ function SeguidoresPageOther() {
 
     return (
         <main>
-            <HeaderSeguidores />
+            <HeaderSeguidoresOther />
             <SeguidoresOther
                 getSeguidoresUser={() => api.get(`/users/${id}/followers`)}
             />
