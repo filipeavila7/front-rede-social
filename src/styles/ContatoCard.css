@@ -1,59 +1,58 @@
 .contato-card-list{
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
 }
 
 .contato-card{
-    background: linear-gradient(145deg, #181717 0%, #111111 100%);
-    border-radius: 30px;
-    padding: 20px 22px;
+    background: linear-gradient(145deg, #141414 0%, #101010 100%);
+    border-radius: 24px;
+    padding: 18px 20px;
     display: flex;
-    gap: 18px;
+    gap: 16px;
     cursor: pointer;
     transition: 0.2s ease-in-out;
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    box-shadow: 5px 5px 15px 5px #000000;
+    border: 1px solid rgb(70, 70, 70);  
 }
 
 .contato-card:hover{
     transform: translateY(-2px);
-    background: linear-gradient(145deg, #313030 0%, #111111 100%);
-    border-color: rgba(146, 217, 188, 0.18);
+    background: linear-gradient(145deg, #1d1d1d 0%, #121212 100%);
+    border-color: rgba(123, 63, 228, 0.24);
 }
 
 .contato-card.active{
-    box-shadow: 0 0 0 4px rgba(55, 118, 97, 0.12);
+    border-color: rgba(123, 63, 228, 0.48);
+    box-shadow: 0 0 0 4px rgba(123, 63, 228, 0.12);
 }
 
 .img-contato{
-    width: 84px;
-    height: 84px;
+    width: 76px;
+    height: 76px;
     object-fit: cover;
     border-radius: 999px;
     border: 3px solid #1c1c1c;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
 .contato-info{
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 16px;
     width: 100%;
-    
 }
 
 .contato-nome{
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
     flex: 1;
     min-width: 0;
     overflow: hidden;
-    width: 600px;
 }
 
 .contato-nome-text{
-    font-size: 24px;
+    font-size: 21px;
     font-weight: 700;
     color: white;
 }
@@ -70,10 +69,10 @@
     display: flex;
     align-items: flex-end;
     flex-direction: column;
-    gap: 6px;
-    font-size: 15px;
+    gap: 4px;
+    font-size: 14px;
     color: #9ca3af;
-    min-width: 86px;
+    min-width: 78px;
 }
 
 .hora-principal{
@@ -83,13 +82,13 @@
 
 @media (max-width: 768px){
     .contato-card{
-        padding: 18px;
-        border-radius: 24px;
+        padding: 16px;
+        border-radius: 20px;
     }
 
     .img-contato{
-        width: 68px;
-        height: 68px;
+        width: 62px;
+        height: 62px;
     }
 
     .contato-info{
@@ -97,7 +96,7 @@
     }
 
     .contato-nome-text{
-        font-size: 20px;
+        font-size: 18px;
     }
 
     .ultima-msg{

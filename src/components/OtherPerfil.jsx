@@ -1,7 +1,7 @@
 import '../styles/Perfil.css'
 import api from '../service/api'
 import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import ConfirmModal from './ConfirmModal'
 
 function OtherPerfil() {
@@ -14,7 +14,10 @@ function OtherPerfil() {
   const [showUnfollowModal, setShowUnfollowModal] = useState(false)
 
   const navigate = useNavigate()
+  const location = useLocation()
   const { id, userName } = useParams()
+  const backStack = location.state?.backStack ?? []
+  const currentProfilePath = `/profile/${id}/${userName}`
 
   async function seguir(userId) {
     try {
@@ -103,16 +106,31 @@ function OtherPerfil() {
 
   const isMe = meId === Number(id)
 
+  function handleBack() {
+    const previousEntry = backStack[backStack.length - 1]
+
+    if (previousEntry) {
+      navigate(previousEntry.path, {
+        state: {
+          backStack: backStack.slice(0, -1),
+          profilePath: previousEntry.profilePath
+        }
+      })
+      return
+    }
+
+    navigate('/feed')
+  }
+
   return (
     <>
       {profile && (
         <>
           <div className='meu-perfil'>
-            {profile.messageStatus?.trim() && (
-              <div className="message-status-perfil">
-                <p>{profile.messageStatus}</p>
-              </div>
-            )}
+            <button onClick={handleBack} className='voltar-other'>
+              <img src="/voltar.png" alt="" className="voltar-other-icon" />
+            </button>
+            
 
             <div className='img-perfil-container'>
               <img
@@ -138,7 +156,12 @@ function OtherPerfil() {
                 </div>
 
                 <div
-                  onClick={() => navigate(`/profile/${id}/${userName}/followers`)}
+                  onClick={() => navigate(`/profile/${id}/${userName}/followers`, {
+                    state: {
+                      backStack,
+                      profilePath: currentProfilePath
+                    }
+                  })}
                   className='followers-container'
                 >
                   <div className='seguidores-content'>
@@ -149,7 +172,12 @@ function OtherPerfil() {
                 </div>
 
                 <div
-                  onClick={() => navigate(`/profile/${id}/${userName}/follows`)}
+                  onClick={() => navigate(`/profile/${id}/${userName}/follows`, {
+                    state: {
+                      backStack,
+                      profilePath: currentProfilePath
+                    }
+                  })}
                   className='followers-container'
                 >
                   <div className='seguidores-content'>

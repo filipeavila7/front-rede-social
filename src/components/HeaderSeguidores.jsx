@@ -1,14 +1,22 @@
 import { NavLink } from "react-router-dom";
 import '../styles/Perfil.css'
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function HeaderSeguidores() {
     const navigate = useNavigate()
+    const location = useLocation()
+    const profilePath = location.state?.profilePath ?? "/perfil"
     return (
         <section className="header-seguidores">
             <div className="header-seguidores-top">
                 <div className="voltar-container-seguidor">
-                    <button onClick={()=> navigate('/perfil')} className="voltar-button" type="button">
+                    <button
+                        onClick={() => navigate(profilePath, {
+                            state: { backStack: location.state?.backStack ?? [] }
+                        })}
+                        className="voltar-button"
+                        type="button"
+                    >
                         <img className="voltar-icon" src="/voltar.png" alt="Voltar para contatos" />
                     </button>
                     <h2 className="header-seguidores-title">Conexões</h2>
@@ -20,12 +28,20 @@ function HeaderSeguidores() {
             <nav className="navBar-seguidores">
                 <ul className="navLinks-seguidores">
                     <li>
-                        <NavLink to="/perfil/followers" className={({ isActive }) => (isActive ? "active" : "")}>
+                        <NavLink
+                            to="/perfil/followers"
+                            state={location.state}
+                            className={({ isActive }) => (isActive ? "active" : "")}
+                        >
                             Seguidores
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/perfil/follows" className={({ isActive }) => (isActive ? "active" : "")}>
+                        <NavLink
+                            to="/perfil/follows"
+                            state={location.state}
+                            className={({ isActive }) => (isActive ? "active" : "")}
+                        >
                             Seguindo
                         </NavLink>
                     </li>

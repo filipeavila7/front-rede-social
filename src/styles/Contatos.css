@@ -1,9 +1,9 @@
 .conteudo-contato{
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 30px;
+    gap: 22px;
     width: 100%;
+    padding: 0 8px 24px 8px;
 }
 
 .contatos-layout{
@@ -18,10 +18,11 @@
 
 .contatos-section{
     width: 100%;
-    background: linear-gradient(145deg, #050505 0%, #111111 100%);
+    background-color: #101010;
     border-radius: 28px;
     padding: 26px;
-    box-shadow: 5px 5px 15px 5px #000000;
+    background: linear-gradient(164deg, rgba(16, 16, 16, 1) 85%, rgba(25, 11, 46, 1) 100%);
+    border: 1px solid rgb(70, 70, 70);
 }
 
 .contatos-section-top{
@@ -29,10 +30,12 @@
     flex-direction: column;
     gap: 6px;
     margin-bottom: 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .contatos-section-label{
-    color: #7ca896;
+    color: #7B3FE4;
     font-size: 14px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -41,4 +44,20 @@
 .contatos-section-title{
     color: white;
     font-size: 30px;
+}
+
+@media (max-width: 768px){
+    .conteudo-contato{
+        padding: 0 0 18px 0;
+        gap: 18px;
+    }
+
+    .contatos-section{
+        padding: 20px 16px;
+        border-radius: 24px;
+    }
+
+    .contatos-section-title{
+        font-size: 24px;
+    }
 }

@@ -1,12 +1,13 @@
 import '../styles/Post.css'
 import { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import api from '../service/api'
 import { useFeedStore } from '../store/feedStore'
 import useScrollPosition from '../hooks/useScrollPosition'
 
 function PostsUsers() {
     const navigate = useNavigate()
+    const location = useLocation()
     const isScrollReady = useScrollPosition("feed")
 
     const {
@@ -34,8 +35,13 @@ function PostsUsers() {
     const hasMoreRef = useRef(hasMore)
     const seedRef = useRef(seed)
 
-    hasMoreRef.current = hasMore
-    seedRef.current = seed
+    useEffect(() => {
+        hasMoreRef.current = hasMore
+    }, [hasMore])
+
+    useEffect(() => {
+        seedRef.current = seed
+    }, [seed])
 
     const formatDate = (date) => {
         if (!date) return ""
@@ -137,7 +143,15 @@ function PostsUsers() {
         <div style={{ display: 'contents', visibility: isScrollReady ? 'visible' : 'hidden' }}>
             {posts.map((dados) => (
                 <div
-                    onClick={() => navigate(`/feed/${dados.id}`)}
+                    onClick={() => navigate(`/feed/${dados.id}`, {
+                        state: {
+                            returnTo: {
+                                kind: "feed",
+                                path: location.pathname,
+                                state: location.state ?? null
+                            }
+                        }
+                    })}
                     key={`post-${dados.id}`}
                     className='card-container'
                 >

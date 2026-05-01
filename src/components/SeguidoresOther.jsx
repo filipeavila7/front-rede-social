@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import '../styles/Perfil.css'
+import { useLocation, useNavigate } from 'react-router-dom'
 
-
-function SeguidoresOther({ getSeguidoresUser, onDelete }) {
+function SeguidoresOther({ getSeguidoresUser}) {
     const [userSeguidor, setUserSeguidor] = useState([])
-    const [userSelecionado, setUserSelecionado] = useState(null)
-
+    const navigate = useNavigate()
+    const location = useLocation()
+    const currentProfilePath = location.state?.profilePath ?? null
+    const backStack = location.state?.backStack ?? []
     useEffect(() => {
         getSeguidoresUser().then(res => setUserSeguidor(res.data))
     }, [getSeguidoresUser])
@@ -14,7 +16,20 @@ function SeguidoresOther({ getSeguidoresUser, onDelete }) {
     return (
         <div className='seguidor-layout'>
             {userSeguidor.map((dados) => (
-                <div className='seguidor-container' key={dados.userId}>
+                
+                <div
+                    onClick={() => navigate(`/profile/${dados.userId}/${dados.UserName}`, {
+                        state: {
+                            backStack: [
+                                ...backStack,
+                                {
+                                    path: location.pathname,
+                                    profilePath: currentProfilePath
+                                }
+                            ]
+                        }
+                    })}
+                    className='seguidor-container' key={dados.userId}>
                     <div className="img-seguidor-container">
                         <img
                             className='seguidor-img'

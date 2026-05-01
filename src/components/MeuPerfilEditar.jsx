@@ -13,6 +13,7 @@ function MeuPerfilEditar() {
 
   const imputNovoNome = useRef();
   const imputNovaBio = useRef();
+  const imputNovoUserName = useRef();
 
   async function getMyProfile() {
     try {
@@ -59,10 +60,20 @@ function MeuPerfilEditar() {
     }
   }
 
-  async function putUserName(id) {
+  async function putName(id) {
     try {
       await api.put(`/users/${id}`, {
         nome: imputNovoNome.current.value || myProfile.nome,
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+  async function putUserName(id) {
+    try {
+      await api.put(`/users/${id}`, {
+        userName: imputNovoUserName.current.value || myProfile.userName,
       });
     } catch (error) {
       console.log(error);
@@ -89,6 +100,7 @@ function MeuPerfilEditar() {
       setLoading(true);
 
       await putUserName(meId);
+      await putName(meId)
       await putPerfil();
 
       await getMyProfile();
@@ -119,12 +131,22 @@ function MeuPerfilEditar() {
           </div>
 
           <div className="profile-edit">
-            <p>Nome:</p>
+            <p>Apelido:</p>
             <input
               className="profile-edit-input"
               type="text"
               defaultValue={myProfile.nome}
               ref={imputNovoNome}
+            />
+          </div>
+
+          <div className="profile-edit">
+            <p>Nome de usuário:</p>
+            <input
+              className="profile-edit-input"
+              type="text"
+              defaultValue={myProfile.userName}
+              ref={imputNovoUserName}
             />
           </div>
 

@@ -1,21 +1,20 @@
 import '../styles/Perfil.css'
 import api from '../service/api'
 import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 function MeuPerfil() {
   const [myProfile, setMyprofile] = useState(null)
   const [myFollowers, setMyFollowers] = useState(null)
   const [myFollows, setMyFollows] = useState(null)
-  const [meId, setMeId] = useState(null)
   const [totalPost, setTotalPost] = useState(null)
   const navigate = useNavigate();
+  const location = useLocation()
 
   async function getMe() {
     try {
       const res = await api.get("/users/me")
       const id = res.data?.id ?? null
-      setMeId(id)
       return id
     } catch (error) {
       console.log(error)
@@ -102,7 +101,15 @@ function MeuPerfil() {
                 <p className='post-p'>Posts</p>
               </div>
 
-              <div onClick={() => navigate('/perfil/followers')} className='followers-container'>
+              <div
+                onClick={() => navigate('/perfil/followers', {
+                  state: {
+                    profilePath: location.pathname,
+                    backStack: []
+                  }
+                })}
+                className='followers-container'
+              >
                 <div className='seguidores-content'>
                   <img className='profile-icon' src="/followers.png" alt="" />
                   <p>{myFollowers ?? 0}</p>
@@ -110,7 +117,15 @@ function MeuPerfil() {
                 <p className='post-p'>Seguidores</p>
               </div>
 
-              <div onClick={() => navigate('/perfil/follows')} className='followers-container'>
+              <div
+                onClick={() => navigate('/perfil/follows', {
+                  state: {
+                    profilePath: location.pathname,
+                    backStack: []
+                  }
+                })}
+                className='followers-container'
+              >
                 <div className='seguidores-content'>
                   <img className='profile-icon' src="/follow.png" alt="" />
                   <p>{myFollows ?? 0}</p>

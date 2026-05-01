@@ -1,10 +1,12 @@
 import api from "../service/api"
 import { useState, useEffect } from 'react'
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import '../styles/Post.css'
 
-function MeusPosts() {
+function PostsOther() {
+    const {userName} = useParams()
     const navigate = useNavigate()
+    const location = useLocation()
     const [myPosts, setMyPosts] = useState([])
     const [like, setLike] = useState({})
     const [loading, setLoading] = useState(true)
@@ -31,7 +33,7 @@ function MeusPosts() {
     useEffect(() => {
         async function fetchData() {
             try {
-                const res = await api.get('/posts/user/me')
+                const res = await api.get(`/posts/user?userName=${userName}`)
                 const posts = res.data
                 setMyPosts(posts)
 
@@ -51,7 +53,7 @@ function MeusPosts() {
         }
 
         fetchData()
-    }, [])
+    }, [userName])
 
     
     if (loading) {
@@ -65,13 +67,8 @@ function MeusPosts() {
             <div className="empty-posts">
                 <img src="/happy.png" alt="Sem posts" className="empty-img" />
                 <div className="empty-content">
-                    <h1 className="empty-text">Sua galeria ainda está vazia</h1>
-                    <p className="empty-text-p">Compartilhe a sua primeira arte com o mundo</p>
-                    <p className="empty-text-p">e inspire outras pessoas</p>
-                    <button className="btn-mascote">
-                        <img className="btn-mascote-icon" src="" alt="" />
-                        <p>Criar primeira arte</p>
-                    </button>
+                    <h1 className="empty-text">Esse perfil não possui nehuma arte ainda</h1>
+                                        
                 </div>
                 
             </div>
@@ -88,12 +85,12 @@ function MeusPosts() {
                     <div
                         key={`post-${dados.id}`}
                         className='card-container'
-                        onClick={() => navigate(`/feed/${dados.id}?from=my-profile`, {
+                        onClick={() => navigate(`/feed/${dados.id}`, {
                             state: {
                                 returnTo: {
-                                    kind: "my-profile",
-                                    path: "/perfil",
-                                    state: null
+                                    kind: "other-profile",
+                                    path: location.pathname,
+                                    state: location.state ?? null
                                 }
                             }
                         })}
@@ -138,4 +135,4 @@ function MeusPosts() {
     )
 }
 
-export default MeusPosts
+export default PostsOther

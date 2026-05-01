@@ -1,5 +1,5 @@
 import "../styles/Post.css";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import api from "../service/api";
 import { useFeedStore } from "../store/feedStore";
@@ -9,6 +9,10 @@ function PostContent() {
     const { postId } = useParams();
     const numericId = Number(postId);
     const navigate = useNavigate();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const from = searchParams.get("from");
+    const returnTo = location.state?.returnTo ?? { kind: "feed", path: "/feed", state: null };
 
     const [post, setPost] = useState(null);
     const [like, setLike] = useState(false);
@@ -220,6 +224,50 @@ function PostContent() {
 
     const isMe = meId === post?.user?.id;
 
+    function handleBack() {
+        if (from === "my-profile" || returnTo.kind === "my-profile") {
+            navigate("/perfil");
+            return;
+        }
+
+        navigate(returnTo.path ?? "/feed", {
+            state: returnTo.state ?? undefined
+        });
+    }
+
+    function handleOwnerProfileClick() {
+        const originPath = returnTo.path ?? "/feed";
+        const originState = returnTo.state ?? null;
+
+        let profileState;
+
+        if (returnTo.kind === "other-profile" && originPath.startsWith("/profile/")) {
+            profileState = originState ?? { backStack: [], profilePath: originPath };
+        } else if (from === "my-profile" || returnTo.kind === "my-profile" || originPath === "/perfil") {
+            profileState = {
+                backStack: [
+                    {
+                        path: "/perfil",
+                        profilePath: "/perfil"
+                    }
+                ]
+            };
+        } else {
+            profileState = {
+                backStack: [
+                    {
+                        path: originPath,
+                        profilePath: originPath
+                    }
+                ]
+            };
+        }
+
+        navigate(`/profile/${post.user.id}/${post.user.userName}`, {
+            state: profileState
+        });
+    }
+
     return (
         <>
             {post && (
@@ -227,7 +275,7 @@ function PostContent() {
                     <div className="post-inner-img-container">
                         <img className="post-inner-img" src={post.imageUrl} alt="" />
 
-                        <button onClick={() => window.history.back()} className="btn-voltar-post">
+                        <button onClick={handleBack} className="btn-voltar-post">
                             <img src="/voltar.png" alt="" className="back-icon" />
                         </button>
                     </div>
@@ -236,7 +284,7 @@ function PostContent() {
                         <div className="dono-post">
                             <div
                                 className="dono-post-img-container"
-                                onClick={() => navigate(`/profile/${post.user.id}/${post.user.userName}`)}
+                                onClick={handleOwnerProfileClick}
                             >
                                 <img src={post.user.profileImageUrl} alt="" className="dono-post-img" />
                             </div>

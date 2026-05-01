@@ -1,11 +1,16 @@
 import { useState, useEffect } from 'react'
 import '../styles/Perfil.css'
 import ConfirmModal from './ConfirmModal'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 function Seguidores({ getSeguidoresUser, onDelete }) {
     const [userSeguidor, setUserSeguidor] = useState([])
     const [showModal, setShowModal] = useState(false)
     const [userSelecionado, setUserSelecionado] = useState(null)
+    const navigate = useNavigate()
+    const location = useLocation()
+    const currentProfilePath = location.state?.profilePath ?? "/perfil"
+    const backStack = location.state?.backStack ?? []
 
     useEffect(() => {
         getSeguidoresUser().then(res => setUserSeguidor(res.data))
@@ -39,7 +44,21 @@ function Seguidores({ getSeguidoresUser, onDelete }) {
     return (
         <div className='seguidor-layout'>
             {userSeguidor.map((dados) => (
-                <div className='seguidor-container' key={dados.userId}>
+                <div
+                    className='seguidor-container'
+                    key={dados.userId}
+                    onClick={() => navigate(`/profile/${dados.userId}/${dados.UserName}`, {
+                        state: {
+                            backStack: [
+                                ...backStack,
+                                {
+                                    path: location.pathname,
+                                    profilePath: currentProfilePath
+                                }
+                            ]
+                        }
+                    })}
+                >
                     <div className="img-seguidor-container">
                         <img
                             className='seguidor-img'
@@ -57,7 +76,10 @@ function Seguidores({ getSeguidoresUser, onDelete }) {
                         <button
                             type="button"
                             className="delete-button"
-                            onClick={() => abrirModal(dados.userId)}
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                abrirModal(dados.userId)
+                            }}
                         >
                             <img
                                 src="/close.png"
