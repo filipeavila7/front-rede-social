@@ -25,18 +25,6 @@ function MeuPerfilEditar() {
     }
   }
 
-  async function getMePut() {
-    try {
-      const res = await api.get("/users/me");
-      const id = res.data?.id ?? null;
-      setMeId(id);
-      return id;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  }
-
   async function handleImageChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -86,6 +74,7 @@ function MeuPerfilEditar() {
       await api.put("/profiles/me", {
         bio: imputNovaBio.current.value || myProfile.bio,
         imageUrlProfile: imageUrlProfile || myProfile.imageUrlProfile,
+        messageStatus: myProfile.messageStatus || "",
       });
     } catch (error) {
       console.log(error);
@@ -113,8 +102,22 @@ function MeuPerfilEditar() {
   }
 
   useEffect(() => {
-    getMyProfile();
-    getMePut();
+    api.get("/profiles/me")
+      .then((res) => {
+        setMyprofile(res.data);
+        setImageUrlProfile(res.data.imageUrlProfile || null);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    api.get("/users/me")
+      .then((res) => {
+        setMeId(res.data?.id ?? null);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, []);
 
   return (

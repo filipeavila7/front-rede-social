@@ -68,7 +68,7 @@ function MeusPosts() {
                     <h1 className="empty-text">Sua galeria ainda está vazia</h1>
                     <p className="empty-text-p">Compartilhe a sua primeira arte com o mundo</p>
                     <p className="empty-text-p">e inspire outras pessoas</p>
-                    <button className="btn-mascote">
+                    <button onClick={()=> navigate('/posts')} className="btn-mascote">
                         <img className="btn-mascote-icon" src="" alt="" />
                         <p>Criar primeira arte</p>
                     </button>

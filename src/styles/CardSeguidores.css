@@ -30,7 +30,7 @@
     justify-content: flex-start;
     align-items: center;
     position: relative;
-    min-width: 176px;
+    min-width: 178px;
     min-height: 240px;
     padding: 18px 16px 16px 16px;
     border-radius: 24px;
@@ -58,8 +58,7 @@
     object-fit: cover;
     border-radius: 150px;
     cursor: pointer;
-    box-shadow: 5px 5px 15px 5px #000000;
-    border: 3px solid #1b1b1b;
+   
 }
 
 .name{
@@ -78,17 +77,64 @@
     border-radius: 20px;
     min-width: 132px;
     max-width: 132px;
-    min-height: 60px;
+    height: 55px;
     top: 170px;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     overflow-wrap: break-word;
     box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
 }
 
-.message-status p{
-    font-size: 13px;
-    line-height: 1.25;
+.status-p{
+    width: 100%;
+    margin: 0;
+    font-size: 15px;
+    line-height: 15px;
+    white-space: pre-line;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
+
+.message-status-input{
+    background: transparent;
+    border: 1px solid rgb(70, 70, 70);
+    outline: none;
+    padding: 10px 12px;
+    position: absolute;
+    border-radius: 20px;
+    min-width: 132px;
+    max-width: 132px;
+    font-size: 15px;
+    min-height: 60px;
+    top: 170px;
+    
+    overflow-wrap: break-word;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+}
+
+.message-status-input-ativa{
+    background: transparent;
+    border: 1px solid rgb(70, 70, 70);
+    outline: none;
+    padding: 10px 12px;
+    border-radius: 20px;
+    min-width: 132px;
+    max-width: 132px;
+    font-size: 15px;
+    resize: none;
+    overflow-y: hidden;
+    min-height: 60px;
+    overflow-wrap: break-word;
+    text-align: center;
+    
+   
+}
+
+
+
+
 
 @media (max-width: 768px){
     .cards-content{

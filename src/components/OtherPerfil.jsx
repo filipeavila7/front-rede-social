@@ -111,7 +111,7 @@ function OtherPerfil() {
 
     if (previousEntry) {
       navigate(previousEntry.path, {
-        state: {
+        state: previousEntry.state ?? {
           backStack: backStack.slice(0, -1),
           profilePath: previousEntry.profilePath
         }

@@ -38,7 +38,7 @@ function CardSeguidores() {
 
           {dados.messageStatus?.trim() && (
             <div className="message-status">
-              <p>{dados.messageStatus}</p>
+              <p className='status-p'>{dados.messageStatus}</p>
             </div>
           )}
 

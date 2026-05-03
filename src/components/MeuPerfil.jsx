@@ -76,12 +76,8 @@ function MeuPerfil() {
     <>
       {myProfile && (
         <div className='meu-perfil'>
-          {myProfile.messageStatus?.trim() && (
-            <div className="message-status-perfil">
-              <p>{myProfile.messageStatus}</p>
-            </div>
-          )}
-          <img className='more' src="/add.png" alt="" />
+          
+          <img onClick={()=> navigate('/posts')}  className='more' src="/add.png" alt="" />
           <div className='img-perfil-container'>
             <img className='img-perfil' src={myProfile.imageUrlProfile ? myProfile.imageUrlProfile : 'null.png'} alt="" />
           </div>

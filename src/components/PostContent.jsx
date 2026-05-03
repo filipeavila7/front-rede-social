@@ -236,32 +236,16 @@ function PostContent() {
     }
 
     function handleOwnerProfileClick() {
-        const originPath = returnTo.path ?? "/feed";
-        const originState = returnTo.state ?? null;
-
-        let profileState;
-
-        if (returnTo.kind === "other-profile" && originPath.startsWith("/profile/")) {
-            profileState = originState ?? { backStack: [], profilePath: originPath };
-        } else if (from === "my-profile" || returnTo.kind === "my-profile" || originPath === "/perfil") {
-            profileState = {
-                backStack: [
-                    {
-                        path: "/perfil",
-                        profilePath: "/perfil"
+        const profileState = {
+            backStack: [
+                {
+                    path: `${location.pathname}${location.search}`,
+                    state: {
+                        returnTo
                     }
-                ]
-            };
-        } else {
-            profileState = {
-                backStack: [
-                    {
-                        path: originPath,
-                        profilePath: originPath
-                    }
-                ]
-            };
-        }
+                }
+            ]
+        };
 
         navigate(`/profile/${post.user.id}/${post.user.userName}`, {
             state: profileState
