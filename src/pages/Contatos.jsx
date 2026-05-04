@@ -1,11 +1,13 @@
 import StatusCard from "../components/StatusCards";
 import ContatoCard from "../components/ContatoCard";
 import '../styles/Contatos.css'
+import SearchUsers from "../components/SearchUsers";
 
 
 function Contatos() {
   return (
     <main className="conteudo-contato">
+      <SearchUsers/>
       <StatusCard />
 
       <section className="contatos-section">

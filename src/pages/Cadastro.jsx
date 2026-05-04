@@ -63,9 +63,9 @@ function Cadastro() {
                     <h1>Cadastro</h1>
                     <img onClick={() => navigate('/login')} className='voltar-icon-c' src="/voltar.png" alt="" />
                     <form onSubmit={cadastroUser} className='form' action="" method="post">
-                        <label htmlFor="nome">Nome de usuário </label>
+                        <label htmlFor="userName">Nome de usuário </label>
                         <div className="input-container">
-                            <input required type="text" id="nome" name="nome" ref={imputUserName} />
+                            <input required type="text" id="userName" name="userName" ref={imputUserName} />
                             <img src="/user.png" alt="" className="form-icon" />
                         </div>
 

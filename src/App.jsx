@@ -18,6 +18,10 @@ import PostInner from "./pages/PostInner";
 import OtherUserPage from "./pages/OtherUserPage";
 import SeguidoresPageOther from "./pages/SeguidoresPageOther";
 import SeguindoPageOther from "./pages/SeguindoPageOther";
+import SearchPosts from "./pages/SearchPosts";
+
+
+
 function App() {
   return (
     <>
@@ -34,6 +38,7 @@ function App() {
           <Route path="/contatos/:conversationId" element={<Messages />} />
           <Route path="/" element={<AppLayout />}>
             <Route path="feed" element={<Feed />} />
+            <Route path="feed/search/:termo" element={<SearchPosts />} />
             <Route path="perfil" element={<Perfil />} />
             <Route path="perfil/editar" element={<PerfilEditar />} />
             <Route path="contatos" element={<Contatos />} />

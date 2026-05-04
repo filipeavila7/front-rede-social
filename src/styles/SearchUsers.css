@@ -1,0 +1,94 @@
+.search-users-container {
+    width: 100%;
+    position: relative;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.search-input-box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 17px 14px;
+    backdrop-filter: blur(10px);
+    gap: 10px;
+}
+
+.search-icon {
+    width: 23px;
+    
+}
+
+.search-users-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 17px;
+}
+
+.search-users-input::placeholder {
+    color: rgba(255,255,255,0.5);
+}
+
+.search-dropdown {
+    width: 100%;
+    max-height: 320px;
+    overflow-y: auto;
+    background: rgba(20,20,20,0.96);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    margin-top: 8px;
+    padding: 8px;
+    position: absolute;
+    z-index: 999;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.search-user-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.search-user-card:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+.search-user-photo {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.search-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.search-username {
+    color: white;
+    font-size: 14px;
+    margin: 0;
+    font-weight: 600;
+}
+
+.search-name {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+}
+
+.search-empty {
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    padding: 20px;
+    font-size: 13px;
+}
