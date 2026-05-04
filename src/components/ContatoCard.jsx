@@ -11,7 +11,7 @@ function ContatoCard() {
     async function getContatos() {
         try {
             const res = await api.get("/conversations/me");
-            setContatos(res.data);
+            setContatos(res.data || []);
         } catch (error) {
             console.error("Erro ao buscar contatos:", error);
         }
@@ -19,7 +19,7 @@ function ContatoCard() {
 
     useEffect(() => {
         getContatos();
-    }, []);
+    }, [conversationId]);
 
     const formatTime = (date) => {
         if (!date) return "--:--";
@@ -40,13 +40,20 @@ function ContatoCard() {
         });
     };
 
+    // só renderiza conversas que já possuem alguma mensagem
+    const contatosVisiveis = contatos.filter(
+        (dados) => dados.lastMessage && dados.lastMessage.trim() !== ""
+    );
+
     return (
         <div className="contato-card-list">
-            {contatos.map((dados) => (
+            {contatosVisiveis.map((dados) => (
                 <article
                     key={`contatos-${dados.conversationId}`}
                     onClick={() => navigate(`/contatos/${dados.conversationId}`)}
-                    className={`contato-card ${Number(conversationId) === dados.conversationId ? "active" : ""}`}
+                    className={`contato-card ${
+                        Number(conversationId) === Number(dados.conversationId) ? "active" : ""
+                    }`}
                 >
                     <div className="img-contato-container">
                         <img
@@ -59,9 +66,7 @@ function ContatoCard() {
                     <div className="contato-info">
                         <div className="contato-nome">
                             <p className="contato-nome-text">{dados.otherUserName}</p>
-                            <p className="ultima-msg">
-                                {dados.lastMessage?.trim() || "Comece essa conversa"}
-                            </p>
+                            <p className="ultima-msg">{dados.lastMessage}</p>
                         </div>
 
                         <div className="hora-msg">

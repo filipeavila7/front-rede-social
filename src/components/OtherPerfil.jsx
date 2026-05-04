@@ -47,6 +47,17 @@ function OtherPerfil() {
     }
   }
 
+ 
+
+  async function handleOpenConversation() {
+    try {
+      const response = await api.post(`/conversations/open/${profile.id}`)
+      navigate(`/contatos/${response.data.conversationId}`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   async function confirmUnfollow() {
     await deixarDeSeguir(Number(id))
     setShowUnfollowModal(false)
@@ -130,7 +141,7 @@ function OtherPerfil() {
             <button onClick={handleBack} className='voltar-other'>
               <img src="/voltar.png" alt="" className="voltar-other-icon" />
             </button>
-            
+
 
             <div className='img-perfil-container'>
               <img
@@ -188,6 +199,11 @@ function OtherPerfil() {
                 </div>
 
                 <div className="btn-div">
+                  <div>
+                    <button onClick={handleOpenConversation} className="btn-editar-perfil">
+                      <p className="btn-texto">Mensagem</p>
+                    </button>
+                  </div>
                   <button
                     onClick={
                       isMe
@@ -216,7 +232,11 @@ function OtherPerfil() {
                           : 'Seguir'}
                     </p>
                   </button>
+
+
                 </div>
+
+
               </div>
 
               <div className='my-bio'>

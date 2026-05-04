@@ -172,7 +172,7 @@ background: linear-gradient(164deg, rgba(16, 16, 16, 1) 85%, rgba(25, 11, 46, 1)
 .btn-div{
     display: flex;
     width: 430px;
-    
+    gap: 20px;
     justify-content: flex-end;
 }
 

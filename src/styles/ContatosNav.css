@@ -9,7 +9,7 @@
     padding: 18px 14px;
     -webkit-box-shadow: 4px 3px 17px 0px #000000;
     box-shadow: 4px 3px 17px 0px #000000;
-    overflow-y: auto;
+    
     border-right: 1px solid rgba(255, 255, 255, 0.04);
 }
 
@@ -87,6 +87,11 @@
 .contatos-nav-title{
     color: white;
     font-size: 28px;
+}
+
+
+.message-nav-lay{
+    overflow-y: auto;
 }
 
 .contato-user-nav-info{
