@@ -241,7 +241,10 @@
     gap: 10px;
     flex-wrap: wrap;
     height: 240px;
+    padding: 10px;
     overflow-x: auto;
+    scrollbar-width: none;       
+    -ms-overflow-style: none;
 }
 
 .tag{

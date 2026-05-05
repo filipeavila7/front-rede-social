@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import api from "../service/api";
 import "../styles/Messages.css";
 import { useParams } from "react-router-dom";
+import SockJS from "sockjs-client/dist/sockjs";
+import { Client } from "@stomp/stompjs";
 
 function CardsMessages({ onMessageSent }) {
     const [messages, setMessages] = useState([]);
@@ -10,9 +12,11 @@ function CardsMessages({ onMessageSent }) {
     const [headerPhoto, setHeaderPhoto] = useState("");
     const { conversationId } = useParams();
     const [receiverId, setReceiverId] = useState(null);
+
     const inputMessage = useRef();
     const allRef = useRef(null);
     const firstLoadRef = useRef(true);
+    const stompClientRef = useRef(null);
 
     async function getMessages() {
         try {
@@ -27,8 +31,10 @@ function CardsMessages({ onMessageSent }) {
         try {
             const res = await api.get("/users/me");
             setMeId(res.data?.id ?? null);
+            return res.data?.id ?? null;
         } catch (error) {
             console.log(error);
+            return null;
         }
     }
 
@@ -54,35 +60,111 @@ function CardsMessages({ onMessageSent }) {
 
         if (!content || !receiverId) return;
 
+        const tempId = "temp_" + Date.now();
+
+        const tempMessage = {
+            id: tempId,
+            senderId: meId,
+            content,
+            createdAt: new Date().toISOString(),
+            status: "sending"
+        };
+
+        setMessages((prev) => [...prev, tempMessage]);
+        inputMessage.current.value = "";
+
+        requestAnimationFrame(() => {
+            if (allRef.current) {
+                allRef.current.scrollTop = allRef.current.scrollHeight;
+            }
+        });
+
         try {
-            await api.post(`/messages/${receiverId}`, {
+            const res = await api.post(`/messages/${receiverId}`, {
                 content,
             });
 
-            inputMessage.current.value = "";
-            getMessages();
+            setMessages((prev) =>
+                prev.map((msg) =>
+                    msg.id === tempId
+                        ? { ...res.data, status: "sent" }
+                        : msg
+                )
+            );
 
-            if (onMessageSent) {
-                onMessageSent();
-            }
         } catch (error) {
             console.log(error);
+
+            setMessages((prev) =>
+                prev.map((msg) =>
+                    msg.id === tempId
+                        ? { ...msg, status: "error" }
+                        : msg
+                )
+            );
         }
     }
-
     useEffect(() => {
         if (!conversationId) return;
 
-        getMessages();
-        getMe();
-        getConversationHeader();
-        firstLoadRef.current = true;
+        async function initChat() {
+            await getMessages();
+            const myId = await getMe();
+            await getConversationHeader();
 
-        const interval = setInterval(() => {
-            getMessages();
-        }, 1000);
+            firstLoadRef.current = true;
 
-        return () => clearInterval(interval);
+            if (!myId) return;
+
+            try {
+                const socket = new SockJS("http://localhost:8080/ws");
+
+                const stompClient = new Client({
+                    webSocketFactory: () => socket,
+                    reconnectDelay: 5000,
+
+                    onConnect: () => {
+                        stompClient.subscribe(`/topic/messages/${myId}`, (message) => {
+                            const novaMensagem = JSON.parse(message.body);
+
+                            setMessages((prev) => {
+                                const jaExiste = prev.some((m) => m.id === novaMensagem.id);
+                                if (jaExiste) return prev;
+                                return [...prev, novaMensagem];
+                            });
+
+                            if (onMessageSent) {
+                                onMessageSent();
+                            }
+
+                            requestAnimationFrame(() => {
+                                if (allRef.current) {
+                                    allRef.current.scrollTop = allRef.current.scrollHeight;
+                                }
+                            });
+                        });
+                    },
+
+                    onStompError: (frame) => {
+                        console.log("Erro STOMP:", frame);
+                    }
+                });
+
+                stompClient.activate();
+                stompClientRef.current = stompClient;
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        initChat();
+
+        return () => {
+            if (stompClientRef.current) {
+                stompClientRef.current.deactivate();
+            }
+        };
     }, [conversationId]);
 
     useEffect(() => {
@@ -124,6 +206,15 @@ function CardsMessages({ onMessageSent }) {
 
                     return (
                         <div key={dados.id} className={isMine ? "msg-right" : "msg-left"}>
+
+                            {isMine && (
+                                <div className="send-indicator">
+                                    {dados.status === "sending" && <span className="loading-dot"></span>}
+                                    {dados.status === "sent" && <span className="send-ok">✓</span>}
+                                    {dados.status === "error" && <span className="send-error">!</span>}
+                                </div>
+                            )}
+
                             <div className={isMine ? "conteudo-right" : "conteudo-left"}>
                                 <p>{dados.content}</p>
                                 <p className={isMine ? "horas-right" : "horas-left"}>
@@ -136,7 +227,7 @@ function CardsMessages({ onMessageSent }) {
             </div>
 
             <div className="input-msg-container">
-                <form onSubmit={postMessage} className="msg-form" action="">
+                <form onSubmit={postMessage} className="msg-form">
                     <textarea
                         ref={inputMessage}
                         className="input-msg"
