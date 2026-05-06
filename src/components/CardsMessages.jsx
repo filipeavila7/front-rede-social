@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import api from "../service/api";
 import "../styles/Messages.css";
 import { useParams } from "react-router-dom";
@@ -16,19 +16,28 @@ function CardsMessages({ onMessageSent }) {
 
     const inputMessage = useRef();
     const allRef = useRef(null);
-    const firstLoadRef = useRef(true);
     const stompClientRef = useRef(null);
-    const currentConversationRef = useRef(null);
+    const subscriptionRef = useRef(null);
+    const readSubscriptionRef = useRef(null);
+    const firstLoadRef = useRef(true);
+    const meIdRef = useRef(null);           // evita closure stale no WebSocket
+    const receiverIdRef = useRef(null);     // mesmo motivo
 
-    useEffect(() => {
-        currentConversationRef.current = Number(conversationId);
-    }, [conversationId]);
+    const scrollToBottom = useCallback(() => {
+        requestAnimationFrame(() => {
+            if (allRef.current) {
+                allRef.current.scrollTop = allRef.current.scrollHeight;
+            }
+        });
+    }, []);
 
     async function getMe() {
         try {
             const res = await api.get("/users/me");
-            setMeId(res.data?.id ?? null);
-            return res.data?.id ?? null;
+            const id = res.data?.id ?? null;
+            setMeId(id);
+            meIdRef.current = id;
+            return id;
         } catch (error) {
             console.log(error);
             return null;
@@ -38,12 +47,12 @@ function CardsMessages({ onMessageSent }) {
     async function getConversationHeader() {
         try {
             const res = await api.get("/conversations/me");
-
             const convo = res.data?.find(
                 (c) => Number(c.conversationId) === Number(conversationId)
             );
-
-            setReceiverId(convo?.otherUserId ?? null);
+            const otherId = convo?.otherUserId ?? null;
+            setReceiverId(otherId);
+            receiverIdRef.current = otherId;
             setHeaderName(convo?.otherUserName || "");
             setHeaderPhoto(convo?.otherUserPhoto || "");
         } catch (error) {
@@ -54,31 +63,34 @@ function CardsMessages({ onMessageSent }) {
     async function getMessages() {
         try {
             const res = await api.get(`/messages/conversation/${conversationId}`);
-
-            const msgs = (res.data || []).map((msg) => ({
-                ...msg,
-                status: "sent"
-            }));
-
+            const msgs = (res.data || []).map((msg) => ({ ...msg, status: "sent" }));
             setMessages(msgs);
         } catch (error) {
             console.log(error);
         }
     }
 
+    // chamado em dois lugares: ao abrir a conversa e ao receber msg via WebSocket
+    const markAsRead = useCallback(async () => {
+        try {
+            await api.post(`/messages/conversation/${conversationId}/read`);
+        } catch (error) {
+            console.log(error);
+        }
+    }, [conversationId]);
+
     async function postMessage(e) {
         e.preventDefault();
 
         const content = inputMessage.current.value.trim();
-
-        if (!content || !receiverId) return;
+        if (!content || !receiverIdRef.current) return;
 
         const tempId = "temp_" + Date.now();
 
         const tempMessage = {
             id: tempId,
             conversationId: Number(conversationId),
-            senderId: meId,
+            senderId: meIdRef.current,
             content,
             createdAt: new Date().toISOString(),
             status: "sending",
@@ -87,112 +99,102 @@ function CardsMessages({ onMessageSent }) {
 
         setMessages((prev) => [...prev, tempMessage]);
         inputMessage.current.value = "";
-
-        requestAnimationFrame(() => {
-            if (allRef.current) {
-                allRef.current.scrollTop = allRef.current.scrollHeight;
-            }
-        });
+        scrollToBottom();
 
         try {
-            const res = await api.post(`/messages/${receiverId}`, { content });
+            const res = await api.post(`/messages/${receiverIdRef.current}`, { content });
+
+            if (onMessageSent) onMessageSent();
 
             setMessages((prev) =>
                 prev.map((msg) =>
-                    msg.id === tempId
-                        ? { ...res.data, status: "sent" }
-                        : msg
+                    msg.id === tempId ? { ...res.data, status: "sent" } : msg
                 )
             );
         } catch (error) {
             console.log(error);
-
             setMessages((prev) =>
                 prev.map((msg) =>
-                    msg.id === tempId
-                        ? { ...msg, status: "error" }
-                        : msg
+                    msg.id === tempId ? { ...msg, status: "error" } : msg
                 )
             );
         }
     }
 
-    // CARREGA CONVERSA AO TROCAR DE CHAT
+    // carrega conversa ao trocar conversationId
     useEffect(() => {
         if (!conversationId) return;
 
         async function loadConversation() {
+            firstLoadRef.current = true;
             await getConversationHeader();
             await getMessages();
-            firstLoadRef.current = true;
+            await markAsRead(); // marca lido ao abrir
         }
 
         loadConversation();
     }, [conversationId]);
 
-    // CONECTA WEBSOCKET UMA ÚNICA VEZ
+    // WebSocket — conecta uma vez por conversationId
     useEffect(() => {
+        if (!conversationId) return;
+
+        let stompClient;
+
         async function connectSocket() {
             const myId = await getMe();
             if (!myId) return;
 
             const socket = new SockJS("http://localhost:8080/ws");
 
-            const stompClient = new Client({
+            stompClient = new Client({
                 webSocketFactory: () => socket,
                 reconnectDelay: 5000,
 
                 onConnect: () => {
+                    // cancela subs antigas se reconectou
+                    if (subscriptionRef.current) subscriptionRef.current.unsubscribe();
+                    if (readSubscriptionRef.current) readSubscriptionRef.current.unsubscribe();
 
-                    // RECEBER NOVAS MENSAGENS
-                    stompClient.subscribe(`/topic/messages/${myId}`, (message) => {
-                        const novaMensagem = JSON.parse(message.body);
+                    // recebe mensagens da conversa
+                    subscriptionRef.current = stompClient.subscribe(
+                        `/topic/messages/conversation/${conversationId}`,
+                        (message) => {
+                            const novaMensagem = JSON.parse(message.body);
 
-                        if (onMessageSent) onMessageSent();
+                            setMessages((prev) => {
+                                // ignora msg enviada por mim (já adicionada como tempMsg)
+                                if (novaMensagem.senderId === meIdRef.current) return prev;
 
-                        setMessages((prev) => {
-                            const jaExiste = prev.some((m) => m.id === novaMensagem.id);
-                            if (jaExiste) return prev;
+                                const jaExiste = prev.some((m) => m.id === novaMensagem.id);
+                                if (jaExiste) return prev;
 
-                            if (
-                                Number(novaMensagem.conversationId) !==
-                                currentConversationRef.current
-                            ) {
-                                return prev;
-                            }
-
-                            requestAnimationFrame(() => {
-                                if (allRef.current) {
-                                    allRef.current.scrollTop = allRef.current.scrollHeight;
-                                }
+                                return [...prev, { ...novaMensagem, status: "sent" }];
                             });
 
-                            return [
-                                ...prev,
-                                {
-                                    ...novaMensagem,
-                                    status: "sent"
-                                }
-                            ];
-                        });
-                    });
+                            // ✅ marca como lido em tempo real (resolve o bug principal)
+                            markAsRead();
 
-                    // RECEBER EVENTO DE LEITURA
-                    stompClient.subscribe(`/topic/read-status/${myId}`, (message) => {
-                        const readEvent = JSON.parse(message.body);
+                            if (onMessageSent) onMessageSent();
+                            scrollToBottom();
+                        }
+                    );
 
-                        setMessages((prev) =>
-                            prev.map((msg) =>
-                                readEvent.messageIds.includes(msg.id)
-                                    ? { ...msg, readAt: new Date().toISOString() }
-                                    : msg
-                            )
-                        );
-                    });
-                },
+                    // recebe confirmação de leitura das minhas msgs
+                    readSubscriptionRef.current = stompClient.subscribe(
+                        `/topic/read-status/${myId}`,
+                        (message) => {
+                            const readEvent = JSON.parse(message.body);
 
-                onStompError: (frame) => {
-                    console.log("Erro STOMP:", frame);
+                            setMessages((prev) =>
+                                prev.map((msg) =>
+                                    readEvent.messageIds.includes(msg.id)
+                                        ? { ...msg, readAt: new Date().toISOString() }
+                                        : msg
+                                )
+                            );
+                        }
+                    );
                 }
             });
 
@@ -203,35 +205,26 @@ function CardsMessages({ onMessageSent }) {
         connectSocket();
 
         return () => {
-            if (stompClientRef.current) {
-                stompClientRef.current.deactivate();
-            }
+            if (subscriptionRef.current) subscriptionRef.current.unsubscribe();
+            if (readSubscriptionRef.current) readSubscriptionRef.current.unsubscribe();
+            if (stompClientRef.current) stompClientRef.current.deactivate();
         };
-    }, []);
+    }, [conversationId]);
 
-    // SCROLL AUTOMÁTICO PRIMEIRA CARGA
+    // scroll no primeiro carregamento
     useEffect(() => {
-        if (!firstLoadRef.current) return;
-        if (messages.length === 0) return;
-
-        requestAnimationFrame(() => {
-            if (allRef.current) {
-                allRef.current.scrollTop = allRef.current.scrollHeight;
-                firstLoadRef.current = false;
-            }
-        });
+        if (!firstLoadRef.current || messages.length === 0) return;
+        scrollToBottom();
+        firstLoadRef.current = false;
     }, [messages]);
 
     return (
         <div ref={allRef} className="all">
             <div className="chat-header">
-                <img className="chat-photo" src={headerPhoto || "/null.png"} alt="" />
+                <img className="chat-photo" src={headerPhoto || "/null.png"} />
                 <div className="chat-header-info">
                     <div className="chat-name">{headerName}</div>
                     <p className="chat-subtitle">Conversa ativa</p>
-                </div>
-                <div className="config-icon-container">
-                    <img className="config-icon" src="/dots.png" alt="" />
                 </div>
             </div>
 
@@ -241,29 +234,35 @@ function CardsMessages({ onMessageSent }) {
 
                     const time = dados.createdAt
                         ? new Date(dados.createdAt).toLocaleTimeString("pt-BR", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                        })
+                              hour: "2-digit",
+                              minute: "2-digit",
+                          })
                         : "";
 
                     return (
                         <div key={dados.id} className={isMine ? "msg-right" : "msg-left"}>
                             <div className={isMine ? "conteudo-right" : "conteudo-left"}>
                                 <p>{dados.content}</p>
-
                                 <div className={isMine ? "horas-right" : "horas-left"}>
-                                    <span>{time}</span>
-
+                                    <span className="hora-cor" >{time}</span>
                                     {isMine && (
                                         <div className="send-indicator">
-                                            {dados.status === "sending" && <span className="loading-dot"></span>}
-                                            {dados.status === "error" && <span className="send-error">!</span>}
-                                            {dados.status !== "sending" && dados.status !== "error" && !dados.readAt && (
-                                                <span className="send-ok">✓✓</span>
+                                            {dados.status === "sending" && (
+                                                <span className="loading-dot"></span>
                                             )}
-                                            {dados.status !== "sending" && dados.status !== "error" && dados.readAt && (
-                                                <span className="send-read">✓✓</span>
+                                            {dados.status === "error" && (
+                                                <span className="send-error">!</span>
                                             )}
+                                            {dados.status !== "sending" &&
+                                                dados.status !== "error" &&
+                                                !dados.readAt && (
+                                                    <span className="send-ok">✓✓</span>
+                                                )}
+                                            {dados.status !== "sending" &&
+                                                dados.status !== "error" &&
+                                                dados.readAt && (
+                                                    <span className="send-read">✓✓</span>
+                                                )}
                                         </div>
                                     )}
                                 </div>
@@ -287,9 +286,8 @@ function CardsMessages({ onMessageSent }) {
                         }}
                     />
                 </form>
-
                 <button onClick={postMessage} className="btn-msg" type="button">
-                    <img className="btn-icon" src="/plane.png" alt="" />
+                    <img className="btn-icon" src="/plane.png" />
                 </button>
             </div>
         </div>

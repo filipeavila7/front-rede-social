@@ -21,7 +21,7 @@
 
 .send-ok{
     color: white;
-    font-size: 15px;
+    font-size: 12px;
 }
 
 @keyframes spinMsgInline{
@@ -136,7 +136,7 @@
 
 .conteudo-right {
     background: linear-gradient(145deg, #7B3FE4 0%, #d530fa 100%);
-    padding: 14px 62px 24px 16px;
+    padding: 14px 80px 24px 16px;
     border-radius: 24px 24px 8px 24px;
     font-size: 20px;
     position: relative;
@@ -157,7 +157,7 @@
 .conteudo-left {
     background: linear-gradient(145deg, #060606 0%, #121212 100%);
     color: white;
-    padding: 14px 62px 24px 16px;
+    padding: 14px 80px 24px 16px;
     border-radius: 24px 24px 24px 8px;
     font-size: 20px;
     position: relative;
@@ -173,11 +173,16 @@
 .horas-right,
 .horas-left {
     position: absolute;
-    bottom: 8px;
-    right: 12px;
-    font-size: 12px;
+    bottom: 5px;
+    right: 8px;
+    font-size: 14px;
+    gap: 4px;
     display: flex;
     align-items: center;
+}
+
+.hora-cor{
+    color: white;
 }
 
 .input-msg-container {
