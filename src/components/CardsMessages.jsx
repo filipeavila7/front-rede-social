@@ -10,22 +10,19 @@ function CardsMessages({ onMessageSent }) {
     const [meId, setMeId] = useState(null);
     const [headerName, setHeaderName] = useState("");
     const [headerPhoto, setHeaderPhoto] = useState("");
-    const { conversationId } = useParams();
     const [receiverId, setReceiverId] = useState(null);
+
+    const { conversationId } = useParams();
 
     const inputMessage = useRef();
     const allRef = useRef(null);
     const firstLoadRef = useRef(true);
     const stompClientRef = useRef(null);
+    const currentConversationRef = useRef(null);
 
-    async function getMessages() {
-        try {
-            const res = await api.get(`/messages/conversation/${conversationId}`);
-            setMessages(res.data || []);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    useEffect(() => {
+        currentConversationRef.current = Number(conversationId);
+    }, [conversationId]);
 
     async function getMe() {
         try {
@@ -41,6 +38,7 @@ function CardsMessages({ onMessageSent }) {
     async function getConversationHeader() {
         try {
             const res = await api.get("/conversations/me");
+
             const convo = res.data?.find(
                 (c) => Number(c.conversationId) === Number(conversationId)
             );
@@ -48,6 +46,21 @@ function CardsMessages({ onMessageSent }) {
             setReceiverId(convo?.otherUserId ?? null);
             setHeaderName(convo?.otherUserName || "");
             setHeaderPhoto(convo?.otherUserPhoto || "");
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async function getMessages() {
+        try {
+            const res = await api.get(`/messages/conversation/${conversationId}`);
+
+            const msgs = (res.data || []).map((msg) => ({
+                ...msg,
+                status: "sent"
+            }));
+
+            setMessages(msgs);
         } catch (error) {
             console.log(error);
         }
@@ -64,10 +77,12 @@ function CardsMessages({ onMessageSent }) {
 
         const tempMessage = {
             id: tempId,
+            conversationId: Number(conversationId),
             senderId: meId,
             content,
             createdAt: new Date().toISOString(),
-            status: "sending"
+            status: "sending",
+            readAt: null
         };
 
         setMessages((prev) => [...prev, tempMessage]);
@@ -80,9 +95,7 @@ function CardsMessages({ onMessageSent }) {
         });
 
         try {
-            const res = await api.post(`/messages/${receiverId}`, {
-                content,
-            });
+            const res = await api.post(`/messages/${receiverId}`, { content });
 
             setMessages((prev) =>
                 prev.map((msg) =>
@@ -91,7 +104,6 @@ function CardsMessages({ onMessageSent }) {
                         : msg
                 )
             );
-
         } catch (error) {
             console.log(error);
 
@@ -104,37 +116,49 @@ function CardsMessages({ onMessageSent }) {
             );
         }
     }
+
+    // CARREGA CONVERSA AO TROCAR DE CHAT
     useEffect(() => {
         if (!conversationId) return;
 
-        async function initChat() {
-            await getMessages();
-            const myId = await getMe();
+        async function loadConversation() {
             await getConversationHeader();
-
+            await getMessages();
             firstLoadRef.current = true;
+        }
 
+        loadConversation();
+    }, [conversationId]);
+
+    // CONECTA WEBSOCKET UMA ÚNICA VEZ
+    useEffect(() => {
+        async function connectSocket() {
+            const myId = await getMe();
             if (!myId) return;
 
-            try {
-                const socket = new SockJS("http://localhost:8080/ws");
+            const socket = new SockJS("http://localhost:8080/ws");
 
-                const stompClient = new Client({
-                    webSocketFactory: () => socket,
-                    reconnectDelay: 5000,
+            const stompClient = new Client({
+                webSocketFactory: () => socket,
+                reconnectDelay: 5000,
 
-                    onConnect: () => {
-                        stompClient.subscribe(`/topic/messages/${myId}`, (message) => {
-                            const novaMensagem = JSON.parse(message.body);
+                onConnect: () => {
 
-                            setMessages((prev) => {
-                                const jaExiste = prev.some((m) => m.id === novaMensagem.id);
-                                if (jaExiste) return prev;
-                                return [...prev, novaMensagem];
-                            });
+                    // RECEBER NOVAS MENSAGENS
+                    stompClient.subscribe(`/topic/messages/${myId}`, (message) => {
+                        const novaMensagem = JSON.parse(message.body);
 
-                            if (onMessageSent) {
-                                onMessageSent();
+                        if (onMessageSent) onMessageSent();
+
+                        setMessages((prev) => {
+                            const jaExiste = prev.some((m) => m.id === novaMensagem.id);
+                            if (jaExiste) return prev;
+
+                            if (
+                                Number(novaMensagem.conversationId) !==
+                                currentConversationRef.current
+                            ) {
+                                return prev;
                             }
 
                             requestAnimationFrame(() => {
@@ -142,41 +166,59 @@ function CardsMessages({ onMessageSent }) {
                                     allRef.current.scrollTop = allRef.current.scrollHeight;
                                 }
                             });
+
+                            return [
+                                ...prev,
+                                {
+                                    ...novaMensagem,
+                                    status: "sent"
+                                }
+                            ];
                         });
-                    },
+                    });
 
-                    onStompError: (frame) => {
-                        console.log("Erro STOMP:", frame);
-                    }
-                });
+                    // RECEBER EVENTO DE LEITURA
+                    stompClient.subscribe(`/topic/read-status/${myId}`, (message) => {
+                        const readEvent = JSON.parse(message.body);
 
-                stompClient.activate();
-                stompClientRef.current = stompClient;
+                        setMessages((prev) =>
+                            prev.map((msg) =>
+                                readEvent.messageIds.includes(msg.id)
+                                    ? { ...msg, readAt: new Date().toISOString() }
+                                    : msg
+                            )
+                        );
+                    });
+                },
 
-            } catch (error) {
-                console.log(error);
-            }
+                onStompError: (frame) => {
+                    console.log("Erro STOMP:", frame);
+                }
+            });
+
+            stompClient.activate();
+            stompClientRef.current = stompClient;
         }
 
-        initChat();
+        connectSocket();
 
         return () => {
             if (stompClientRef.current) {
                 stompClientRef.current.deactivate();
             }
         };
-    }, [conversationId]);
+    }, []);
 
+    // SCROLL AUTOMÁTICO PRIMEIRA CARGA
     useEffect(() => {
         if (!firstLoadRef.current) return;
         if (messages.length === 0) return;
 
-        const el = allRef.current;
-        if (!el) return;
-
         requestAnimationFrame(() => {
-            el.scrollTop = el.scrollHeight;
-            firstLoadRef.current = false;
+            if (allRef.current) {
+                allRef.current.scrollTop = allRef.current.scrollHeight;
+                firstLoadRef.current = false;
+            }
         });
     }, [messages]);
 
@@ -206,20 +248,25 @@ function CardsMessages({ onMessageSent }) {
 
                     return (
                         <div key={dados.id} className={isMine ? "msg-right" : "msg-left"}>
-
-                            {isMine && (
-                                <div className="send-indicator">
-                                    {dados.status === "sending" && <span className="loading-dot"></span>}
-                                    {dados.status === "sent" && <span className="send-ok">✓</span>}
-                                    {dados.status === "error" && <span className="send-error">!</span>}
-                                </div>
-                            )}
-
                             <div className={isMine ? "conteudo-right" : "conteudo-left"}>
                                 <p>{dados.content}</p>
-                                <p className={isMine ? "horas-right" : "horas-left"}>
-                                    {time}
-                                </p>
+
+                                <div className={isMine ? "horas-right" : "horas-left"}>
+                                    <span>{time}</span>
+
+                                    {isMine && (
+                                        <div className="send-indicator">
+                                            {dados.status === "sending" && <span className="loading-dot"></span>}
+                                            {dados.status === "error" && <span className="send-error">!</span>}
+                                            {dados.status !== "sending" && dados.status !== "error" && !dados.readAt && (
+                                                <span className="send-ok">✓✓</span>
+                                            )}
+                                            {dados.status !== "sending" && dados.status !== "error" && dados.readAt && (
+                                                <span className="send-read">✓✓</span>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     );

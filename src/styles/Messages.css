@@ -14,6 +14,16 @@
     font-weight: bold;
 }
 
+.send-read{
+    color: #00eaff;
+    font-size: 15px;
+}
+
+.send-ok{
+    color: white;
+    font-size: 15px;
+}
+
 @keyframes spinMsgInline{
     from{
         transform: rotate(0deg);
@@ -166,7 +176,8 @@
     bottom: 8px;
     right: 12px;
     font-size: 12px;
-    opacity: 0.72;
+    display: flex;
+    align-items: center;
 }
 
 .input-msg-container {
