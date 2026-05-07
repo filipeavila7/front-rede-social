@@ -12,7 +12,7 @@ function GlobalNotifications() {
     const socketInitializedRef = useRef(false);
     const subscribedRef = useRef(false);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (socketInitializedRef.current) return;
@@ -37,33 +37,41 @@ function GlobalNotifications() {
                         if (subscribedRef.current) return;
                         subscribedRef.current = true;
 
-                        stompClientLocal.subscribe(`/topic/notifications/${myId}`, (msg) => {
-                            const notif = JSON.parse(msg.body);
+                        stompClientLocal.subscribe(
+                            `/topic/notifications/${myId}`,
+                            (msg) => {
+                                const notif = JSON.parse(msg.body);
 
-                            const notifObj = {
-                                ...notif,
-                                localId: Date.now() + Math.random()
-                            };
+                                // ❌ ignora READ (não é toast)
+                                if (notif.type === "READ") return;
 
-                            setNotifications((prev) => {
-                                const exists = prev.some(
-                                    (n) =>
-                                        n.senderId === notif.senderId &&
-                                        n.content === notif.content &&
-                                        Math.abs(n.localId - notifObj.localId) < 2000
-                                );
+                                const notifObj = {
+                                    ...notif,
+                                    localId: Date.now() + Math.random()
+                                };
 
-                                if (exists) return prev;
+                                setNotifications((prev) => {
+                                    const exists = prev.some(
+                                        (n) =>
+                                            n.messageId === notif.messageId &&
+                                            n.type === notif.type
+                                    );
 
-                                return [...prev, notifObj];
-                            });
+                                    if (exists) return prev;
 
-                            setTimeout(() => {
-                                setNotifications((prev) =>
-                                    prev.filter((n) => n.localId !== notifObj.localId)
-                                );
-                            }, 4500);
-                        });
+                                    return [...prev, notifObj];
+                                });
+
+                                // auto remove toast
+                                setTimeout(() => {
+                                    setNotifications((prev) =>
+                                        prev.filter(
+                                            (n) => n.localId !== notifObj.localId
+                                        )
+                                    );
+                                }, 4500);
+                            }
+                        );
                     },
 
                     onStompError: (frame) => {
@@ -93,25 +101,31 @@ function GlobalNotifications() {
     }, []);
 
     return (
-        <div
-            className="global-notification-wrapper">
+        <div className="global-notification-wrapper">
+
             {notifications.map((n) => (
                 <div
-                    key={n.localId} className="notification-card"
-                    onClick={() => navigate(`/contatos/${n.conversationId}`)}
+                    key={n.localId}
+                    className="notification-card"
+                    onClick={() =>
+                        navigate(`/contatos/${n.conversationId}`)
+                    }
                 >
-
                     <img
                         src={n.senderPhoto || "/null.png"}
-                        alt=""
                         className="notif-photo"
                     />
 
                     <div className="notif-texts">
                         <h4>{n.senderName}</h4>
 
-                        <p>te enviou uma mensagem</p>
-                        <span>{n.content}</span>
+                        <p>
+                            {n.type === "MESSAGE"
+                                ? "te enviou uma mensagem"
+                                : "notificação"}
+                        </p>
+
+                        {n.content && <span>{n.content}</span>}
                     </div>
                 </div>
             ))}

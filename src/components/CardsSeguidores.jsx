@@ -1,9 +1,9 @@
 import api from '../service/api';
 import '../styles/CardSeguidores.css';
 import { useEffect, useState, useMemo } from "react";
-
+import { useNavigate } from 'react-router-dom';
 function CardSeguidores() {
-
+  const navigate = useNavigate()
   const [seguidores, setSeguidres] = useState([]);
 
   async function getStatusSeguidores() {
@@ -42,7 +42,7 @@ function CardSeguidores() {
             </div>
           )}
 
-          <div className="img-container">
+          <div onClick={ () => navigate(`/profile/${dados.userId}/${dados.UserName}`)} className="img-container">
             <img className='imageCard'
               src={dados.imageUrlProfile ? dados.imageUrlProfile : "/null.png"}
               alt={dados.nome}

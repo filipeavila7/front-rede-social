@@ -5,7 +5,26 @@
     overflow-y: auto;
     min-height: 200px   ;
     max-height: 500px;
-    padding: 10px;
+    
+}
+
+.badge-div{
+    width: 20px;
+    background-color: #7B3FE4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+}
+
+.badge-unread{
+    color: white;
+}
+
+.img-contato-container{
+    display: flex;
+    align-items: center;
+    gap: 3px;
 }
 
 .contato-card{

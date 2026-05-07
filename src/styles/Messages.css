@@ -1,3 +1,18 @@
+
+.loading-more {
+    display: flex;
+    justify-content: center;
+    padding: 12px 0;
+}
+
+.start-of-chat {
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    padding: 12px 0;
+}
+
+
 .loading-dot-inline{
     width: 9px;
     height: 9px;
