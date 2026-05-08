@@ -109,6 +109,20 @@ function NavBar() {
               )}
             </NavLink>
           </li>
+          <li>
+            <NavLink
+              to="/notifications"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              onClick={(e) => handleProtectedNavigation("/perfil", e)}
+            >
+              {({ isActive }) => (
+                <>
+                  <img src={isActive ? "/bellA.png" : "/bell.png"} alt="" />
+                  Notificações
+                </>
+              )}
+            </NavLink>
+          </li>
           <li className="cog">
             <NavLink
               to="/config"

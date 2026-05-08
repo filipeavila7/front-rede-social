@@ -4,6 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import api from "../service/api";
 import { useFeedStore } from "../store/feedStore";
 import ConfirmModal from "./ConfirmModal";
+import {
+    incrementPostCommentsInAllCaches,
+    updatePostLikeStateInAllCaches,
+} from "../store/postsListCache";
 
 function PostContent() {
     const { postId } = useParams();
@@ -100,6 +104,7 @@ function PostContent() {
             }));
 
             updatePostCommentCount(numericId, +1);
+            incrementPostCommentsInAllCaches(numericId, +1);
 
             contentComment.current.value = "";
         } catch (error) {
@@ -120,6 +125,7 @@ function PostContent() {
             }));
 
             updatePostLikeCount(numericId, +1);
+            updatePostLikeStateInAllCaches(numericId, true, +1);
         } catch (error) {
             console.log(error);
         }
@@ -138,6 +144,7 @@ function PostContent() {
             }));
 
             updatePostLikeCount(numericId, -1);
+            updatePostLikeStateInAllCaches(numericId, false, -1);
         } catch (error) {
             console.log(error);
         }
@@ -226,12 +233,13 @@ function PostContent() {
 
     function handleBack() {
         if (from === "my-profile" || returnTo.kind === "my-profile") {
-            navigate("/perfil");
+            navigate("/perfil", { replace: true });
             return;
         }
 
         navigate(returnTo.path ?? "/feed", {
-            state: returnTo.state ?? undefined
+            state: returnTo.state ?? undefined,
+            replace: true
         });
     }
 

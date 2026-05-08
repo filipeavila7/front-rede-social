@@ -1,10 +1,12 @@
 import OtherPerfil from "../components/OtherPerfil"
 import PostsOther from "../components/PostsOther"
+import { useParams } from "react-router-dom"
 function OtherUserPage(){
+    const { userName } = useParams()
     return(
         <main className="perfil-layout">
             <OtherPerfil/>
-            <PostsOther/>
+            <PostsOther key={userName}/>
         </main>
     )
 }

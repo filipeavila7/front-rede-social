@@ -21,6 +21,7 @@
     border-radius: 22px;
     transition: 0.2s ease-in-out;
     margin-bottom: 8px;
+    position: relative;
 }
 
 .contato-user-nav:hover{
@@ -45,6 +46,22 @@
     flex-direction: column;
     gap: 18px;
     padding: 8px 8px 20px 8px;
+}
+
+
+.badge-div-c{
+    position: absolute;
+    left: 300px;
+    width: 20px;
+    background-color: #7B3FE4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+}
+
+.badge-unread-c{
+    color: white;
 }
 
 .voltar-button{

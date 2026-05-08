@@ -15,17 +15,11 @@ function ContatoCard() {
     const stompRef = useRef(null);
     const myIdRef = useRef(null);
 
-    // =========================
-    // USER
-    // =========================
     async function getMe() {
         const res = await api.get("/users/me");
         myIdRef.current = res.data?.id;
     }
 
-    // =========================
-    // CONTATOS
-    // =========================
     async function getContatos() {
         try {
             const res = await api.get("/conversations/me");
@@ -35,9 +29,6 @@ function ContatoCard() {
         }
     }
 
-    // =========================
-    // UNREAD (SOURCE OF TRUTH)
-    // =========================
     async function getUnread() {
         try {
             const res = await api.get("/messages/conversations/unread");
@@ -53,9 +44,6 @@ function ContatoCard() {
         }
     }
 
-    // =========================
-    // RESET AO ABRIR CONVERSA
-    // =========================
     useEffect(() => {
         if (!conversationId) return;
 
@@ -65,17 +53,11 @@ function ContatoCard() {
         }));
     }, [conversationId]);
 
-    // =========================
-    // INIT
-    // =========================
     useEffect(() => {
         getContatos();
         getUnread();
     }, []);
 
-    // =========================
-    // WEBSOCKET
-    // =========================
     useEffect(() => {
         let client;
 
@@ -89,10 +71,6 @@ function ContatoCard() {
                 reconnectDelay: 5000,
 
                 onConnect: () => {
-
-                    // =========================
-                    // CONVERSATIONS UPDATE
-                    // =========================
                     client.subscribe(
                         `/topic/conversations/${myIdRef.current}`,
                         (msg) => {
@@ -116,15 +94,10 @@ function ContatoCard() {
                                 );
                             });
 
-                            // 🔥 NÃO incrementa mais aqui (evita duplicação)
-                            // só recalcula depois de sync leve
                             getUnread();
                         }
                     );
 
-                    // =========================
-                    // READ EVENTS
-                    // =========================
                     client.subscribe(
                         `/topic/notifications/${myIdRef.current}`,
                         (msg) => {
@@ -155,9 +128,6 @@ function ContatoCard() {
         };
     }, []);
 
-    // =========================
-    // FORMATADORES
-    // =========================
     const formatTime = (date) => {
         if (!date) return "--:--";
 
@@ -177,16 +147,10 @@ function ContatoCard() {
         });
     };
 
-    // =========================
-    // FILTER
-    // =========================
     const contatosVisiveis = contatos.filter(
         (c) => c.lastMessage && c.lastMessage.trim() !== ""
     );
 
-    // =========================
-    // RENDER
-    // =========================
     return (
         <div className="contato-card-list">
             {contatosVisiveis.map((dados) => (
@@ -237,8 +201,6 @@ function ContatoCard() {
                             <p className="hora-secundaria">
                                 {formatDate(dados.lastMessageAt)}
                             </p>
-
-                            
                         </div>
                     </div>
                 </article>

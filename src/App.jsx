@@ -19,7 +19,7 @@ import OtherUserPage from "./pages/OtherUserPage";
 import SeguidoresPageOther from "./pages/SeguidoresPageOther";
 import SeguindoPageOther from "./pages/SeguindoPageOther";
 import SearchPosts from "./pages/SearchPosts";
-
+import Notifications from "./pages/Notifications";
 
 
 function App() {
@@ -40,6 +40,7 @@ function App() {
             <Route path="feed" element={<Feed />} />
             <Route path="feed/search/:termo" element={<SearchPosts />} />
             <Route path="perfil" element={<Perfil />} />
+            <Route path="notifications" element={<Notifications />} />
             <Route path="perfil/editar" element={<PerfilEditar />} />
             <Route path="contatos" element={<Contatos />} />
             <Route path="posts" element={<CriarPostPage />} />

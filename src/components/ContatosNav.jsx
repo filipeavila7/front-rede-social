@@ -62,9 +62,6 @@ function ContatoNav({ refreshContacts }) {
                 reconnectDelay: 5000,
 
                 onConnect: () => {
-                    // =========================
-                    // UPDATE CONVERSAS
-                    // =========================
                     client.subscribe(
                         `/topic/conversations/${myIdRef.current}`,
                         (msg) => {
@@ -88,14 +85,10 @@ function ContatoNav({ refreshContacts }) {
                                 );
                             });
 
-                            // 🔥 NÃO incrementa mais manualmente
                             getUnread();
                         }
                     );
 
-                    // =========================
-                    // READ EVENTS
-                    // =========================
                     client.subscribe(
                         `/topic/notifications/${myIdRef.current}`,
                         (msg) => {
@@ -174,15 +167,13 @@ function ContatoNav({ refreshContacts }) {
                                 {dados.lastMessage}
                             </span>
                         </div>
-
-                        {/* =========================
-                            BADGE UNREAD
-                        ========================= */}
+                        <div className="badge-div-c">
                         {unreadMap[dados.conversationId] > 0 && (
-                            <span className="badge-unread">
+                            <span className="badge-unread-c">
                                 {unreadMap[dados.conversationId]}
                             </span>
                         )}
+                        </div>
                     </div>
                 ))}
             </div>

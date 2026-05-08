@@ -1,30 +1,47 @@
-import { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import api from "../service/api";
 import "../styles/Post.css";
 import SearchBar from "../components/SearchBar";
+import useScrollPosition from "../hooks/useScrollPosition";
+import { getSearchPostsCache, setSearchPostsCache } from "../store/postsListCache";
 
 function SearchPosts() {
     const { termo } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
+    const isScrollReady = useScrollPosition(`search-posts-${termo}`);
 
-    const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [likes, setLikes] = useState({});
-    const [page, setPage] = useState(0);
-    const [hasMore, setHasMore] = useState(true);
-    const [isInitialized, setIsInitialized] = useState(false);
+    const cache = getSearchPostsCache(termo || "");
+    const [posts, setPosts] = useState(cache.posts);
+    const [likes, setLikes] = useState(cache.likes);
+    const [page, setPage] = useState(cache.page);
+    const [hasMore, setHasMore] = useState(cache.hasMore);
+    const [loading, setLoading] = useState(!cache.initialized);
+    const [loadingMore, setLoadingMore] = useState(false);
 
     const observerRef = useRef(null);
     const sentinelRef = useRef(null);
     const isFetchingRef = useRef(false);
-    const requestedPagesRef = useRef(new Set());
-
     const hasMoreRef = useRef(hasMore);
+    const requestedPagesRef = useRef(new Set());
+    const stateOwnerTermRef = useRef(termo || "");
 
     useEffect(() => {
         hasMoreRef.current = hasMore;
     }, [hasMore]);
+
+    useEffect(() => {
+        if (stateOwnerTermRef.current !== (termo || "")) return;
+
+        setSearchPostsCache(termo || "", {
+            posts,
+            likes,
+            page,
+            hasMore,
+            initialized: posts.length > 0 || cache.initialized,
+        });
+    }, [termo, posts, likes, page, hasMore]);
 
     const formatDate = (date) => {
         if (!date) return "";
@@ -41,11 +58,12 @@ function SearchPosts() {
 
         requestedPagesRef.current.add(pageNumber);
         isFetchingRef.current = true;
-        setLoading(true);
+        if (pageNumber === 0) setLoading(true);
+        else setLoadingMore(true);
 
         try {
             const res = await api.get(`/posts/search?termo=${termo}&page=${pageNumber}&size=12`);
-            const newPosts = res.data.content;
+            const newPosts = res.data.content || [];
             const isLast = res.data.last;
 
             const likeStatus = {};
@@ -62,40 +80,36 @@ function SearchPosts() {
 
             setPosts(prev => pageNumber === 0 ? newPosts : [...prev, ...newPosts]);
             setLikes(prev => ({ ...prev, ...likeStatus }));
-
-            hasMoreRef.current = !isLast;
             setHasMore(!isLast);
+            hasMoreRef.current = !isLast;
         } catch (err) {
             console.error(err);
         } finally {
             isFetchingRef.current = false;
             setLoading(false);
+            setLoadingMore(false);
         }
     }
 
-    // Reseta tudo quando o termo de busca mudar
     useEffect(() => {
-        setPosts([]);
-        setLikes({});
-        setPage(0);
-        setHasMore(true);
-        hasMoreRef.current = true;
+        const current = getSearchPostsCache(termo || "");
+        stateOwnerTermRef.current = termo || "";
+        setPosts(current.posts);
+        setLikes(current.likes);
+        setPage(current.page);
+        setHasMore(current.hasMore);
+        hasMoreRef.current = current.hasMore;
         requestedPagesRef.current = new Set();
-        isFetchingRef.current = false;
-        setIsInitialized(false);
+
+        if (!current.initialized) {
+            fetchPosts(0);
+        } else {
+            setLoading(false);
+        }
     }, [termo]);
 
     useEffect(() => {
-        if (!isInitialized) {
-            fetchPosts(0);
-            setIsInitialized(true);
-        }
-    }, [isInitialized]);
-
-    useEffect(() => {
-        if (page > 0) {
-            fetchPosts(page);
-        }
+        if (page > 0) fetchPosts(page);
     }, [page]);
 
     useEffect(() => {
@@ -119,20 +133,20 @@ function SearchPosts() {
 
     const renderDots = () => (
         <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '7px',
-            padding: '25px'
+            display: "flex",
+            justifyContent: "center",
+            gap: "7px",
+            padding: "25px"
         }}>
             {[0, 1, 2].map(i => (
                 <span
                     key={i}
                     style={{
-                        width: '9px',
-                        height: '9px',
-                        borderRadius: '50%',
-                        background: '#999',
-                        display: 'inline-block',
+                        width: "9px",
+                        height: "9px",
+                        borderRadius: "50%",
+                        background: "#999",
+                        display: "inline-block",
                         animation: `bounce 0.8s ease-in-out ${i * 0.15}s infinite`
                     }}
                 />
@@ -148,7 +162,7 @@ function SearchPosts() {
 
     if (loading && posts.length === 0) {
         return (
-            <div className="meus-posts-container">
+            <div className="meus-posts-container" style={{ width: "100%" }}>
                 <SearchBar />
                 {renderDots()}
             </div>
@@ -156,11 +170,11 @@ function SearchPosts() {
     }
 
     return (
-        <div className="meus-posts-container">
+        <div className="meus-posts-container" style={{ width: "100%", visibility: isScrollReady ? "visible" : "hidden" }}>
             <SearchBar />
 
             <div style={{ display: "flex", alignItems: "center", gap: 15 }}>
-                <button onClick={() => navigate(-1)} className="voltar-button">
+                <button onClick={() => navigate('/feed')} className="voltar-button">
                     <img src="/voltar.png" alt="" className="voltar-icon" />
                 </button>
                 <h2>Resultados para: "{termo}"</h2>
@@ -182,7 +196,15 @@ function SearchPosts() {
                             <div
                                 key={post.id}
                                 className="card-container"
-                                onClick={() => navigate(`/feed/${post.id}`)}
+                                onClick={() => navigate(`/feed/${post.id}`, {
+                                    state: {
+                                        returnTo: {
+                                            kind: "search",
+                                            path: location.pathname,
+                                            state: null
+                                        }
+                                    }
+                                })}
                             >
                                 <div className="img-post-container">
                                     <img className="image-post" src={post.imageUrl} alt="" />
@@ -211,9 +233,8 @@ function SearchPosts() {
                         ))}
                     </div>
 
-                    <div ref={sentinelRef} style={{ height: '10px' }} />
-
-                    {loading && renderDots()}
+                    <div ref={sentinelRef} style={{ height: "10px" }} />
+                    {loadingMore && renderDots()}
                 </>
             )}
         </div>

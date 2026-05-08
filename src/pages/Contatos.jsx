@@ -2,11 +2,17 @@ import StatusCard from "../components/StatusCards";
 import ContatoCard from "../components/ContatoCard";
 import '../styles/Contatos.css'
 import SearchUsers from "../components/SearchUsers";
+import useScrollPosition from "../hooks/useScrollPosition";
 
 
 function Contatos() {
+  const isScrollReady = useScrollPosition("contatos");
+
   return (
-    <main className="conteudo-contato">
+    <main
+      className="conteudo-contato"
+      style={{ visibility: isScrollReady ? "visible" : "hidden" }}
+    >
       <SearchUsers/>
       <StatusCard />
 

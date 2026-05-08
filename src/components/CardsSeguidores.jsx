@@ -1,9 +1,10 @@
 import api from '../service/api';
 import '../styles/CardSeguidores.css';
 import { useEffect, useState, useMemo } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 function CardSeguidores() {
   const navigate = useNavigate()
+  const location = useLocation()
   const [seguidores, setSeguidres] = useState([]);
 
   async function getStatusSeguidores() {
@@ -42,7 +43,25 @@ function CardSeguidores() {
             </div>
           )}
 
-          <div onClick={ () => navigate(`/profile/${dados.userId}/${dados.UserName}`)} className="img-container">
+          <div
+            onClick={() => {
+              const currentEntry = {
+                path: location.pathname,
+                state: location.state ?? null
+              };
+              const incomingBackStack = location.state?.backStack ?? [];
+              const lastEntry = incomingBackStack[incomingBackStack.length - 1];
+              const nextBackStack =
+                lastEntry?.path === currentEntry.path
+                  ? incomingBackStack
+                  : [...incomingBackStack, currentEntry];
+
+              navigate(`/profile/${dados.userId}/${dados.UserName}`, {
+                state: { backStack: nextBackStack }
+              });
+            }}
+            className="img-container"
+          >
             <img className='imageCard'
               src={dados.imageUrlProfile ? dados.imageUrlProfile : "/null.png"}
               alt={dados.nome}
