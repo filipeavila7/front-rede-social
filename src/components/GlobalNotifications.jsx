@@ -4,95 +4,67 @@ import SockJS from "sockjs-client/dist/sockjs";
 import { Client } from "@stomp/stompjs";
 import api from "../service/api";
 import "../styles/GlobalNotifications.css";
+import {
+    getNotificationNavigation,
+    getNotificationText,
+    normalizeNotification,
+} from "../utils/notificationUtils";
 
 function GlobalNotifications() {
     const [notifications, setNotifications] = useState([]);
     const stompRef = useRef(null);
-
-    const socketInitializedRef = useRef(false);
-    const subscribedRef = useRef(false);
-
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (socketInitializedRef.current) return;
-        socketInitializedRef.current = true;
-
-        let stompClientLocal = null;
+        let stompClient;
 
         async function connect() {
             try {
-                const res = await api.get("/users/me");
-                const myId = res.data?.id;
-
+                const meRes = await api.get("/users/me");
+                const myId = meRes.data?.id;
                 if (!myId) return;
 
                 const socket = new SockJS("http://localhost:8080/ws");
 
-                stompClientLocal = new Client({
+                stompClient = new Client({
                     webSocketFactory: () => socket,
                     reconnectDelay: 5000,
-
                     onConnect: () => {
-                        if (subscribedRef.current) return;
-                        subscribedRef.current = true;
+                        stompClient.subscribe(`/topic/notifications/${myId}`, (msg) => {
+                            const raw = JSON.parse(msg.body);
+                            if (raw?.type === "READ") return;
 
-                        stompClientLocal.subscribe(
-                            `/topic/notifications/${myId}`,
-                            (msg) => {
-                                const notif = JSON.parse(msg.body);
+                            const normalized = normalizeNotification(raw);
+                            const toast = { ...normalized, localId: `${Date.now()}-${Math.random()}` };
 
-                                // ❌ ignora READ (não é toast)
-                                if (notif.type === "READ") return;
+                            setNotifications((prev) => {
+                                const exists = prev.some(
+                                    (n) => String(n.id) === String(toast.id) && n.type === toast.type
+                                );
+                                if (exists) return prev;
+                                return [...prev, toast];
+                            });
 
-                                const notifObj = {
-                                    ...notif,
-                                    localId: Date.now() + Math.random()
-                                };
-
-                                setNotifications((prev) => {
-                                    const exists = prev.some(
-                                        (n) =>
-                                            n.messageId === notif.messageId &&
-                                            n.type === notif.type
-                                    );
-
-                                    if (exists) return prev;
-
-                                    return [...prev, notifObj];
-                                });
-
-                                // auto remove toast
-                                setTimeout(() => {
-                                    setNotifications((prev) =>
-                                        prev.filter(
-                                            (n) => n.localId !== notifObj.localId
-                                        )
-                                    );
-                                }, 4500);
-                            }
-                        );
+                            setTimeout(() => {
+                                setNotifications((prev) => prev.filter((n) => n.localId !== toast.localId));
+                            }, 4500);
+                        });
                     },
-
                     onStompError: (frame) => {
                         console.log("Erro STOMP:", frame);
-                    }
+                    },
                 });
 
-                stompClientLocal.activate();
-                stompRef.current = stompClientLocal;
-
-            } catch (err) {
-                console.log(err);
+                stompClient.activate();
+                stompRef.current = stompClient;
+            } catch (error) {
+                console.log(error);
             }
         }
 
         connect();
 
         return () => {
-            socketInitializedRef.current = false;
-            subscribedRef.current = false;
-
             if (stompRef.current) {
                 stompRef.current.deactivate();
                 stompRef.current = null;
@@ -102,30 +74,24 @@ function GlobalNotifications() {
 
     return (
         <div className="global-notification-wrapper">
-
-            {notifications.map((n) => (
+            {notifications.map((notification) => (
                 <div
-                    key={n.localId}
+                    key={notification.localId}
                     className="notification-card"
-                    onClick={() =>
-                        navigate(`/contatos/${n.conversationId}`)
-                    }
+                    onClick={() => {
+                        const target = getNotificationNavigation(notification, "/notifications");
+                        navigate(target.path, { state: target.state ?? undefined });
+                    }}
                 >
                     <img
-                        src={n.senderPhoto || "/null.png"}
+                        src={notification.senderPhoto || "/null.png"}
                         className="notif-photo"
                     />
 
                     <div className="notif-texts">
-                        <h4>{n.senderName}</h4>
-
-                        <p>
-                            {n.type === "MESSAGE"
-                                ? "te enviou uma mensagem"
-                                : "notificação"}
-                        </p>
-
-                        {n.content && <span>{n.content}</span>}
+                        <h4>{notification.senderName}</h4>
+                        <p>{getNotificationText(notification)}</p>
+                        {notification.content && <span>{notification.content}</span>}
                     </div>
                 </div>
             ))}

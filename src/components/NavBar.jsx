@@ -5,6 +5,8 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import ConfirmModal from "./ConfirmModal";
 import usePostDraftStore from "../store/postDraftStore";
 import { clearSession } from "../utils/session";
+import { useFeedStore } from "../store/feedStore";
+import { clearPostsListCaches } from "../store/postsListCache";
 
 function NavBar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -14,8 +16,11 @@ function NavBar() {
   const location = useLocation();
   const hasUnsavedChanges = usePostDraftStore((state) => state.hasUnsavedChanges);
   const setHasUnsavedChanges = usePostDraftStore((state) => state.setHasUnsavedChanges);
+  const resetFeed = useFeedStore((state) => state.resetFeed);
 
   function handleLogout() {
+    clearPostsListCaches();
+    resetFeed();
     clearSession();
     setShowLogoutModal(false);
     navigate("/login", { replace: true });

@@ -100,6 +100,22 @@ function incrementPostCommentsInAllCaches(postId, commentsDelta = 1) {
     Object.values(searchPostsCache).forEach(applyUpdate)
 }
 
+function clearPostsListCaches() {
+    mePostsCache.posts = []
+    mePostsCache.likes = {}
+    mePostsCache.page = 0
+    mePostsCache.hasMore = true
+    mePostsCache.initialized = false
+
+    Object.keys(otherPostsCache).forEach((key) => {
+        delete otherPostsCache[key]
+    })
+
+    Object.keys(searchPostsCache).forEach((key) => {
+        delete searchPostsCache[key]
+    })
+}
+
 export {
     getMePostsCache,
     setMePostsCache,
@@ -109,4 +125,5 @@ export {
     setSearchPostsCache,
     updatePostLikeStateInAllCaches,
     incrementPostCommentsInAllCaches,
+    clearPostsListCaches,
 }

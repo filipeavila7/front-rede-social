@@ -135,7 +135,7 @@ function OtherPerfil() {
 
   return (
     <>
-      {profile && (
+      {profile ? (
         <>
           <div className='meu-perfil'>
             <button onClick={handleBack} className='voltar-other'>
@@ -252,6 +252,19 @@ function OtherPerfil() {
             onCancel={() => setShowUnfollowModal(false)}
           />
         </>
+      ) : (
+        <div className="meu-perfil perfil-loading" aria-hidden="true">
+          <div className="perfil-loading-avatar" />
+          <div className="perfil-loading-content">
+            <div className="perfil-loading-line lg" />
+            <div className="perfil-loading-line md" />
+            <div className="perfil-loading-row">
+              <div className="perfil-loading-chip" />
+              <div className="perfil-loading-chip" />
+              <div className="perfil-loading-chip" />
+            </div>
+          </div>
+        </div>
       )}
     </>
   )

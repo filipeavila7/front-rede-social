@@ -74,7 +74,7 @@ function MeuPerfil() {
 
   return (
     <>
-      {myProfile && (
+      {myProfile ? (
         <div className='meu-perfil'>
           
           <img onClick={()=> navigate('/posts')}  className='more' src="/add.png" alt="" />
@@ -142,7 +142,19 @@ function MeuPerfil() {
 
           </div>
         </div>
-       
+      ) : (
+        <div className="meu-perfil perfil-loading" aria-hidden="true">
+          <div className="perfil-loading-avatar" />
+          <div className="perfil-loading-content">
+            <div className="perfil-loading-line lg" />
+            <div className="perfil-loading-line md" />
+            <div className="perfil-loading-row">
+              <div className="perfil-loading-chip" />
+              <div className="perfil-loading-chip" />
+              <div className="perfil-loading-chip" />
+            </div>
+          </div>
+        </div>
       )}
     </>
   )

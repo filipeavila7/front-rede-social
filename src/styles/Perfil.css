@@ -13,6 +13,62 @@ background: linear-gradient(164deg, rgba(16, 16, 16, 1) 85%, rgba(25, 11, 46, 1)
     height: 300px;
 }
 
+.perfil-loading{
+    pointer-events: none;
+}
+
+.perfil-loading-avatar{
+    width: 180px;
+    height: 180px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #1a1a1a 25%, #272727 50%, #1a1a1a 75%);
+    background-size: 200% 100%;
+    animation: perfilShimmer 1.25s linear infinite;
+}
+
+.perfil-loading-content{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.perfil-loading-line{
+    height: 18px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #1a1a1a 25%, #272727 50%, #1a1a1a 75%);
+    background-size: 200% 100%;
+    animation: perfilShimmer 1.25s linear infinite;
+}
+
+.perfil-loading-line.lg{
+    width: 48%;
+}
+
+.perfil-loading-line.md{
+    width: 32%;
+}
+
+.perfil-loading-row{
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.perfil-loading-chip{
+    width: 120px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, #1a1a1a 25%, #272727 50%, #1a1a1a 75%);
+    background-size: 200% 100%;
+    animation: perfilShimmer 1.25s linear infinite;
+}
+
+@keyframes perfilShimmer{
+    0%{ background-position: 200% 0; }
+    100%{ background-position: -200% 0; }
+}
+
 .voltar-other{
     position: absolute;
     top: 35px;
