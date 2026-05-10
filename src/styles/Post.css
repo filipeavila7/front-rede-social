@@ -302,6 +302,7 @@ box-shadow: -8px 0px 17px 0px #000000;
 }
 
 .post-comments-container{
+    scrollbar-width: none;
     overflow-y: auto;
     overflow-x: hidden;
     display: flex;
@@ -332,6 +333,12 @@ box-shadow: -8px 0px 17px 0px #000000;
     gap: 10px;
     position: relative;
     border-bottom: 1px solid rgb(52, 48, 48);
+}
+
+.me-comment{
+    background: rgba(123, 63, 228, 0.08);
+    border-radius: 10px;
+    
 }
 
 
@@ -374,6 +381,8 @@ box-shadow: -8px 0px 17px 0px #000000;
     position: absolute;
    
     width: 100%;
+    padding: 0px 20px 0 0;
+  
     
     
 }

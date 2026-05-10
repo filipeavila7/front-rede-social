@@ -9,6 +9,23 @@ import {
     updatePostLikeStateInAllCaches,
 } from "../store/postsListCache";
 
+function getCommentUserId(comment) {
+    return comment?.user?.id ?? comment?.userId ?? null;
+}
+
+function sortCommentsWithMineFirst(list, loggedUserId) {
+    if (!Array.isArray(list)) return [];
+    if (!loggedUserId) return list;
+
+    return [...list].sort((a, b) => {
+        const aMine = Number(getCommentUserId(a)) === Number(loggedUserId);
+        const bMine = Number(getCommentUserId(b)) === Number(loggedUserId);
+
+        if (aMine === bMine) return 0;
+        return aMine ? -1 : 1;
+    });
+}
+
 function PostContent() {
     const { postId } = useParams();
     const numericId = Number(postId);
@@ -25,6 +42,8 @@ function PostContent() {
     const [meId, setMeId] = useState(null);
     const [seguindo, setseguindo] = useState(false);
     const [showUnfollowModal, setShowUnfollowModal] = useState(false);
+    const [openCommentMenuId, setOpenCommentMenuId] = useState(null);
+    const [commentToDelete, setCommentToDelete] = useState(null);
 
     const contentComment = useRef();
 
@@ -90,13 +109,14 @@ function PostContent() {
                 id: res.data?.id || Date.now(),
                 content: text,
                 createdAt: new Date().toISOString(),
+                userId: meId,
                 user: {
                     nome: myProfile?.nome || "Você",
                     profileImageUrl: myProfile?.imageUrlProfile || null
                 }
             };
 
-            setComments(prev => [...prev, newComment]);
+            setComments(prev => sortCommentsWithMineFirst([...prev, newComment], meId));
 
             setPost(prev => ({
                 ...prev,
@@ -128,6 +148,27 @@ function PostContent() {
             updatePostLikeStateInAllCaches(numericId, true, +1);
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    async function deleteComment(commentId) {
+        try {
+            await api.delete(`/posts/${commentId}/comments`);
+
+            setComments((prev) => prev.filter((comment) => Number(comment.id) !== Number(commentId)));
+
+            setPost((prev) => ({
+                ...prev,
+                commentsCount: Math.max(0, prev.commentsCount - 1),
+            }));
+
+            updatePostCommentCount(numericId, -1);
+            incrementPostCommentsInAllCaches(numericId, -1);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setCommentToDelete(null);
+            setOpenCommentMenuId(null);
         }
     }
 
@@ -183,7 +224,7 @@ function PostContent() {
 
         api.get(`/posts/${postId}/comments`)
             .then((res) => {
-                setComments(res.data || []);
+                setComments(sortCommentsWithMineFirst(res.data || [], meId));
             })
             .catch((error) => {
                 console.log(error);
@@ -204,7 +245,7 @@ function PostContent() {
             .catch((error) => {
                 console.log(error);
             });
-    }, [postId, numericId, mergePosts, setLikes]);
+    }, [postId, numericId, mergePosts, setLikes, meId]);
 
     const formatRelativeDate = (date) => {
         if (!date) return "";
@@ -349,7 +390,12 @@ function PostContent() {
                                 </div>
                             ) : (
                                 comments.map((dados) => (
-                                    <div key={dados.id} className="user-comments">
+                                    <div
+                                        key={dados.id}
+                                        className={`user-comments ${
+                                            Number(getCommentUserId(dados)) === Number(meId) ? "me-comment" : ""
+                                        }`}
+                                    >
                                         <div className="user-comment-img-container">
                                             <img
                                                 className="user-comment-img"
@@ -367,7 +413,62 @@ function PostContent() {
                                         </div>
 
                                         <div className="comment-settings">
-                                            <img className="dots-comment" src="/dots.png" alt="" />
+                                            <div style={{ position: "relative" }}>
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setOpenCommentMenuId((prev) =>
+                                                            prev === dados.id ? null : dados.id
+                                                        )
+                                                    }
+                                                    style={{
+                                                        background: "transparent",
+                                                        border: "none",
+                                                        padding: 0,
+                                                        cursor: "pointer",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                    }}
+                                                >
+                                                    <img className="dots-comment" src="/dots.png" alt="" />
+                                                </button>
+
+                                                {openCommentMenuId === dados.id &&
+                                                    Number(getCommentUserId(dados)) === Number(meId) && (
+                                                        <div
+                                                            style={{
+                                                                position: "absolute",
+                                                                top: "28px",
+                                                                right: 0,
+                                                                zIndex: 10,
+                                                                background: "#151515",
+                                                                border: "1px solid rgba(255,255,255,0.12)",
+                                                                borderRadius: "10px",
+                                                                padding: "6px",
+                                                                minWidth: "150px",
+                                                            }}
+                                                        >
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => setCommentToDelete(dados.id)}
+                                                                style={{
+                                                                    width: "100%",
+                                                                    border: "none",
+                                                                    background: "transparent",
+                                                                    color: "#ff7c7c",
+                                                                    cursor: "pointer",
+                                                                    textAlign: "left",
+                                                                    fontSize: "14px",
+                                                                    padding: "8px",
+                                                                    borderRadius: "8px",
+                                                                }}
+                                                            >
+                                                                Excluir comentario
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                            </div>
                                         </div>
                                     </div>
                                 ))
@@ -406,6 +507,13 @@ function PostContent() {
                 message="Tem certeza que deseja deixar de seguir este usuario?"
                 onConfirm={confirmUnfollow}
                 onCancel={() => setShowUnfollowModal(false)}
+            />
+
+            <ConfirmModal
+                isOpen={commentToDelete !== null}
+                message="Tem certeza que deseja excluir este comentario?"
+                onConfirm={() => deleteComment(commentToDelete)}
+                onCancel={() => setCommentToDelete(null)}
             />
         </>
     );
