@@ -20,7 +20,7 @@ import SeguidoresPageOther from "./pages/SeguidoresPageOther";
 import SeguindoPageOther from "./pages/SeguindoPageOther";
 import SearchPosts from "./pages/SearchPosts";
 import Notifications from "./pages/Notifications";
-
+import Esqueceu from "./pages/Esqueceu";
 
 function App() {
   return (
@@ -31,6 +31,8 @@ function App() {
         <Route element={<PublicOnly />}>
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
+          <Route path="/esqueceu" element={<Esqueceu />} />
+          
         </Route>
         <Route index element={<Navigate to="/login" replace />} />
         <Route element={<RequireAuth />}>
