@@ -21,6 +21,7 @@ import SeguindoPageOther from "./pages/SeguindoPageOther";
 import SearchPosts from "./pages/SearchPosts";
 import Notifications from "./pages/Notifications";
 import Esqueceu from "./pages/Esqueceu";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/esqueceu" element={<Esqueceu />} />
-          
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
         <Route index element={<Navigate to="/login" replace />} />
         <Route element={<RequireAuth />}>
