@@ -5,24 +5,29 @@ import { useParams } from "react-router-dom";
 import SockJS from "sockjs-client/dist/sockjs";
 import { Client } from "@stomp/stompjs";
 
+const PAGE_SIZE = 20;
+
 function CardsMessages({ onMessageSent }) {
     const [messages, setMessages] = useState([]);
     const [meId, setMeId] = useState(null);
     const [headerName, setHeaderName] = useState("");
     const [headerPhoto, setHeaderPhoto] = useState("");
-    const [receiverId, setReceiverId] = useState(null);
+    const [loadingOlder, setLoadingOlder] = useState(false);
 
     const { conversationId } = useParams();
 
-    const inputMessage = useRef();
+    const inputMessage = useRef(null);
     const allRef = useRef(null);
     const stompClientRef = useRef(null);
     const subscriptionRef = useRef(null);
     const notificationSubRef = useRef(null);
-
-    const firstLoadRef = useRef(true);
-    const meIdRef = useRef(null);
     const receiverIdRef = useRef(null);
+    const meIdRef = useRef(null);
+    const firstLoadRef = useRef(true);
+    const isFetchingOlderRef = useRef(false);
+    const hasMoreOlderRef = useRef(true);
+    const pageRef = useRef(0);
+    const pendingScrollRestoreRef = useRef(null);
 
     const scrollToBottom = useCallback(() => {
         requestAnimationFrame(() => {
@@ -30,6 +35,14 @@ function CardsMessages({ onMessageSent }) {
                 allRef.current.scrollTop = allRef.current.scrollHeight;
             }
         });
+    }, []);
+
+    const mergeById = useCallback((list) => {
+        const map = new Map();
+        list.forEach((item) => {
+            map.set(String(item.id), item);
+        });
+        return Array.from(map.values());
     }, []);
 
     async function getMe() {
@@ -45,40 +58,18 @@ function CardsMessages({ onMessageSent }) {
         }
     }
 
-    async function getConversationHeader() {
+    const getConversationHeader = useCallback(async () => {
         try {
             const res = await api.get("/conversations/me");
+            const convo = res.data?.find((c) => Number(c.conversationId) === Number(conversationId));
 
-            const convo = res.data?.find(
-                (c) => Number(c.conversationId) === Number(conversationId)
-            );
-
-            const otherId = convo?.otherUserId ?? null;
-
-            setReceiverId(otherId);
-            receiverIdRef.current = otherId;
-
+            receiverIdRef.current = convo?.otherUserId ?? null;
             setHeaderName(convo?.otherUserName || "");
             setHeaderPhoto(convo?.otherUserPhoto || "");
         } catch (error) {
             console.log(error);
         }
-    }
-
-    async function getMessages() {
-        try {
-            const res = await api.get(`/messages/conversation/${conversationId}`);
-
-            const msgs = (res.data || []).map((msg) => ({
-                ...msg,
-                status: "sent"
-            }));
-
-            setMessages(msgs);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    }, [conversationId]);
 
     const markAsRead = useCallback(async () => {
         try {
@@ -88,14 +79,56 @@ function CardsMessages({ onMessageSent }) {
         }
     }, [conversationId]);
 
+    const loadMessagesPage = useCallback(async (pageNumber, { prepend } = { prepend: false }) => {
+        if (isFetchingOlderRef.current) return;
+        if (prepend && !hasMoreOlderRef.current) return;
+
+        isFetchingOlderRef.current = true;
+        setLoadingOlder(prepend);
+
+        let prevHeight = 0;
+        let prevTop = 0;
+
+        if (prepend && allRef.current) {
+            prevHeight = allRef.current.scrollHeight;
+            prevTop = allRef.current.scrollTop;
+        }
+
+        try {
+            const res = await api.get(`/messages/${conversationId}/messages?page=${pageNumber}&size=${PAGE_SIZE}`);
+            const chunk = (res.data || []).map((msg) => ({ ...msg, status: "sent" }));
+
+            hasMoreOlderRef.current = chunk.length === PAGE_SIZE;
+            pageRef.current = pageNumber;
+
+            setMessages((prev) => {
+                if (!prepend) return mergeById(chunk);
+                return mergeById([...chunk, ...prev]);
+            });
+
+            if (prepend && allRef.current) {
+                pendingScrollRestoreRef.current = { prevHeight, prevTop };
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
+            isFetchingOlderRef.current = false;
+            setLoadingOlder(false);
+        }
+    }, [conversationId, mergeById]);
+
+    async function loadOlderMessages() {
+        if (isFetchingOlderRef.current || !hasMoreOlderRef.current) return;
+        await loadMessagesPage(pageRef.current + 1, { prepend: true });
+    }
+
     async function postMessage(e) {
         e.preventDefault();
 
-        const content = inputMessage.current.value.trim();
+        const content = inputMessage.current?.value?.trim();
         if (!content || !receiverIdRef.current) return;
 
-        const tempId = "temp_" + Date.now();
-
+        const tempId = `temp_${Date.now()}`;
         const tempMessage = {
             id: tempId,
             conversationId: Number(conversationId),
@@ -103,62 +136,57 @@ function CardsMessages({ onMessageSent }) {
             content,
             createdAt: new Date().toISOString(),
             status: "sending",
-            readAt: null
+            readAt: null,
         };
 
         setMessages((prev) => [...prev, tempMessage]);
-
         inputMessage.current.value = "";
         scrollToBottom();
 
         try {
-            const res = await api.post(
-                `/messages/${receiverIdRef.current}`,
-                { content }
-            );
-
+            const res = await api.post(`/messages/${receiverIdRef.current}`, { content });
             if (onMessageSent) onMessageSent();
 
             setMessages((prev) =>
-                prev.map((msg) =>
-                    msg.id === tempId
-                        ? { ...res.data, status: "sent" }
-                        : msg
-                )
+                prev.map((msg) => (msg.id === tempId ? { ...res.data, status: "sent" } : msg))
             );
         } catch (error) {
             console.log(error);
-
             setMessages((prev) =>
-                prev.map((msg) =>
-                    msg.id === tempId
-                        ? { ...msg, status: "error" }
-                        : msg
-                )
+                prev.map((msg) => (msg.id === tempId ? { ...msg, status: "error" } : msg))
             );
         }
     }
 
-    // =========================
-    // LOAD CONVERSATION
-    // =========================
     useEffect(() => {
         if (!conversationId) return;
 
-        async function load() {
+        let mounted = true;
+
+        async function loadConversation() {
             firstLoadRef.current = true;
+            pageRef.current = 0;
+            hasMoreOlderRef.current = true;
+            isFetchingOlderRef.current = false;
+            setMessages([]);
 
             await getConversationHeader();
-            await getMessages();
+            await loadMessagesPage(0, { prepend: false });
             await markAsRead();
+
+            if (mounted) {
+                scrollToBottom();
+                firstLoadRef.current = false;
+            }
         }
 
-        load();
-    }, [conversationId]);
+        loadConversation();
 
-    // =========================
-    // WEBSOCKET
-    // =========================
+        return () => {
+            mounted = false;
+        };
+    }, [conversationId, getConversationHeader, loadMessagesPage, markAsRead, scrollToBottom]);
+
     useEffect(() => {
         if (!conversationId) return;
 
@@ -169,62 +197,46 @@ function CardsMessages({ onMessageSent }) {
             if (!myId) return;
 
             const socket = new SockJS("http://localhost:8080/ws");
-
             stompClient = new Client({
                 webSocketFactory: () => socket,
                 reconnectDelay: 5000,
-
                 onConnect: () => {
-
-                    // limpa subs antigas
                     if (subscriptionRef.current) subscriptionRef.current.unsubscribe();
                     if (notificationSubRef.current) notificationSubRef.current.unsubscribe();
 
-                    // =========================
-                    // MENSAGENS CHAT
-                    // =========================
                     subscriptionRef.current = stompClient.subscribe(
                         `/topic/messages/conversation/${conversationId}`,
                         (message) => {
-                            const nova = JSON.parse(message.body);
+                            const incoming = JSON.parse(message.body);
 
                             setMessages((prev) => {
-                                if (nova.senderId === meIdRef.current) return prev;
-
-                                const exists = prev.some((m) => m.id === nova.id);
-                                if (exists) return prev;
-
-                                return [...prev, { ...nova, status: "sent" }];
+                                if (incoming.senderId === meIdRef.current) return prev;
+                                if (prev.some((m) => String(m.id) === String(incoming.id))) return prev;
+                                return [...prev, { ...incoming, status: "sent" }];
                             });
 
                             markAsRead();
                             scrollToBottom();
-
                             if (onMessageSent) onMessageSent();
                         }
                     );
 
-                    // =========================
-                    // NOTIFICAÇÕES (READ + MESSAGE + LIKE etc)
-                    // =========================
                     notificationSubRef.current = stompClient.subscribe(
                         `/topic/notifications/${myId}`,
                         (message) => {
                             const event = JSON.parse(message.body);
+                            if (event.type !== "READ") return;
 
-                            // READ EVENT
-                            if (event.type === "READ") {
-                                setMessages((prev) =>
-                                    prev.map((msg) =>
-                                        msg.conversationId === event.conversationId
-                                            ? { ...msg, readAt: new Date().toISOString() }
-                                            : msg
-                                    )
-                                );
-                            }
+                            setMessages((prev) =>
+                                prev.map((msg) =>
+                                    msg.conversationId === event.conversationId
+                                        ? { ...msg, readAt: new Date().toISOString() }
+                                        : msg
+                                )
+                            );
                         }
                     );
-                }
+                },
             });
 
             stompClient.activate();
@@ -238,26 +250,30 @@ function CardsMessages({ onMessageSent }) {
             if (notificationSubRef.current) notificationSubRef.current.unsubscribe();
             if (stompClientRef.current) stompClientRef.current.deactivate();
         };
-    }, [conversationId]);
+    }, [conversationId, markAsRead, onMessageSent, scrollToBottom]);
 
-    // =========================
-    // AUTO SCROLL PRIMEIRA VEZ
-    // =========================
     useEffect(() => {
-        if (!firstLoadRef.current || messages.length === 0) return;
+        const restore = pendingScrollRestoreRef.current;
+        if (!restore || !allRef.current) return;
 
-        scrollToBottom();
-        firstLoadRef.current = false;
+        requestAnimationFrame(() => {
+            if (!allRef.current) return;
+            const nextHeight = allRef.current.scrollHeight;
+            allRef.current.scrollTop = restore.prevTop + (nextHeight - restore.prevHeight);
+            pendingScrollRestoreRef.current = null;
+        });
     }, [messages]);
 
-    return (
-        <div ref={allRef} className="all">
+    function handleScroll() {
+        if (!allRef.current) return;
+        if (allRef.current.scrollTop > 80) return;
+        loadOlderMessages();
+    }
 
+    return (
+        <div ref={allRef} className="all" onScroll={handleScroll}>
             <div className="chat-header">
-                <img
-                    className="chat-photo"
-                    src={headerPhoto || "/null.png"}
-                />
+                <img className="chat-photo" src={headerPhoto || "/null.png"} />
 
                 <div className="chat-header-info">
                     <div className="chat-name">{headerName}</div>
@@ -266,9 +282,14 @@ function CardsMessages({ onMessageSent }) {
             </div>
 
             <div className="message-list">
+                {loadingOlder && (
+                    <div className="loading-more">
+                        <span className="loading-dot-inline" />
+                    </div>
+                )}
+
                 {messages.map((dados) => {
                     const isMine = dados.senderId === meId;
-
                     const time = dados.createdAt
                         ? new Date(dados.createdAt).toLocaleTimeString("pt-BR", {
                               hour: "2-digit",
@@ -277,12 +298,8 @@ function CardsMessages({ onMessageSent }) {
                         : "";
 
                     return (
-                        <div
-                            key={dados.id}
-                            className={isMine ? "msg-right" : "msg-left"}
-                        >
+                        <div key={dados.id} className={isMine ? "msg-right" : "msg-left"}>
                             <div className={isMine ? "conteudo-right" : "conteudo-left"}>
-
                                 <p>{dados.content}</p>
 
                                 <div className={isMine ? "horas-right" : "horas-left"}>
@@ -290,29 +307,17 @@ function CardsMessages({ onMessageSent }) {
 
                                     {isMine && (
                                         <div className="send-indicator">
-                                            {dados.status === "sending" && (
-                                                <span className="loading-dot"></span>
-                                            )}
-
-                                            {dados.status === "error" && (
-                                                <span className="send-error">!</span>
-                                            )}
-
+                                            {dados.status === "sending" && <span className="loading-dot" />}
+                                            {dados.status === "error" && <span className="send-error">!</span>}
                                             {dados.status !== "sending" &&
                                                 dados.status !== "error" &&
-                                                !dados.readAt && (
-                                                    <span className="send-ok">✓✓</span>
-                                                )}
-
+                                                !dados.readAt && <span className="send-ok">✓✓</span>}
                                             {dados.status !== "sending" &&
                                                 dados.status !== "error" &&
-                                                dados.readAt && (
-                                                    <span className="send-read">✓✓</span>
-                                                )}
+                                                dados.readAt && <span className="send-read">✓✓</span>}
                                         </div>
                                     )}
                                 </div>
-
                             </div>
                         </div>
                     );
@@ -338,7 +343,6 @@ function CardsMessages({ onMessageSent }) {
                     <img className="btn-icon" src="/plane.png" />
                 </button>
             </div>
-
         </div>
     );
 }
