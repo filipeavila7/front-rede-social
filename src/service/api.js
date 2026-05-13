@@ -4,7 +4,7 @@ import { clearSession } from "../utils/session";
 let isHandlingUnauthorized = false;
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL
+    baseURL: "https://rede-social-java-production.up.railway.app"
 });
 
 // adcionar token automaticamnte
