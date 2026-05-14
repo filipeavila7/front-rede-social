@@ -86,7 +86,7 @@
 .container{   
     border-radius: 10px;
     width: 475px;
-    min-width: 430px;
+    min-width: 400px;
     height: 525px;
     border: 2px solid rgb(255, 255, 255, .2);
     box-shadow: 0 0px 10px rgba(0, 0, 0, 0.4);
