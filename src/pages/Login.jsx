@@ -107,8 +107,9 @@ function Login() {
               <div className="radio">
                 <input className="lembrar" id="lembrar" type="checkbox" />
               </div>
-
+              <div className="lembrar-div">
               <p className="acao-texto">Lembrar de mim</p>
+              </div>
 
               <div className="esqueceu">
                 <p onClick={()=> navigate('/esqueceu')} className="acao-texto-e">

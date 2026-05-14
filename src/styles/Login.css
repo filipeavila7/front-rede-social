@@ -260,8 +260,14 @@ input {
 .esqueceu {
     display: flex;
     align-items: center;
-    margin-left: 100px;
+    justify-content: flex-end;
+    width: 100%;
 }
+
+.lembrar-div{
+ width: 100%;
+}
+
 
 .acao-texto {
 
@@ -375,9 +381,7 @@ span {
         font-size: 15px;
     }
 
-    .esqueceu {
-        margin-left: 64px;
-    }
+    
 
     .form label,
     input {
