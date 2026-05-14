@@ -86,7 +86,7 @@
 .container{   
     border-radius: 10px;
     width: 475px;
-    min-width: 400px;
+    min-width: 380px;
     height: 525px;
     border: 2px solid rgb(255, 255, 255, .2);
     box-shadow: 0 0px 10px rgba(0, 0, 0, 0.4);
@@ -281,9 +281,9 @@ span{
 
 @media(max-width: 768px){
     .layout{
-        flex-direction: column-reverse;
+        flex-direction: column;
         justify-content: center;
-        height: 1600px;
+        height: 1200px;
         padding: 20px;
     }
 
@@ -294,15 +294,24 @@ span{
     .texto-social{
         align-items: center;
         text-align: center;
+        padding: 0px 0 0 0;
+    }
+
+    .titulos{
+        font-size: 45px;
+    }
+
+    .titulo-a{
+        font-size: 45px;
     }
 
     .midia-p{
         text-align: center;
     }
 
+    
     .midia-logo{
-        top: 1000px;
-        width: 400px;
+        width: 370px;
         
     }
 
@@ -310,6 +319,43 @@ span{
         width: 100%;
         display: flex;
         justify-content: center;
+        top: 380px;
     
+}
+
+.acao-texto-e{
+    font-size: 15px;
+}
+
+.acao-texto{
+    font-size: 15px;
+}
+
+.esqueceu{
+    margin-left: 64px;
+}
+
+.form label, input{
+    font-size: 17px;
+}
+
+.form input{
+    height: 35px;
+}
+
+.form-icon{
+    bottom: 27px;
+}
+
+.container{
+    height: 470px;
+}
+
+.container h1{
+    font-size: 29px;
+}
+
+.link{
+    font-size: 16px;
 }
 }
