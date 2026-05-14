@@ -320,6 +320,10 @@ span {
         top: 35px;
     }
 
+    .voltar-icon-c{
+        top: 23px
+    }
+
     .container-r h1 {
         font-size: 29px;
     }
@@ -372,7 +376,7 @@ span {
     }
 
     .esqueceu {
-        margin-left: 110px;
+        margin-left: 64px;
     }
 
     .form label,
