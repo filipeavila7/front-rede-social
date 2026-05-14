@@ -15,11 +15,17 @@
     position: relative;
 }
 
-.midia-logo{
-    width: 300px;
+.midia-logo-div{
     position: absolute;
     top: 0;
     left: 0;
+    
+}
+
+.midia-logo{
+    width: 300px;
+
+  
 }
 
 .texto-social{
@@ -80,6 +86,7 @@
 .container{   
     border-radius: 10px;
     width: 475px;
+    min-width: 430px;
     height: 525px;
     border: 2px solid rgb(255, 255, 255, .2);
     box-shadow: 0 0px 10px rgba(0, 0, 0, 0.4);
@@ -260,10 +267,49 @@
 
 .btn-icon-enter{
     width: 17px;
-    position: absolute;
-    left: 380px;
+    
+    
+    
 }
 
 span{
     color: #aa2dfd;
+}
+
+
+
+
+@media(max-width: 768px){
+    .layout{
+        flex-direction: column-reverse;
+        justify-content: center;
+        height: 1600px;
+        padding: 20px;
+    }
+
+    .form-main{
+        justify-content: center;
+    }
+
+    .texto-social{
+        align-items: center;
+        text-align: center;
+    }
+
+    .midia-p{
+        text-align: center;
+    }
+
+    .midia-logo{
+        top: 1000px;
+        width: 400px;
+        
+    }
+
+    .midia-logo-div{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    
+}
 }

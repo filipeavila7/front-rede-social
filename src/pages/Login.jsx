@@ -57,7 +57,9 @@ function Login() {
 
   return (
     <main className="layout">
+      <div className="midia-logo-div">
       <img className="midia-logo" src="/logoA.png" alt="" />
+      </div>
 
       <div className="texto-social">
         <div className="titulo">
@@ -116,7 +118,7 @@ function Login() {
             </div>
 
             {erro && <p className="erro">{erro}</p>}
-
+            
             <Botao type="submit" variant="primary" disabled={loading}>
               {loading ? "Entrando..." : "Entrar"}
               <img className="btn-icon-enter" src="/enter.png" alt="" />

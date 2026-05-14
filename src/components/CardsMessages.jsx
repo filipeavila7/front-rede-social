@@ -244,7 +244,7 @@ function CardsMessages({ onMessageSent }) {
         }
 
         connect();
-
+        
         return () => {
             if (subscriptionRef.current) subscriptionRef.current.unsubscribe();
             if (notificationSubRef.current) notificationSubRef.current.unsubscribe();
