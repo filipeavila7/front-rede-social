@@ -46,7 +46,9 @@ function Cadastro() {
 
     return (
         <main className="layout">
-            <img className="midia-logo" src="/logoA.png" alt="" />
+            <div className="midia-logo-div">
+      <img className="midia-logo" src="/logoA.png" alt="" />
+      </div>
             <div className="texto-social">
                 <div className="titulo">
                     <h1 className="titulos">Compartilhe.</h1>

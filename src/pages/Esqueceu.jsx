@@ -5,7 +5,7 @@ import Botao from "../components/Botao";
 import api from "../service/api";
 
 function Esqueceu() {
-  const navigate =  useNavigate()
+  const navigate = useNavigate()
   const inputEmail = useRef();
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
@@ -37,22 +37,24 @@ function Esqueceu() {
   return (
 
     <main className="layout">
-       <img className="midia-logo" src="/logoA.png" alt="" />
-            <div className="texto-social">
-                <div className="titulo">
-                    <h1 className="titulos">Compartilhe.</h1>
-                    <h1 className="titulo-a">Inspire-se.</h1>
-                    <h1 className="titulos">Conecte-se.</h1>
-                </div>
-                <div className="midia-p">
-                    <p>Uma plataforma para artistas e fãs</p>
-                    <p>compartilharem ideias,  criações e histórias</p>
-                </div>
-            </div>
+      <div className="midia-logo-div">
+        <img className="midia-logo" src="/logoA.png" alt="" />
+      </div>
+      <div className="texto-social">
+        <div className="titulo">
+          <h1 className="titulos">Compartilhe.</h1>
+          <h1 className="titulo-a">Inspire-se.</h1>
+          <h1 className="titulos">Conecte-se.</h1>
+        </div>
+        <div className="midia-p">
+          <p>Uma plataforma para artistas e fãs</p>
+          <p>compartilharem ideias,  criações e histórias</p>
+        </div>
+      </div>
       <div className="form-main">
-       
+
         <div className="container-r">
-           <img onClick={() => navigate('/login')} className='voltar-icon-c' src="/voltar.png" alt="" />
+          <img onClick={() => navigate('/login')} className='voltar-icon-e' src="/voltar.png" alt="" />
 
           <h1>Recuperar senha</h1>
 
