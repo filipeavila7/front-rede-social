@@ -1,3 +1,20 @@
+header{
+    background-color: #101010;
+    width: 17%;
+    position: sticky;
+    left: 15px;
+    top: 0;
+    height: 100vh;
+    border-radius: 20px;
+
+    padding: 35px 10px 50px 15px;
+    border: 1px solid rgb(70, 70, 70);
+}
+
+.nav-text{
+    color: white;
+}
+
 .navBar{
     display: flex;
     width: 100%;
@@ -17,7 +34,7 @@
     list-style: none;
     width: 100%;
     gap: 5px;
-    flex: 1;
+  
 }
 
 .navLinks li{
@@ -66,7 +83,7 @@
 
 
 
-.navLinks li a.active{
+.navLinks li a.active  {
     border-left: 4px solid #7B3FE4;
     text-decoration: none;
     color: #7B3FE4;
@@ -75,6 +92,9 @@
     background-color: #1e1a2a;
 }   
 
+.navLinks li a.active .nav-text{
+    color: #7B3FE4;
+}
 
 
 .btn-sair{
@@ -95,3 +115,4 @@
 .sair-icon{
     width: 20px;
 }
+

@@ -38,6 +38,112 @@ body {
   padding: 20px 50px 20px 50px;
 }
 
+@media (max-width: 768px) {
+
+  .app-layout {
+    flex-direction: column;
+  }
+
+  header {
+    position: fixed !important;
+    bottom: 0 !important;
+    top: auto !important;
+    left: 0;
+    right: 0;
+
+    width: 100% !important;
+    height: 70px;
+
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 9999;
+    border-radius: 0;
+  }
+
+  /* NAV CONTAINER */
+  .navBar {
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+  }
+
+  /* LISTA */
+  .navLinks {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  gap: 35px;
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+  .navLinks li {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* LINK */
+  .navLinks li a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+  gap: 4px;
+}
+
+  /* TEXTO SUME */
+  .nav-text,
+  .navLinks li p {
+    display: none !important;
+  }
+
+  /* ACTIVE LIMPO */
+  .navLinks li a.active {
+    background-color: transparent;
+    border-left: none;
+  }
+
+  /* ÍCONES */
+  .navLinks li img {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* REMOVE SEPARADOR COG */
+  .navLinks .cog {
+    border: none;
+    margin: 0;
+    
+  }
+
+  .cog img{
+    display: none;
+  }
+
+  /* CONTEÚDO NÃO FICA EMBAIXO */
+  .app-content {
+    margin-bottom: 80px;
+    padding: 20px;
+  }
+
+  /* ESCONDE ELEMENTOS EXTRA */
+  .logo-nav,
+  .btn-sair {
+    display: none;
+  }
+}
 /* largura da barra */
 ::-webkit-scrollbar {
   width: 8px;

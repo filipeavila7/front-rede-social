@@ -4,10 +4,11 @@ import { clearSession } from "../utils/session";
 let isHandlingUnauthorized = false;
 
 const api = axios.create({
-    baseURL: "http://localhost:8080"
+    baseURL: "https://rede-social-java-production.up.railway.app"
 });
 
 //baseURL: "https://rede-social-java-production.up.railway.app"
+//baseURL: "http://localhost:8080"
 
 // adcionar token automaticamnte
 api.interceptors.request.use((config) => {

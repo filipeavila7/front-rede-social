@@ -67,11 +67,12 @@ function NavBar() {
               {({ isActive }) => (
                 <>
                   <img src={isActive ? "/homeA.png" : "/home.png"} alt="" />
-                  Feed
+                  <span className="nav-text">Feed</span>
                 </>
               )}
             </NavLink>
           </li>
+
           <li>
             <NavLink
               to="/contatos"
@@ -81,11 +82,12 @@ function NavBar() {
               {({ isActive }) => (
                 <>
                   <img src={isActive ? "/planeB.png" : "/plane.png"} alt="" />
-                  Contatos
+                  <span className="nav-text">Contatos</span>
                 </>
               )}
             </NavLink>
           </li>
+
           <li>
             <NavLink
               to="/posts"
@@ -95,11 +97,27 @@ function NavBar() {
               {({ isActive }) => (
                 <>
                   <img src={isActive ? "/moreA.png" : "/more.png"} alt="" />
-                  Novo
+                  <span className="nav-text">Novo</span>
                 </>
               )}
             </NavLink>
           </li>
+
+          <li>
+            <NavLink
+              to="/notifications"
+              className={({ isActive }) => (isActive ? "active" : "")}
+              onClick={(e) => handleProtectedNavigation("/notifications", e)}
+            >
+              {({ isActive }) => (
+                <>
+                  <img src={isActive ? "/bellA.png" : "/bell.png"} alt="" />
+                  <span className="nav-text">Notificações</span>
+                </>
+              )}
+            </NavLink>
+          </li>
+
           <li>
             <NavLink
               to="/perfil"
@@ -109,25 +127,14 @@ function NavBar() {
               {({ isActive }) => (
                 <>
                   <img src={isActive ? "/userA.png" : "/user.png"} alt="" />
-                  Perfil
+                  <span className="nav-text">Perfil</span>
                 </>
               )}
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/notifications"
-              className={({ isActive }) => (isActive ? "active" : "")}
-              onClick={(e) => handleProtectedNavigation("/perfil", e)}
-            >
-              {({ isActive }) => (
-                <>
-                  <img src={isActive ? "/bellA.png" : "/bell.png"} alt="" />
-                  Notificações
-                </>
-              )}
-            </NavLink>
-          </li>
+
+          
+
           <li className="cog">
             <NavLink
               to="/config"
@@ -137,7 +144,7 @@ function NavBar() {
               {({ isActive }) => (
                 <>
                   <img src={isActive ? "/cogA.png" : "/cog.png"} alt="" />
-                  Configuração
+                  <span className="nav-text">Configuração</span>
                 </>
               )}
             </NavLink>
