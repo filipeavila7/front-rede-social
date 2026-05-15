@@ -65,7 +65,7 @@ function ContatoCard() {
             await getMe();
 
             const socket = new SockJS("https://rede-social-java-production.up.railway.app/ws");
-
+            //const socket = new SockJS("http://localhost:8080/ws");
             client = new Client({
                 webSocketFactory: () => socket,
                 reconnectDelay: 5000,

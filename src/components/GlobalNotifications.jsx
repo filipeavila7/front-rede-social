@@ -25,7 +25,7 @@ function GlobalNotifications() {
                 if (!myId) return;
 
                 const socket = new SockJS("https://rede-social-java-production.up.railway.app/ws");
-
+                //const socket = new SockJS("http://localhost:8080/ws");
                 stompClient = new Client({
                     webSocketFactory: () => socket,
                     reconnectDelay: 5000,

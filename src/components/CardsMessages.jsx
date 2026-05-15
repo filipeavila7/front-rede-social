@@ -7,7 +7,7 @@ import { Client } from "@stomp/stompjs";
 
 const PAGE_SIZE = 20;
 
-function CardsMessages({ onMessageSent }) {
+function CardsMessages({ onMessageSent, isNavOpen = true }) {
     const [messages, setMessages] = useState([]);
     const [meId, setMeId] = useState(null);
     const [headerName, setHeaderName] = useState("");
@@ -197,6 +197,7 @@ function CardsMessages({ onMessageSent }) {
             if (!myId) return;
 
             const socket = new SockJS("https://rede-social-java-production.up.railway.app/ws");
+            //const socket = new SockJS("http://localhost:8080/ws");
             stompClient = new Client({
                 webSocketFactory: () => socket,
                 reconnectDelay: 5000,
@@ -271,7 +272,11 @@ function CardsMessages({ onMessageSent }) {
     }
 
     return (
-        <div ref={allRef} className="all" onScroll={handleScroll}>
+        <div
+            ref={allRef}
+            className={`all ${isNavOpen ? "with-nav-open" : "with-nav-closed"}`}
+            onScroll={handleScroll}
+        >
             <div className="chat-header">
                 <img className="chat-photo" src={headerPhoto || "/null.png"} />
 

@@ -51,6 +51,40 @@
 .message-layout{
     display: flex;
     min-height: 100vh;
+    position: relative;
+}
+
+.messages-nav-toggle{
+    position: fixed;
+    top: 30px;
+    left: 20px;
+    z-index: 45;
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    border: 1px solid rgba(123, 63, 228, 0.35);
+    background: rgba(13, 13, 13, 0.96);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+    transition: transform 0.2s ease, background-color 0.2s ease, left 0.28s ease;
+}
+
+.messages-nav-toggle:hover{
+    transform: translateY(-2px);
+    background-color: #1a1a1a;
+}
+
+.messages-nav-toggle-icon{
+    font-size: 21px;
+    line-height: 1;
+    color: white;
+}
+
+.message-layout.nav-open .messages-nav-toggle{
+    left: calc(22rem + 28px);
 }
 
 .message-container{
@@ -95,6 +129,7 @@
     align-items: center;
     gap: 16px;
     padding: 18px 24px;
+    padding-left: 70px;
      
 }
 
@@ -214,6 +249,7 @@
     background: linear-gradient(180deg, rgba(17, 17, 17, 0) 0%, rgba(8, 8, 8, 0.92) 55%);
     align-items: center;
     gap: 10px;
+    transition: left 0.28s ease;
 }
 
 .msg-form{
@@ -265,9 +301,17 @@
 }
 
 @media (max-width: 1100px){
+    .message-layout.nav-open .messages-nav-toggle{
+        left: calc(19rem + 28px);
+    }
+
     .input-msg-container{
         left: 19rem;
     }
+}
+
+.all.with-nav-closed .input-msg-container{
+    left: 0;
 }
 
 @media (max-width: 768px){
@@ -292,5 +336,52 @@
     .conteudo-right{
         font-size: 17px;
         max-width: 88%;
+    }
+}
+
+@media (max-width: 900px){
+    .message-layout.nav-open::after{
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.42);
+        z-index: 30;
+    }
+
+    .messages-nav-toggle{
+        top: 16px;
+        left: 16px;
+    }
+
+    .message-layout.nav-open .messages-nav-toggle{
+        left: calc(min(20rem, calc(100vw - 28px)) + 16px);
+    }
+
+    .message-content{
+        width: 100%;
+    }
+
+    .input-msg-container,
+    .all.with-nav-open .input-msg-container,
+    .all.with-nav-closed .input-msg-container{
+        left: 0;
+        padding: 16px 14px 18px 14px;
+    }
+}
+
+@media (max-width: 768px){
+    .messages-nav-toggle{
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+    }
+
+    .msg-form{
+        padding: 12px 14px;
+        gap: 14px;
+    }
+
+    .btn-msg{
+        padding: 20px;
     }
 }

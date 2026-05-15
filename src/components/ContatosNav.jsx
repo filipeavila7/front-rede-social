@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import SockJS from "sockjs-client/dist/sockjs";
 import { Client } from "@stomp/stompjs";
 
-function ContatoNav({ refreshContacts }) {
+function ContatoNav({ refreshContacts, isOpen = true, onConversationSelect }) {
     const [contatos, setContatos] = useState([]);
     const [unreadMap, setUnreadMap] = useState({});
 
@@ -56,7 +56,7 @@ function ContatoNav({ refreshContacts }) {
             await getMe();
 
             const socket = new SockJS("https://rede-social-java-production.up.railway.app/ws");
-
+            //const socket = new SockJS("http://localhost:8080/ws");
             client = new Client({
                 webSocketFactory: () => socket,
                 reconnectDelay: 5000,
@@ -124,7 +124,7 @@ function ContatoNav({ refreshContacts }) {
     );
 
     return (
-        <div className="contatos-nav">
+        <aside className={`contatos-nav ${isOpen ? "is-open" : "is-closed"}`}>
             <div className="voltar-container">
                 <button
                     className="voltar-button"
@@ -149,9 +149,10 @@ function ContatoNav({ refreshContacts }) {
                                 ? "active"
                                 : ""
                         }`}
-                        onClick={() =>
+                        onClick={() => {
                             navigate(`/contatos/${dados.conversationId}`)
-                        }
+                            onConversationSelect?.()
+                        }}
                     >
                         <img
                             className="img-contato-nav"
@@ -177,7 +178,7 @@ function ContatoNav({ refreshContacts }) {
                     </div>
                 ))}
             </div>
-        </div>
+        </aside>
     );
 }
 

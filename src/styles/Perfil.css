@@ -110,6 +110,10 @@ background: linear-gradient(164deg, rgba(16, 16, 16, 1) 85%, rgba(25, 11, 46, 1)
     cursor: pointer;
 }
 
+.img-perfil-container{
+    flex-shrink: 0;
+}
+
 
 .seguidores-container{
     display: flex;
@@ -499,7 +503,220 @@ box-shadow: -3px 7px 15px -1px #000000;
     cursor: pointer;
 }
 
+@media (max-width: 1200px){
+    .meu-perfil{
+        height: auto;
+        align-items: flex-start;
+        padding: 40px 28px;
+    }
+
+    .dados-perfil{
+        width: 100%;
+        gap: 16px;
+    }
+
+    .seguidores-container{
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .btn-div{
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .my-bio{
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 900px){
+    .meu-perfil{
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 24px;
+        padding: 32px 24px;
+    }
+
+    .perfil-loading{
+        align-items: flex-start;
+    }
+
+    .perfil-loading-avatar{
+        width: 150px;
+        height: 150px;
+    }
+
+    .perfil-loading-row{
+        flex-wrap: wrap;
+    }
+
+    .voltar-other{
+        top: 20px;
+        left: 20px;
+    }
+
+    .more{
+        top: 22px;
+        right: 20px;
+        left: auto;
+        bottom: auto;
+        width: 34px;
+    }
+
+    .dados-perfil{
+        font-size: 32px;
+        align-items: flex-start;
+        text-align: left;
+    }
+
+    .perfil-name{
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .perfil-name h4{
+        font-size: 34px;
+    }
+
+    .seguidores-container{
+        justify-content: flex-start;
+    }
+
+    .perfil-posts-container,
+    .followers-container{
+        align-items: flex-start;
+    }
+
+    .btn-div{
+        justify-content: flex-start;
+    }
+
+    .my-bio{
+        text-align: left;
+        font-size: 21px;
+    }
+
+    .header-seguidores{
+        padding: 22px;
+        border-radius: 22px;
+    }
+
+    .header-seguidores-title{
+        font-size: 26px;
+    }
+
+    .navLinks-seguidores{
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
 @media (max-width: 768px){
+    .meu-perfil{
+        display: grid;
+        grid-template-columns: 120px minmax(0, 1fr);
+        align-items: start;
+        padding: 22px 18px;
+        border-radius: 26px;
+        gap: 18px 16px;
+    }
+
+    .img-perfil{
+        width: 120px;
+        height: 120px;
+    }
+
+    .dados-perfil{
+        font-size: 24px;
+        gap: 14px;
+        min-width: 0;
+    }
+
+    .perfil-name{
+        gap: 6px;
+    }
+
+    .perfil-name h4{
+        font-size: 25px;
+        line-height: 1.08;
+    }
+
+    .userName{
+        font-size: 16px;
+    }
+
+    .seguidores-container{
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        font-size: 16px;
+        width: 100%;
+    }
+
+    .profile-icon{
+        width: 18px;
+    }
+
+    .perfil-posts-container,
+    .followers-container{
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 16px;
+        padding: 12px 10px;
+        min-width: 0;
+    }
+
+    .perfil-posts,
+    .seguidores-content{
+        align-items: center;
+    }
+
+    .post-p{
+        font-size: 14px;
+    }
+
+    .btn-div{
+        grid-column: 1 / -1;
+        gap: 12px;
+        width: 100%;
+        padding-top: 2px;
+    }
+
+    .btn-editar-perfil{
+        min-height: 44px;
+        padding: 10px 16px;
+        font-size: 16px;
+    }
+
+    .edit-icon{
+        width: 20px;
+    }
+
+    .my-bio{
+        font-size: 17px;
+        line-height: 1.5;
+        color: #dedede;
+    }
+
+    .header-seguidores{
+        padding: 18px;
+        border-radius: 20px;
+    }
+
+    .header-seguidores-title{
+        font-size: 22px;
+    }
+
+    .navLinks-seguidores li a{
+        padding: 11px 18px;
+        font-size: 17px;
+    }
+
     .seguidor-container{
         padding: 18px;
         border-radius: 24px;
@@ -522,5 +739,165 @@ box-shadow: -3px 7px 15px -1px #000000;
         width: 44px;
         height: 44px;
         border-radius: 14px;
+    }
+}
+
+@media (max-width: 520px){
+    .meu-perfil{
+        grid-template-columns: 84px minmax(0, 1fr);
+        padding: 18px 14px;
+        gap: 14px 12px;
+    }
+
+    .perfil-loading-avatar{
+        width: 120px;
+        height: 120px;
+    }
+
+    .perfil-loading-line.lg,
+    .perfil-loading-line.md{
+        width: 100%;
+    }
+
+    .perfil-loading-chip{
+        width: 100%;
+    }
+
+    .voltar-other{
+        top: 14px;
+        left: 14px;
+    }
+
+    .voltar-other-icon{
+        width: 22px;
+    }
+
+    .more{
+        top: 14px;
+        right: 14px;
+        width: 30px;
+    }
+
+    .img-perfil{
+        width: 84px;
+        height: 84px;
+    }
+
+    .dados-perfil{
+        width: 100%;
+        font-size: 18px;
+        gap: 12px;
+    }
+
+    .perfil-name h4{
+        font-size: 21px;
+        word-break: break-word;
+    }
+
+    .userName{
+        font-size: 15px;
+        word-break: break-word;
+    }
+
+    .seguidores-container{
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: 100%;
+        gap: 10px;
+    }
+
+    .perfil-posts-container,
+    .followers-container{
+        padding: 10px 8px;
+        border-radius: 14px;
+    }
+
+    .perfil-posts,
+    .seguidores-content{
+        gap: 4px;
+    }
+
+    .perfil-posts p,
+    .seguidores-content p{
+        font-size: 17px;
+    }
+
+    .btn-div{
+        grid-column: 1 / -1;
+        justify-content: stretch;
+        align-items: center;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .btn-div > div{
+        flex: 1 1 0;
+        width: 100%;
+    }
+
+    .btn-editar-perfil{
+        width: 100%;
+        min-height: 42px;
+        padding: 9px 10px;
+        font-size: 15px;
+        gap: 8px;
+    }
+
+    .btn-texto{
+        font-size: 15px;
+    }
+
+    .my-bio{
+        font-size: 15px;
+        line-height: 1.45;
+        text-align: left;
+    }
+
+    .header-seguidores-top{
+        margin-bottom: 14px;
+    }
+
+    .header-seguidores-label{
+        font-size: 12px;
+    }
+
+    .header-seguidores-title{
+        font-size: 20px;
+    }
+
+    .navLinks-seguidores{
+        gap: 8px;
+        padding: 6px;
+    }
+
+    .navLinks-seguidores li{
+        width: 100%;
+    }
+
+    .navLinks-seguidores li a{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        font-size: 16px;
+        padding: 10px 12px;
+    }
+
+    .seguidor-container{
+        padding: 14px;
+        gap: 14px;
+        border-radius: 20px;
+    }
+
+    .seguidor-img{
+        width: 64px;
+        height: 64px;
+    }
+
+    .seguidor-nome{
+        font-size: 18px;
+    }
+
+    .seguidor-legenda{
+        font-size: 13px;
     }
 }

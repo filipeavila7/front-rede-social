@@ -8,8 +8,20 @@
     height: 100vh;
     padding: 18px 14px;
     margin-right: 20px;
-    
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: width 0.28s ease, padding 0.28s ease, margin-right 0.28s ease, opacity 0.2s ease, transform 0.28s ease;
     border: 1px solid rgb(70, 70, 70);
+}
+
+.contatos-nav.is-closed{
+    width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    margin-right: 0;
+    opacity: 0;
+    border-color: transparent;
+    pointer-events: none;
 }
 
 .contato-user-nav{
@@ -136,5 +148,35 @@
 @media (max-width: 1100px){
     .contatos-nav{
         width: 19rem;
+    }
+}
+
+@media (max-width: 900px){
+    .contatos-nav{
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 40;
+        width: min(20rem, calc(100vw - 28px));
+        margin-right: 0;
+        box-shadow: 14px 0 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .contatos-nav.is-closed{
+        transform: translateX(-100%);
+        width: min(20rem, calc(100vw - 28px));
+        padding-top: 18px;
+        padding-bottom: 18px;
+        opacity: 0;
+    }
+
+    .contatos-nav.is-open{
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    .badge-div-c{
+        left: auto;
+        right: 16px;
     }
 }
