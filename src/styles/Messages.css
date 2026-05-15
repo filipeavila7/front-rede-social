@@ -51,8 +51,9 @@
 .message-layout{
     display: flex;
     min-height: 100vh;
-    min-height: 100dvh;
+    min-height: var(--messages-vh, 100dvh);
     position: relative;
+    overflow: hidden;
 }
 
 .messages-nav-toggle{
@@ -97,16 +98,20 @@
     flex: 1;
     display: flex;
     min-height: 100vh;
-    min-height: 100dvh;
+    min-height: var(--messages-vh, 100dvh);
     background: radial-gradient(circle at top, rgba(55, 118, 97, 0.08) 0%, rgba(0, 0, 0, 0) 32%);
 }
 
 .message-list{
     display: flex;
     flex-direction: column;
+    flex: 1;
+    min-height: 0;
     gap: 6px;
     padding: 34px 28px 20px 28px;
     padding-bottom: 160px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .all{
@@ -114,8 +119,8 @@
     flex-direction: column;
     width: 100%;
     height: 100vh;
-    height: 100dvh;
-    overflow-y: auto;
+    height: var(--messages-vh, 100dvh);
+    overflow: hidden;
     background-color: #101010;
     border: 1px solid rgb(70, 70, 70);
 }
@@ -365,8 +370,8 @@
     }
 
     .all{
-        height: 100dvh;
-        min-height: 100dvh;
+        height: var(--messages-vh, 100dvh);
+        min-height: var(--messages-vh, 100dvh);
         overflow: hidden;
     }
 
@@ -375,9 +380,8 @@
     }
 
     .message-list{
-        height: calc(100dvh - 210px);
-        min-height: calc(100dvh - 210px);
-        overflow-y: auto;
+        height: auto;
+        min-height: 0;
         padding-bottom: 24px;
     }
 

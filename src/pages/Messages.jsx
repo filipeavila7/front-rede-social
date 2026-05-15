@@ -21,6 +21,36 @@ function Messages() {
         return () => window.removeEventListener("resize", handleResize)
     }, [])
 
+    useEffect(() => {
+        const root = document.documentElement
+        const body = document.body
+        const previousHtmlOverflow = root.style.overflow
+        const previousBodyOverflow = body.style.overflow
+        const previousBodyTouchAction = body.style.touchAction
+
+        function updateViewportHeight() {
+            const viewportHeight = window.visualViewport?.height ?? window.innerHeight
+            root.style.setProperty("--messages-vh", `${viewportHeight}px`)
+        }
+
+        root.style.overflow = "hidden"
+        body.style.overflow = "hidden"
+        body.style.touchAction = "pan-x pan-y"
+        updateViewportHeight()
+
+        window.visualViewport?.addEventListener("resize", updateViewportHeight)
+        window.addEventListener("resize", updateViewportHeight)
+
+        return () => {
+            root.style.overflow = previousHtmlOverflow
+            body.style.overflow = previousBodyOverflow
+            body.style.touchAction = previousBodyTouchAction
+            root.style.removeProperty("--messages-vh")
+            window.visualViewport?.removeEventListener("resize", updateViewportHeight)
+            window.removeEventListener("resize", updateViewportHeight)
+        }
+    }, [])
+
     function triggerRefreshContacts() {
         setRefreshContacts(prev => !prev)
     }
