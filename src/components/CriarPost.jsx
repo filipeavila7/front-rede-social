@@ -205,7 +205,7 @@ function CriarPost() {
 
                     <div className="descricao-box">
                         <div className="passo">
-                            <p className="passo-p"><span>3.</span> Descricao</p>
+                            <p className="passo-p"><span>2.</span> Descricao</p>
                         </div>
                         <form className="descricao-form" action="" onSubmit={handleCreatePost}>
                             <textarea
@@ -221,7 +221,7 @@ function CriarPost() {
                 <div className="criar-right">
                     <div className="detalhes-box">
                         <div className="passo">
-                            <p className="passo-p"><span>2.</span> Detalhes</p>
+                            <p className="passo-p"><span>3.</span> Detalhes</p>
                         </div>
                         <form className="detalhes-form" action="">
                             <label htmlFor="titulo">Titulo</label>
