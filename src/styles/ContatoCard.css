@@ -144,4 +144,8 @@
     .cards-content{
         height: 235px;
     }
+
+    .contato-nome{
+        width: 20px;
+    }
 }

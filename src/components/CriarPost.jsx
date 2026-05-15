@@ -213,13 +213,7 @@ function CriarPost() {
                                 ref={inputDescricao}
                                 onInput={(e) => updateDraftState({ description: e.target.value })}
                             ></textarea>
-                            <div className="btn-criar-box">
-                                <button className="new-cancelar" type="button" onClick={handleCancelClick}>Cancelar</button>
-                                <button className="btn-publicar" type="submit" disabled={loading}>
-                                    <img src="/plane.png" alt="" className="publicar-icon" />
-                                    {loading ? "Publicando..." : "Publicar"}
-                                </button>
-                            </div>
+                            
                         </form>
                     </div>
                 </div>
@@ -288,6 +282,13 @@ function CriarPost() {
                     </div>
                 </div>
             </div>
+            <div className="btn-criar-box">
+                                <button className="new-cancelar" type="button" onClick={handleCancelClick}>Cancelar</button>
+                                <button className="btn-publicar" type="submit" disabled={loading}>
+                                    <img src="/plane.png" alt="" className="publicar-icon" />
+                                    {loading ? "Publicando..." : "Publicar"}
+                                </button>
+                            </div>
 
             <ConfirmModal
                 isOpen={showExitModal}

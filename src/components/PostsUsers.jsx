@@ -1,5 +1,5 @@
 import '../styles/Post.css'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import api from '../service/api'
 import { useFeedStore } from '../store/feedStore'
@@ -9,6 +9,9 @@ function PostsUsers() {
     const navigate = useNavigate()
     const location = useLocation()
     const isScrollReady = useScrollPosition("feed")
+    const [isMobile, setIsMobile] = useState(() =>
+        typeof window !== "undefined" ? window.innerWidth <= 768 : false
+    )
 
     const {
         posts,
@@ -139,6 +142,15 @@ function PostsUsers() {
         return () => observerRef.current?.disconnect()
     }, [])
 
+    useEffect(() => {
+        function handleResize() {
+            setIsMobile(window.innerWidth <= 768)
+        }
+
+        window.addEventListener("resize", handleResize)
+        return () => window.removeEventListener("resize", handleResize)
+    }, [])
+
     return (
         <div style={{ display: 'contents', visibility: isScrollReady ? 'visible' : 'hidden' }}>
             {posts.map((dados) => (
@@ -193,14 +205,14 @@ function PostsUsers() {
                     display: 'flex',
                     justifyContent: 'center',
                     gap: '7px',
-                    padding: '25px'
+                    padding: isMobile ? '18px 12px' : '25px'
                 }}>
                     {[0, 1, 2].map(i => (
                         <span
                             key={i}
                             style={{
-                                width: '9px',
-                                height: '9px',
+                                width: isMobile ? '7px' : '9px',
+                                height: isMobile ? '7px' : '9px',
                                 borderRadius: '50%',
                                 background: '#999',
                                 display: 'inline-block',
