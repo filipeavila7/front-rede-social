@@ -6,6 +6,7 @@ import ConfirmModal from './ConfirmModal'
 
 function OtherPerfil() {
   const [profile, setprofile] = useState(null)
+  const [loadingProfile, setLoadingProfile] = useState(true)
   const [myFollowers, setMyFollowers] = useState(0)
   const [myFollows, setMyFollows] = useState(0)
   const [meId, setMeId] = useState(null)
@@ -64,6 +65,13 @@ function OtherPerfil() {
   }
 
   useEffect(() => {
+    setLoadingProfile(true)
+    setprofile(null)
+    setMyFollowers(0)
+    setMyFollows(0)
+    setTotalPost(0)
+    setSeguindo(false)
+
     if (id && userName) {
       api.get(`/profiles/user?userName=${userName}`)
         .then((res) => {
@@ -71,6 +79,15 @@ function OtherPerfil() {
         })
         .catch((error) => {
           console.log(error)
+          setprofile({
+            nome: userName,
+            userName,
+            imageUrlProfile: null,
+            bio: ""
+          })
+        })
+        .finally(() => {
+          setLoadingProfile(false)
         })
 
       api.get(`/users/${id}/followers/count`)
@@ -135,7 +152,20 @@ function OtherPerfil() {
 
   return (
     <>
-      {profile ? (
+      {loadingProfile ? (
+        <div className="meu-perfil perfil-loading" aria-hidden="true">
+          <div className="perfil-loading-avatar" />
+          <div className="perfil-loading-content">
+            <div className="perfil-loading-line lg" />
+            <div className="perfil-loading-line md" />
+            <div className="perfil-loading-row">
+              <div className="perfil-loading-chip" />
+              <div className="perfil-loading-chip" />
+              <div className="perfil-loading-chip" />
+            </div>
+          </div>
+        </div>
+      ) : profile ? (
         <>
           <div className='meu-perfil'>
             <button onClick={handleBack} className='voltar-other'>
@@ -253,15 +283,27 @@ function OtherPerfil() {
           />
         </>
       ) : (
-        <div className="meu-perfil perfil-loading" aria-hidden="true">
-          <div className="perfil-loading-avatar" />
-          <div className="perfil-loading-content">
-            <div className="perfil-loading-line lg" />
-            <div className="perfil-loading-line md" />
-            <div className="perfil-loading-row">
-              <div className="perfil-loading-chip" />
-              <div className="perfil-loading-chip" />
-              <div className="perfil-loading-chip" />
+        <div className='meu-perfil'>
+          <button onClick={handleBack} className='voltar-other'>
+            <img src="/voltar.png" alt="" className="voltar-other-icon" />
+          </button>
+
+          <div className='img-perfil-container'>
+            <img
+              className='img-perfil'
+              src="/null.png"
+              alt=""
+            />
+          </div>
+
+          <div className="dados-perfil">
+            <div className='perfil-name'>
+              <h4>@{userName}</h4>
+              <p className='userName'>Perfil indisponivel</p>
+            </div>
+
+            <div className='my-bio'>
+              <p>Nao foi possivel carregar as informacoes deste perfil agora.</p>
             </div>
           </div>
         </div>
