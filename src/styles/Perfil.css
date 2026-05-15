@@ -773,9 +773,9 @@ box-shadow: -3px 7px 15px -1px #000000;
     }
 
     .more{
-        top: 14px;
-        right: 14px;
-        width: 30px;
+        top: 76px;
+        left: 75px;
+        width: 23px;
     }
 
     .img-perfil{
@@ -848,6 +848,11 @@ box-shadow: -3px 7px 15px -1px #000000;
     }
 
     .my-bio{
+        font-size: 15px;
+        line-height: 1.45;
+        text-align: left;
+    }
+    .my-bio p{
         font-size: 15px;
         line-height: 1.45;
         text-align: left;

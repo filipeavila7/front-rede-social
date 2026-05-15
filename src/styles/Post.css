@@ -748,4 +748,58 @@
     .enviar-icon {
         width: 20px;
     }
+
+    .empty-posts {
+        width: 100%;
+        padding: 32px 22px;
+        border-radius: 24px;
+        background-attachment: scroll;
+    }
+
+    .empty-text {
+        font-size: 26px;
+    }
+
+    .empty-text-p {
+        font-size: 17px;
+    }
+
+    .empty-img {
+        width: 180px;
+    }
+}
+
+@media (max-width: 520px) {
+    .empty-container {
+        padding: 18px 0;
+    }
+
+    .empty-posts {
+        flex-direction: column;
+        text-align: center;
+        gap: 18px;
+        padding: 24px 16px;
+        border-radius: 20px;
+    }
+
+    .empty-content {
+        align-items: center;
+    }
+
+    .empty-text {
+        font-size: 21px;
+    }
+
+    .empty-text-p {
+        font-size: 15px;
+    }
+
+    .empty-img {
+        width: 130px;
+    }
+
+    .btn-mascote {
+        margin-top: 22px;
+        width: 100%;
+    }
 }

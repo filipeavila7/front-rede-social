@@ -132,4 +132,16 @@
         font-size: 13px;
         min-width: 70px;
     }
+
+    .hora-principal{
+        font-size: 15px;
+    }
+
+    .hora-secundaria{
+        font-size: 15px;
+    }
+
+    .cards-content{
+        height: 235px;
+    }
 }

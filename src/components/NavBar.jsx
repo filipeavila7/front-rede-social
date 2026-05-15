@@ -1,6 +1,6 @@
 import "../styles/NavBar.css";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import ConfirmModal from "./ConfirmModal";
 import usePostDraftStore from "../store/postDraftStore";
@@ -12,17 +12,23 @@ function NavBar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [pendingRoute, setPendingRoute] = useState(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const hasUnsavedChanges = usePostDraftStore((state) => state.hasUnsavedChanges);
   const setHasUnsavedChanges = usePostDraftStore((state) => state.setHasUnsavedChanges);
   const resetFeed = useFeedStore((state) => state.resetFeed);
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
   function handleLogout() {
     clearPostsListCaches();
     resetFeed();
     clearSession();
     setShowLogoutModal(false);
+    setIsMobileMenuOpen(false);
     navigate("/login", { replace: true });
   }
 
@@ -41,6 +47,7 @@ function NavBar() {
 
     setHasUnsavedChanges(false);
     setShowLeaveModal(false);
+    setIsMobileMenuOpen(false);
     navigate(pendingRoute);
     setPendingRoute(null);
   }
@@ -149,12 +156,56 @@ function NavBar() {
               )}
             </NavLink>
           </li>
+
+          <li className="mobile-menu-trigger">
+            <button
+              type="button"
+              className={`mobile-menu-button ${isMobileMenuOpen ? "active" : ""}`}
+              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+              aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={isMobileMenuOpen}
+            >
+              <img src="/dots.png" alt="" />
+            </button>
+          </li>
         </ul>
 
         <button className="btn-sair" type="button" onClick={() => setShowLogoutModal(true)}>
           <img className="sair-icon" src="/sair.png" alt="" />
           Sair
         </button>
+
+        <div className={`mobile-menu-panel ${isMobileMenuOpen ? "open" : ""}`}>
+          <NavLink
+            to="/config"
+            className={({ isActive }) => `mobile-menu-link ${isActive ? "active" : ""}`}
+            onClick={(e) => {
+              handleProtectedNavigation("/config", e);
+              if (!e.defaultPrevented) {
+                setIsMobileMenuOpen(false);
+              }
+            }}
+          >
+            {({ isActive }) => (
+              <>
+                <img src={isActive ? "/cogA.png" : "/cogA.png"} alt="" />
+                <span >Configuração</span>
+              </>
+            )}
+          </NavLink>
+
+          <button
+            type="button"
+            className="mobile-menu-link mobile-menu-logout"
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              setShowLogoutModal(true);
+            }}
+          >
+            <img src="/sair.png" alt="" />
+            <span>Sair</span>
+          </button>
+        </div>
       </nav>
 
       <ConfirmModal

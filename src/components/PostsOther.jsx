@@ -18,6 +18,7 @@ function PostsOther() {
     const [hasMore, setHasMore] = useState(cache.hasMore)
     const [loading, setLoading] = useState(!cache.initialized)
     const [loadingMore, setLoadingMore] = useState(false)
+    const [hasLoadedOnce, setHasLoadedOnce] = useState(cache.initialized)
 
     const isFetchingRef = useRef(false)
     const hasMoreRef = useRef(hasMore)
@@ -32,9 +33,9 @@ function PostsOther() {
             likes: like,
             page,
             hasMore,
-            initialized: myPosts.length > 0 || cache.initialized,
+            initialized: hasLoadedOnce,
         })
-    }, [userName, myPosts, like, page, hasMore])
+    }, [userName, myPosts, like, page, hasMore, hasLoadedOnce])
 
     const formatDate = (date) => {
         if (!date) return ""
@@ -55,7 +56,8 @@ function PostsOther() {
     }
 
     async function fetchPosts(pageNumber) {
-        if (isFetchingRef.current || !hasMoreRef.current) return
+        if (isFetchingRef.current) return
+        if (pageNumber > 0 && !hasMoreRef.current) return
 
         isFetchingRef.current = true
         if (pageNumber === 0) setLoading(true)
@@ -80,6 +82,9 @@ function PostsOther() {
         } catch (error) {
             console.error(error)
         } finally {
+            if (pageNumber === 0) {
+                setHasLoadedOnce(true)
+            }
             isFetchingRef.current = false
             setLoading(false)
             setLoadingMore(false)
@@ -87,10 +92,10 @@ function PostsOther() {
     }
 
     useEffect(() => {
-        if (!cache.initialized) {
+        if (!hasLoadedOnce) {
             fetchPosts(0)
         }
-    }, [])
+    }, [hasLoadedOnce])
 
     useEffect(() => {
         if (page > 0) fetchPosts(page)
