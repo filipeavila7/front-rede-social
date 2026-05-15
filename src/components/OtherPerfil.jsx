@@ -51,8 +51,11 @@ function OtherPerfil() {
  
 
   async function handleOpenConversation() {
+    const targetUserId = profile?.id ?? Number(id)
+    if (!targetUserId) return
+
     try {
-      const response = await api.post(`/conversations/open/${profile.id}`)
+      const response = await api.post(`/conversations/open/${targetUserId}`)
       navigate(`/contatos/${response.data.conversationId}`)
     } catch (error) {
       console.log(error)
