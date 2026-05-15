@@ -1,5 +1,5 @@
 import NavBar from "./NavBar";
-import '../styles/Navbar.css'
+import '../styles/NavBar.css'
 function Header(){
     return(
         <header>
