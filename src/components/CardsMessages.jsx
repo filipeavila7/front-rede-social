@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useLayoutEffect } from "react";
 import api from "../service/api";
 import "../styles/Messages.css";
 import { useParams } from "react-router-dom";
@@ -13,11 +13,13 @@ function CardsMessages({ onMessageSent, isNavOpen = true }) {
     const [headerName, setHeaderName] = useState("");
     const [headerPhoto, setHeaderPhoto] = useState("");
     const [loadingOlder, setLoadingOlder] = useState(false);
+    const [initialPositionReady, setInitialPositionReady] = useState(false);
 
     const { conversationId } = useParams();
 
     const inputMessage = useRef(null);
     const allRef = useRef(null);
+    const listRef = useRef(null);
     const stompClientRef = useRef(null);
     const subscriptionRef = useRef(null);
     const notificationSubRef = useRef(null);
@@ -31,8 +33,8 @@ function CardsMessages({ onMessageSent, isNavOpen = true }) {
 
     const scrollToBottom = useCallback(() => {
         requestAnimationFrame(() => {
-            if (allRef.current) {
-                allRef.current.scrollTop = allRef.current.scrollHeight;
+            if (listRef.current) {
+                listRef.current.scrollTop = listRef.current.scrollHeight;
             }
         });
     }, []);
@@ -89,9 +91,9 @@ function CardsMessages({ onMessageSent, isNavOpen = true }) {
         let prevHeight = 0;
         let prevTop = 0;
 
-        if (prepend && allRef.current) {
-            prevHeight = allRef.current.scrollHeight;
-            prevTop = allRef.current.scrollTop;
+        if (prepend && listRef.current) {
+            prevHeight = listRef.current.scrollHeight;
+            prevTop = listRef.current.scrollTop;
         }
 
         try {
@@ -106,7 +108,7 @@ function CardsMessages({ onMessageSent, isNavOpen = true }) {
                 return mergeById([...chunk, ...prev]);
             });
 
-            if (prepend && allRef.current) {
+            if (prepend && listRef.current) {
                 pendingScrollRestoreRef.current = { prevHeight, prevTop };
             }
         } catch (error) {
@@ -168,6 +170,7 @@ function CardsMessages({ onMessageSent, isNavOpen = true }) {
             pageRef.current = 0;
             hasMoreOlderRef.current = true;
             isFetchingOlderRef.current = false;
+            setInitialPositionReady(false);
             setMessages([]);
 
             await getConversationHeader();
@@ -175,8 +178,11 @@ function CardsMessages({ onMessageSent, isNavOpen = true }) {
             await markAsRead();
 
             if (mounted) {
-                scrollToBottom();
-                firstLoadRef.current = false;
+                requestAnimationFrame(() => {
+                    scrollToBottom();
+                    setInitialPositionReady(true);
+                    firstLoadRef.current = false;
+                });
             }
         }
 
@@ -255,19 +261,25 @@ function CardsMessages({ onMessageSent, isNavOpen = true }) {
 
     useEffect(() => {
         const restore = pendingScrollRestoreRef.current;
-        if (!restore || !allRef.current) return;
+        if (!restore || !listRef.current) return;
 
         requestAnimationFrame(() => {
-            if (!allRef.current) return;
-            const nextHeight = allRef.current.scrollHeight;
-            allRef.current.scrollTop = restore.prevTop + (nextHeight - restore.prevHeight);
+            if (!listRef.current) return;
+            const nextHeight = listRef.current.scrollHeight;
+            listRef.current.scrollTop = restore.prevTop + (nextHeight - restore.prevHeight);
             pendingScrollRestoreRef.current = null;
         });
     }, [messages]);
 
+    useLayoutEffect(() => {
+        if (!firstLoadRef.current || !listRef.current) return;
+
+        listRef.current.scrollTop = listRef.current.scrollHeight;
+    }, [messages]);
+
     function handleScroll() {
-        if (!allRef.current) return;
-        if (allRef.current.scrollTop > 80) return;
+        if (!listRef.current) return;
+        if (listRef.current.scrollTop > 80) return;
         loadOlderMessages();
     }
 
@@ -286,7 +298,11 @@ function CardsMessages({ onMessageSent, isNavOpen = true }) {
                 </div>
             </div>
 
-            <div className="message-list">
+            <div
+                ref={listRef}
+                className={`message-list ${initialPositionReady ? "is-ready" : "is-positioning"}`}
+                onScroll={handleScroll}
+            >
                 {loadingOlder && (
                     <div className="loading-more">
                         <span className="loading-dot-inline" />

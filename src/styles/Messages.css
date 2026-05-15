@@ -114,6 +114,14 @@
     overscroll-behavior: contain;
 }
 
+.message-list.is-positioning{
+    visibility: hidden;
+}
+
+.message-list.is-ready{
+    visibility: visible;
+}
+
 .all{
     display: flex;
     flex-direction: column;
