@@ -207,7 +207,7 @@ function CriarPost() {
                         <div className="passo">
                             <p className="passo-p"><span>2.</span> Descricao</p>
                         </div>
-                        <form className="descricao-form" action="" onSubmit={handleCreatePost}>
+                        <form className="descricao-form" action="">
                             <textarea
                                 className="descricao-input"
                                 ref={inputDescricao}
@@ -284,7 +284,7 @@ function CriarPost() {
             </div>
             <div className="btn-criar-box">
                                 <button className="new-cancelar" type="button" onClick={handleCancelClick}>Cancelar</button>
-                                <button className="btn-publicar" type="submit" disabled={loading}>
+                                <button onClick={handleCreatePost} className="btn-publicar" type="button" disabled={loading}>
                                     <img src="/plane.png" alt="" className="publicar-icon" />
                                     {loading ? "Publicando..." : "Publicar"}
                                 </button>
